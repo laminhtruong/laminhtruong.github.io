@@ -2,17 +2,54 @@
 
 <head>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src=/src/animation-mixer.js></script>
 </head>
 
 <body>
+    <script type="text/javascript">
+        AFRAME.registerComponent('drag-rotate-component', {
+            schema: { speed: { default: 1 } },
+            init: function () {
+                this.ifMouseDown = false;
+                this.x_cord = 0;
+                this.y_cord = 0;
+                document.addEventListener('mousedown', this.OnDocumentMouseDown.bind(this));
+                document.addEventListener('mouseup', this.OnDocumentMouseUp.bind(this));
+                document.addEventListener('mousemove', this.OnDocumentMouseMove.bind(this));
+            },
+            OnDocumentMouseDown: function (event) {
+                this.ifMouseDown = true;
+                this.x_cord = event.clientX;
+                this.y_cord = event.clientY;
+            },
+            OnDocumentMouseUp: function () {
+                this.ifMouseDown = false;
+            },
+            OnDocumentMouseMove: function (event) {
+                if (this.ifMouseDown) {
+                    var temp_x = event.clientX - this.x_cord;
+                    var temp_y = event.clientY - this.y_cord;
+                    if (Math.abs(temp_y) < Math.abs(temp_x)) {
+                        this.el.object3D.rotateY(temp_x * this.data.speed / 1000);
+                    }
+                    else {
+                        this.el.object3D.rotateX(temp_y * this.data.speed / 1000);
+                    }
+                    this.x_cord = event.clientX;
+                    this.y_cord = event.clientY;
+                }
+            }
+        });
+    </script>
     <a-scene>
-        <a-assets>
-            <a-asset-item id="dog" src="/Mesh_Chimpanzee.gltf"></a-asset-item>
-        </a-assets>
 
-        <a-entity gltf-model="#dog" position="0 0 -10" scale="0.1 0.1 0.1" animation-mixer></a-entity>
-
+        <!-- <a-box position="0 0 -1" scale="0.1 0.1 0.1" rotation="45 45 0" color="#F00" drag-rotate-component="speed:3"></a-box> -->
+        <a-gltf-model id="dog" src="/models/dog.glb" animation-mixer="clip: Action.004"
+            drag-rotate-component="speed:3"></a-gltf-model>
         <a-sky color="#ECECEC"></a-sky>
+        <a-camera position="0 0 5" look-controls="enabled:false">
+            <a-cursor></a-cursor>
+        </a-camera>
     </a-scene>
 </body>
 
