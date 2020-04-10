@@ -44,15 +44,18 @@
 
         function screenShoot()
         {
-            document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
+            var canvas = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
+            var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+
+            window.location.href = image;
         }
     </script>
-    <a-scene embedded arjs>
+    <button style="position: absolute; z-index: 1;" onclick="screenShoot()">Screen Shoot</button>
+    <a-scene artoolkit>
         <a-gltf-model position="0 0 -5" src="/models/dog.glb" animation-mixer="clip: Action.004" drag-rotate-component="speed:3"></a-gltf-model>
         <a-camera look-controls="enabled:false">
             <a-cursor></a-cursor>
         </a-camera>
-        <button style="position: absolute; z-index: 1;" onclick="screenShoot()">Screen Shoot</button>
     </a-scene>
 </body>
 
