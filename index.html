@@ -13,19 +13,19 @@
                 this.ifMouseDown = false;
                 this.x_cord = 0;
                 this.y_cord = 0;
-                document.addEventListener('mousedown', this.OnDocumentMouseDown.bind(this));
-                document.addEventListener('mouseup', this.OnDocumentMouseUp.bind(this));
-                document.addEventListener('mousemove', this.OnDocumentMouseMove.bind(this));
+                document.addEventListener('pointerdown', this.OnDocumentTouchDown.bind(this));
+                document.addEventListener('pointerup', this.OnDocumentTouchUp.bind(this));
+                document.addEventListener('pointermove', this.OnDocumentTouchMove.bind(this));
             },
-            OnDocumentMouseDown: function (event) {
+            OnDocumentTouchDown: function (event) {
                 this.ifMouseDown = true;
                 this.x_cord = event.clientX;
                 this.y_cord = event.clientY;
             },
-            OnDocumentMouseUp: function () {
+            OnDocumentTouchUp: function () {
                 this.ifMouseDown = false;
             },
-            OnDocumentMouseMove: function (event) {
+            OnDocumentTouchMove: function (event) {
                 if (this.ifMouseDown) {
                     var temp_x = event.clientX - this.x_cord;
                     var temp_y = event.clientY - this.y_cord;
