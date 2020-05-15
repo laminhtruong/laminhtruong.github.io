@@ -14,8 +14,6 @@ var APP = {
 		var loader = new THREE.ObjectLoader();
 		var camera, scene;
 
-		var vrButton = VRButton.createButton( renderer );
-
 		var events = {};
 
 		var dom = document.createElement( 'div' );
@@ -173,8 +171,6 @@ var APP = {
 
 		this.play = function () {
 
-			if ( renderer.xr.enabled ) dom.append( vrButton );
-
 			prevTime = performance.now();
 
 			document.addEventListener( 'keydown', onDocumentKeyDown );
@@ -193,8 +189,6 @@ var APP = {
 		};
 
 		this.stop = function () {
-
-			if ( renderer.xr.enabled ) vrButton.remove();
 
 			document.removeEventListener( 'keydown', onDocumentKeyDown );
 			document.removeEventListener( 'keyup', onDocumentKeyUp );
@@ -273,5 +267,3 @@ var APP = {
 	}
 
 };
-
-export { APP };
