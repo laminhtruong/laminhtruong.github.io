@@ -14,9 +14,14 @@
                 this.ifMouseDown = false;
                 this.x_cord = 0;
                 this.y_cord = 0;
+
+                this.el.addEventListener('click', this.OnSelect.bind(this));
                 document.addEventListener('pointerdown', this.OnDocumentTouchDown.bind(this));
                 document.addEventListener('pointerup', this.OnDocumentTouchUp.bind(this));
                 document.addEventListener('pointermove', this.OnDocumentTouchMove.bind(this));
+            },
+            OnSelect: function (event) {
+                selectedObject = this.el;
             },
             OnDocumentTouchDown: function (event) {
                 this.ifMouseDown = true;
@@ -27,7 +32,7 @@
                 this.ifMouseDown = false;
             },
             OnDocumentTouchMove: function (event) {
-                if (this.ifMouseDown) {
+                if (this.ifMouseDown && this.el == window.selectedObject) {
                     var temp_x = event.clientX - this.x_cord;
                     var temp_y = event.clientY - this.y_cord;
                     if (Math.abs(temp_y) < Math.abs(temp_x)) {
@@ -50,12 +55,11 @@
             window.location.href = image;
         }
     </script>
-    <button style="position: absolute; z-index: 1;" onclick="screenShoot()">Screen Shoot</button>
-    <a-scene artoolkit>
-        <a-gltf-model position="0 0 -5" src="/models/dog.glb" animation-mixer="clip: Action.004" drag-rotate-component="speed:3"></a-gltf-model>
-        <a-camera look-controls="enabled:false">
-            <a-cursor></a-cursor>
-        </a-camera>
+    <div>
+        <button style="position: absolute; left: 0px; z-index: 1;" onclick="screenShoot()">Screen Shoot</button>
+    </div>
+    <a-scene>
+
     </a-scene>
 </body>
 
