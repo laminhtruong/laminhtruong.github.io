@@ -1,9 +1,9 @@
 window._CCSettings = {
     debug: true,
     designResolution: {
-        width: 960,
-        height: 640,
-        policy: 4
+        width: 640,
+        height: 960,
+        policy: 3
     },
     platform: "web-mobile",
     launchScene: "db://assets/New Scene.scene",
