@@ -18,10 +18,13 @@ window._CCSettings = {
     moduleIds: [],
     scripts: [],
     packedAssets: {
-        "0c0d139d3": [
-            "1baf0fc9-befa-459c-8bdd-af1a450a0319",
+        "0560be6d0": [
             "5e419143-a993-4ecd-8223-4b4184919264",
-            "1263d74c-8167-4928-91a6-4e2672411f47@2e76e",
+            "1263d74c-8167-4928-91a6-4e2672411f47@2e76e"
+        ],
+        "04f08fb47": [
+            "1baf0fc9-befa-459c-8bdd-af1a450a0319",
+            "3c3b7d55-9418-47fd-a932-6e8d61870899",
             "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
             "d3c7820c-2a98-4429-8bc7-b8453bc9ac41"
         ]
@@ -44,7 +47,8 @@ window._CCSettings = {
     },
     customJointTextureLayouts: [],
     scriptPackages: [
-        "./src/project.dev.js"
+        "./src/project.dev.js",
+        "./src/chunks/bundle.js"
     ],
     orientation: "auto"
 };
