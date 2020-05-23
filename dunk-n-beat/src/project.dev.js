@@ -333,7 +333,9 @@ System.register("chunks:///BallMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
         }, {
           key: "SetNotes",
           value: function SetNotes(notes) {
-            this.notes = notes; //.filter(note => note.name == "D#5");
+            this.notes = notes.filter(function (note) {
+              return note.name == "D#5";
+            });
           }
         }, {
           key: "GetBallThrowOffset",
