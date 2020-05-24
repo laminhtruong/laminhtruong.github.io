@@ -1494,10 +1494,10 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
                 break;
 
               case STATE.LOADING:
-                loader.load("https://laminhtruong.github.io/dunk-n-beat/WeThreeKings_BiometrixRemix.mp3", function (error, clip) {
+                loader.load("https://laminhtruong.github.io/dunk-n-beat/Unity.mp3", function (error, clip) {
                   if (error == null) {
                     _this2.mainAudio.clip = clip;
-                    AmaReadContent("https://laminhtruong.github.io/dunk-n-beat/WeThreeKings_BiometrixRemix.bin").then(function (notes) {
+                    AmaReadContent("https://laminhtruong.github.io/dunk-n-beat/Unity.bin").then(function (notes) {
                       _this2.ballMgr.SetNotes(notes);
 
                       _this2.SetState(STATE.TOUCH_TO_PLAY);
