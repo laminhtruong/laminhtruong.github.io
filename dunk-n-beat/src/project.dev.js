@@ -613,300 +613,6 @@ System.register("chunks:///Ball.js", ["./_virtual/_rollupPluginBabelHelpers.js",
   };
 });
 
-System.register("chunks:///BallMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./core/Timer.js", "./EventMgr.js", "./Defines.js", "./Ball.js"], function (_export, _context) {
-  "use strict";
-
-  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, Prefab, AudioSourceComponent, Node, instantiate, math, clamp, Component, Timer, EventMgr, Config, BallEvent, Ball, _dec, _dec2, _dec3, _class, _class2, _descriptor, _descriptor2, _descriptor3, _temp, ccclass, property, STATE, BallMgr;
-
-  _export({
-    _dec: void 0,
-    _dec2: void 0,
-    _dec3: void 0,
-    _class: void 0,
-    _class2: void 0,
-    _descriptor: void 0,
-    _descriptor2: void 0,
-    _descriptor3: void 0,
-    _temp: void 0,
-    STATE: void 0
-  });
-
-  return {
-    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
-      _applyDecoratedDescriptor = _virtual_rollupPluginBabelHelpersJs.applyDecoratedDescriptor;
-      _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
-      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
-      _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
-      _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
-      _initializerDefineProperty = _virtual_rollupPluginBabelHelpersJs.initializerDefineProperty;
-      _assertThisInitialized = _virtual_rollupPluginBabelHelpersJs.assertThisInitialized;
-      _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
-    }, function (_cc) {
-      cclegacy = _cc.cclegacy;
-      _decorator = _cc._decorator;
-      Prefab = _cc.Prefab;
-      AudioSourceComponent = _cc.AudioSourceComponent;
-      Node = _cc.Node;
-      instantiate = _cc.instantiate;
-      math = _cc.math;
-      clamp = _cc.clamp;
-      Component = _cc.Component;
-    }, function (_coreTimerJs) {
-      Timer = _coreTimerJs.default;
-    }, function (_EventMgrJs) {
-      EventMgr = _EventMgrJs.EventMgr;
-    }, function (_DefinesJs) {
-      Config = _DefinesJs.default;
-      BallEvent = _DefinesJs.BallEvent;
-    }, function (_BallJs) {
-      Ball = _BallJs.default;
-    }],
-    execute: function () {
-      cclegacy._RF.push({}, "b69cb2ma7FGN4AP/vv6f0Lr", "BallMgr", undefined);
-
-      ccclass = _decorator.ccclass;
-      property = _decorator.property;
-
-      (function (STATE) {
-        STATE[STATE["NONE"] = 0] = "NONE";
-        STATE[STATE["INIT"] = 1] = "INIT";
-        STATE[STATE["PLAYING"] = 2] = "PLAYING";
-      })(STATE || (STATE = {}));
-
-      BallMgr = (_dec = property({
-        type: Prefab
-      }), _dec2 = property({
-        type: AudioSourceComponent
-      }), _dec3 = property({
-        type: Node
-      }), ccclass(_class = (_class2 = (_temp = /*#__PURE__*/function (_Component) {
-        _inherits(BallMgr, _Component);
-
-        function BallMgr() {
-          var _getPrototypeOf2;
-
-          var _this;
-
-          _classCallCheck(this, BallMgr);
-
-          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-          }
-
-          _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(BallMgr)).call.apply(_getPrototypeOf2, [this].concat(args)));
-
-          _initializerDefineProperty(_this, "ballPrefab", _descriptor, _assertThisInitialized(_this));
-
-          _initializerDefineProperty(_this, "mainAudio", _descriptor2, _assertThisInitialized(_this));
-
-          _initializerDefineProperty(_this, "basket", _descriptor3, _assertThisInitialized(_this));
-
-          _this.timerDelay = new Timer();
-          _this.balls = [];
-          _this.ballThrowOffset = [];
-          _this.ballThrowPosition = [];
-          _this.currentTime = 0;
-          _this.noteIndex = 0;
-          _this.minX = -3;
-          _this.maxX = 3;
-          _this.combo = 0;
-          return _this;
-        }
-
-        _createClass(BallMgr, [{
-          key: "onLoad",
-          value: function onLoad() {}
-        }, {
-          key: "start",
-          value: function start() {
-            EventMgr.instance.on(BallEvent.SCORE, this.OnScore, this);
-          }
-        }, {
-          key: "update",
-          value: function update(deltaTime) {
-            switch (this.state) {
-              case STATE.NONE:
-                break;
-
-              case STATE.INIT:
-                break;
-
-              case STATE.PLAYING:
-                this.timerDelay.Update(deltaTime);
-
-                if (this.timerDelay.JustFinished()) {
-                  this.mainAudio.play();
-                }
-
-                this.UpdateMakeBall(deltaTime);
-                break;
-            }
-          }
-        }, {
-          key: "SetState",
-          value: function SetState(state) {
-            this.state = state;
-
-            switch (state) {
-              case STATE.NONE:
-                break;
-
-              case STATE.INIT:
-                this.GenerateBallThrowPosition();
-                this.combo = 0;
-                this.flyTime = Config.BALL_FLY_TIME;
-                this.currentTime = this.notes[this.noteIndex].time - this.flyTime;
-                var audioPlayAtTime = Math.max(this.currentTime, 0 - Config.AUDIO_DELAY);
-                var audioStartTime = audioPlayAtTime + Config.AUDIO_DELAY;
-                this.mainAudio.currentTime = audioStartTime;
-                this.timerDelay.SetDuration(audioPlayAtTime - this.currentTime);
-
-                if (this.balls.length == 0) {
-                  for (var i = 0; i < Config.BALL_MAX; i++) {
-                    var objectBall = instantiate(this.ballPrefab);
-                    objectBall.parent = this.node;
-                    var ball = objectBall.getComponent(Ball);
-                    ball.basket = this.basket;
-                    this.balls.push(objectBall);
-                  }
-                }
-
-                break;
-            }
-          }
-        }, {
-          key: "Init",
-          value: function Init() {
-            this.SetState(STATE.INIT);
-          }
-        }, {
-          key: "Play",
-          value: function Play() {
-            this.SetState(STATE.PLAYING);
-          }
-        }, {
-          key: "UpdateMakeBall",
-          value: function UpdateMakeBall(deltaTime) {
-            this.currentTime += deltaTime;
-
-            if (this.noteIndex < this.notes.length) {
-              // let duration = this.noteIndex == 0 ? 1 : this.notes[this.noteIndex].time - this.notes[this.noteIndex - 1].time;
-              if (this.currentTime >= this.notes[this.noteIndex].time - this.flyTime) {
-                this.Throw(this.noteIndex++);
-              }
-            }
-          }
-        }, {
-          key: "SetNotes",
-          value: function SetNotes(notes) {
-            this.notes = notes.filter(function (note) {
-              return note.name == "D#5";
-            });
-          }
-        }, {
-          key: "GetBallThrowOffset",
-          value: function GetBallThrowOffset(noteIndex) {
-            var duration = noteIndex == 0 ? 0 : this.notes[noteIndex].time - this.notes[noteIndex - 1].time;
-            var offset = (duration > Config.BALL_ALIGN_DURATION ? duration * 5 : 0) * math.randomRange(0.3, 1);
-            var percent = this.noteIndex / this.notes.length;
-            var percentEasy = 0.3;
-
-            if (percent < 0.5) {
-              var divide = 5 * (percentEasy - percent);
-              offset /= clamp(divide, 1, divide);
-            }
-
-            return offset;
-          }
-        }, {
-          key: "GenerateBallThrowOffset",
-          value: function GenerateBallThrowOffset() {
-            for (var i = 0; i < this.notes.length; i++) {
-              var offset = i <= this.noteIndex ? 0 : this.GetBallThrowOffset(i);
-              this.ballThrowOffset[i] = offset;
-            }
-          }
-        }, {
-          key: "GenerateBallThrowPosition",
-          value: function GenerateBallThrowPosition() {
-            this.GenerateBallThrowOffset();
-
-            for (var i = 0; i < this.notes.length; i++) {
-              if (i == 0 || i <= this.noteIndex) {
-                this.ballThrowPosition[i] = 0;
-              } else {
-                var offset = this.ballThrowOffset[i];
-                var lastX = this.ballThrowPosition[i - 1];
-                var sign = math.randomRange(0, 1) > (lastX - this.minX) / (this.maxX - this.minX) ? 1 : -1;
-                offset *= sign;
-                this.ballThrowPosition[i] = clamp(lastX + offset, this.minX, this.maxX);
-              }
-            }
-          }
-        }, {
-          key: "GetInactiveBall",
-          value: function GetInactiveBall() {
-            for (var i = 0; i < Config.BALL_MAX; i++) {
-              var ball = this.balls[i].getComponent(Ball);
-
-              if (ball.IsInactive()) {
-                return this.balls[i];
-              }
-            }
-
-            return null;
-          }
-        }, {
-          key: "Throw",
-          value: function Throw(noteIndex) {
-            var objectBall = this.GetInactiveBall();
-
-            if (objectBall != null) {
-              objectBall.getComponent(Ball).Throw(this.ballThrowPosition[noteIndex], this.minX, this.maxX, this.combo);
-            }
-          }
-        }, {
-          key: "OnScore",
-          value: function OnScore(args) {
-            if (!args.miss) {
-              this.combo++;
-            } else {
-              this.combo = 0;
-            }
-          }
-        }]);
-
-        return BallMgr;
-      }(Component), _temp), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "ballPrefab", [_dec], {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        initializer: function initializer() {
-          return null;
-        }
-      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "mainAudio", [_dec2], {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        initializer: function initializer() {
-          return null;
-        }
-      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "basket", [_dec3], {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        initializer: function initializer() {
-          return null;
-        }
-      })), _class2)) || _class);
-
-      cclegacy._RF.pop();
-
-      _export("default", BallMgr);
-    }
-  };
-});
-
 System.register("chunks:///ui/Background.js", ["../_virtual/_rollupPluginBabelHelpers.js", "cc", "../core/Timer.js", "../EventMgr.js", "../Defines.js"], function (_export, _context) {
   "use strict";
 
@@ -1349,10 +1055,302 @@ System.register("chunks:///Basket.js", ["./_virtual/_rollupPluginBabelHelpers.js
   };
 });
 
-System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./core/Input.js", "./EventMgr.js", "./Defines.js", "./BallMgr.js", "./Basket.js"], function (_export, _context) {
+System.register("chunks:///BallMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./core/Timer.js", "./EventMgr.js", "./Defines.js", "./Ball.js"], function (_export, _context) {
   "use strict";
 
-  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, AudioSourceComponent, EventTarget, PhysicsSystem, Vec3, loader, Component, Input, EventMgr, BallEvent, AmaReadContent, BallMgr, Basket, _dec, _dec2, _dec3, _class, _class2, _descriptor, _descriptor2, _descriptor3, _temp, _cc$_decorator, ccclass, property, STATE, GameMgr;
+  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, Prefab, AudioSourceComponent, Node, instantiate, math, clamp, Component, Timer, EventMgr, Config, BallEvent, Ball, _dec, _dec2, _dec3, _class, _class2, _descriptor, _descriptor2, _descriptor3, _temp, ccclass, property, STATE, BallMgr;
+
+  _export({
+    _dec: void 0,
+    _dec2: void 0,
+    _dec3: void 0,
+    _class: void 0,
+    _class2: void 0,
+    _descriptor: void 0,
+    _descriptor2: void 0,
+    _descriptor3: void 0,
+    _temp: void 0,
+    STATE: void 0
+  });
+
+  return {
+    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
+      _applyDecoratedDescriptor = _virtual_rollupPluginBabelHelpersJs.applyDecoratedDescriptor;
+      _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
+      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
+      _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
+      _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
+      _initializerDefineProperty = _virtual_rollupPluginBabelHelpersJs.initializerDefineProperty;
+      _assertThisInitialized = _virtual_rollupPluginBabelHelpersJs.assertThisInitialized;
+      _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
+    }, function (_cc) {
+      cclegacy = _cc.cclegacy;
+      _decorator = _cc._decorator;
+      Prefab = _cc.Prefab;
+      AudioSourceComponent = _cc.AudioSourceComponent;
+      Node = _cc.Node;
+      instantiate = _cc.instantiate;
+      math = _cc.math;
+      clamp = _cc.clamp;
+      Component = _cc.Component;
+    }, function (_coreTimerJs) {
+      Timer = _coreTimerJs.default;
+    }, function (_EventMgrJs) {
+      EventMgr = _EventMgrJs.EventMgr;
+    }, function (_DefinesJs) {
+      Config = _DefinesJs.default;
+      BallEvent = _DefinesJs.BallEvent;
+    }, function (_BallJs) {
+      Ball = _BallJs.default;
+    }],
+    execute: function () {
+      cclegacy._RF.push({}, "b69cb2ma7FGN4AP/vv6f0Lr", "BallMgr", undefined);
+
+      ccclass = _decorator.ccclass;
+      property = _decorator.property;
+
+      (function (STATE) {
+        STATE[STATE["NONE"] = 0] = "NONE";
+        STATE[STATE["INIT"] = 1] = "INIT";
+        STATE[STATE["PLAYING"] = 2] = "PLAYING";
+      })(STATE || (STATE = {}));
+
+      BallMgr = (_dec = property({
+        type: Prefab
+      }), _dec2 = property({
+        type: AudioSourceComponent
+      }), _dec3 = property({
+        type: Node
+      }), ccclass(_class = (_class2 = (_temp = /*#__PURE__*/function (_Component) {
+        _inherits(BallMgr, _Component);
+
+        function BallMgr() {
+          var _getPrototypeOf2;
+
+          var _this;
+
+          _classCallCheck(this, BallMgr);
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(BallMgr)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+          _initializerDefineProperty(_this, "ballPrefab", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "mainAudio", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "basket", _descriptor3, _assertThisInitialized(_this));
+
+          _this.timerDelay = new Timer();
+          _this.balls = [];
+          _this.ballThrowOffset = [];
+          _this.ballThrowPosition = [];
+          _this.currentTime = 0;
+          _this.noteIndex = 0;
+          _this.minX = -3;
+          _this.maxX = 3;
+          _this.combo = 0;
+          return _this;
+        }
+
+        _createClass(BallMgr, [{
+          key: "onLoad",
+          value: function onLoad() {}
+        }, {
+          key: "start",
+          value: function start() {
+            EventMgr.instance.on(BallEvent.SCORE, this.OnScore, this);
+          }
+        }, {
+          key: "update",
+          value: function update(deltaTime) {
+            switch (this.state) {
+              case STATE.NONE:
+                break;
+
+              case STATE.INIT:
+                break;
+
+              case STATE.PLAYING:
+                this.timerDelay.Update(deltaTime);
+
+                if (this.timerDelay.JustFinished()) {
+                  this.mainAudio.play();
+                }
+
+                this.UpdateMakeBall(deltaTime);
+                break;
+            }
+          }
+        }, {
+          key: "SetState",
+          value: function SetState(state) {
+            this.state = state;
+
+            switch (state) {
+              case STATE.NONE:
+                break;
+
+              case STATE.INIT:
+                this.GenerateBallThrowPosition();
+                this.combo = 0;
+                this.flyTime = Config.BALL_FLY_TIME;
+                this.currentTime = this.notes[this.noteIndex].time - this.flyTime;
+                var audioPlayAtTime = Math.max(this.currentTime, 0 - Config.AUDIO_DELAY);
+                var audioStartTime = audioPlayAtTime + Config.AUDIO_DELAY;
+                this.mainAudio.currentTime = audioStartTime;
+                this.timerDelay.SetDuration(audioPlayAtTime - this.currentTime);
+
+                if (this.balls.length == 0) {
+                  for (var i = 0; i < Config.BALL_MAX; i++) {
+                    var objectBall = instantiate(this.ballPrefab);
+                    objectBall.parent = this.node;
+                    var ball = objectBall.getComponent(Ball);
+                    ball.basket = this.basket;
+                    this.balls.push(objectBall);
+                  }
+                }
+
+                break;
+            }
+          }
+        }, {
+          key: "Init",
+          value: function Init() {
+            this.SetState(STATE.INIT);
+          }
+        }, {
+          key: "Play",
+          value: function Play() {
+            this.SetState(STATE.PLAYING);
+          }
+        }, {
+          key: "UpdateMakeBall",
+          value: function UpdateMakeBall(deltaTime) {
+            this.currentTime += deltaTime;
+
+            if (this.noteIndex < this.notes.length) {
+              // let duration = this.noteIndex == 0 ? 1 : this.notes[this.noteIndex].time - this.notes[this.noteIndex - 1].time;
+              if (this.currentTime >= this.notes[this.noteIndex].time - this.flyTime) {
+                this.Throw(this.noteIndex++);
+              }
+            }
+          }
+        }, {
+          key: "SetNotes",
+          value: function SetNotes(notes) {
+            this.notes = notes; //.filter(note => note.name == "D#5");
+          }
+        }, {
+          key: "GetBallThrowOffset",
+          value: function GetBallThrowOffset(noteIndex) {
+            var duration = noteIndex == 0 ? 0 : this.notes[noteIndex].time - this.notes[noteIndex - 1].time;
+            var offset = (duration > Config.BALL_ALIGN_DURATION ? duration * 5 : 0) * math.randomRange(0.3, 1);
+            var percent = this.noteIndex / this.notes.length;
+            var percentEasy = 0.3;
+
+            if (percent < 0.5) {
+              var divide = 5 * (percentEasy - percent);
+              offset /= clamp(divide, 1, divide);
+            }
+
+            return offset;
+          }
+        }, {
+          key: "GenerateBallThrowOffset",
+          value: function GenerateBallThrowOffset() {
+            for (var i = 0; i < this.notes.length; i++) {
+              var offset = i <= this.noteIndex ? 0 : this.GetBallThrowOffset(i);
+              this.ballThrowOffset[i] = offset;
+            }
+          }
+        }, {
+          key: "GenerateBallThrowPosition",
+          value: function GenerateBallThrowPosition() {
+            this.GenerateBallThrowOffset();
+
+            for (var i = 0; i < this.notes.length; i++) {
+              if (i == 0 || i <= this.noteIndex) {
+                this.ballThrowPosition[i] = 0;
+              } else {
+                var offset = this.ballThrowOffset[i];
+                var lastX = this.ballThrowPosition[i - 1];
+                var sign = math.randomRange(0, 1) > (lastX - this.minX) / (this.maxX - this.minX) ? 1 : -1;
+                offset *= sign;
+                this.ballThrowPosition[i] = clamp(lastX + offset, this.minX, this.maxX);
+              }
+            }
+          }
+        }, {
+          key: "GetInactiveBall",
+          value: function GetInactiveBall() {
+            for (var i = 0; i < Config.BALL_MAX; i++) {
+              var ball = this.balls[i].getComponent(Ball);
+
+              if (ball.IsInactive()) {
+                return this.balls[i];
+              }
+            }
+
+            return null;
+          }
+        }, {
+          key: "Throw",
+          value: function Throw(noteIndex) {
+            var objectBall = this.GetInactiveBall();
+
+            if (objectBall != null) {
+              objectBall.getComponent(Ball).Throw(this.ballThrowPosition[noteIndex], this.minX, this.maxX, this.combo);
+            }
+          }
+        }, {
+          key: "OnScore",
+          value: function OnScore(args) {
+            if (!args.miss) {
+              this.combo++;
+            } else {
+              this.combo = 0;
+            }
+          }
+        }]);
+
+        return BallMgr;
+      }(Component), _temp), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "ballPrefab", [_dec], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "mainAudio", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "basket", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      })), _class2)) || _class);
+
+      cclegacy._RF.pop();
+
+      _export("default", BallMgr);
+    }
+  };
+});
+
+System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./core/Input.js", "./EventMgr.js", "./Defines.js", "./Basket.js", "./BallMgr.js"], function (_export, _context) {
+  "use strict";
+
+  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, AudioSourceComponent, EventTarget, PhysicsSystem, Vec3, loader, Component, Input, EventMgr, BallEvent, AmaReadContent, Basket, BallMgr, _dec, _dec2, _dec3, _class, _class2, _descriptor, _descriptor2, _descriptor3, _temp, _cc$_decorator, ccclass, property, STATE, GameMgr;
 
   _export({
     _dec: void 0,
@@ -1392,10 +1390,10 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
     }, function (_DefinesJs) {
       BallEvent = _DefinesJs.BallEvent;
       AmaReadContent = _DefinesJs.AmaReadContent;
-    }, function (_BallMgrJs) {
-      BallMgr = _BallMgrJs.default;
     }, function (_BasketJs) {
       Basket = _BasketJs.default;
+    }, function (_BallMgrJs) {
+      BallMgr = _BallMgrJs.default;
     }],
     execute: function () {
       cclegacy._RF.push({}, "0afcbVbyR9PZLYJkXDtYNU8", "GameMgr", undefined);
@@ -1494,10 +1492,10 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
                 break;
 
               case STATE.LOADING:
-                loader.load("https://laminhtruong.github.io/dunk-n-beat/Unity.mp3", function (error, clip) {
+                loader.load("https://laminhtruong.github.io/dunk-n-beat/songs/WeThreeKings_BiometrixRemix.mp3", function (error, clip) {
                   if (error == null) {
                     _this2.mainAudio.clip = clip;
-                    AmaReadContent("https://laminhtruong.github.io/dunk-n-beat/Unity.bin").then(function (notes) {
+                    AmaReadContent("https://laminhtruong.github.io/dunk-n-beat/songs/WeThreeKings_BiometrixRemix.bin").then(function (notes) {
                       _this2.ballMgr.SetNotes(notes);
 
                       _this2.SetState(STATE.TOUCH_TO_PLAY);
@@ -1572,11 +1570,11 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
   };
 });
 
-System.register("chunks:///_virtual/prerequisite-imports:main", ["../core/Input.js", "../core/Timer.js", "../EventMgr.js", "../Defines.js", "../Ball.js", "../BallMgr.js", "../ui/Background.js", "../Basket.js", "../GameMgr.js"], function (_export, _context) {
+System.register("chunks:///_virtual/prerequisite-imports:main", ["../core/Input.js", "../core/Timer.js", "../EventMgr.js", "../Defines.js", "../Ball.js", "../ui/Background.js", "../Basket.js", "../BallMgr.js", "../GameMgr.js"], function (_export, _context) {
   "use strict";
 
   return {
-    setters: [function (_coreInputJs) {}, function (_coreTimerJs) {}, function (_EventMgrJs) {}, function (_DefinesJs) {}, function (_BallJs) {}, function (_BallMgrJs) {}, function (_uiBackgroundJs) {}, function (_BasketJs) {}, function (_GameMgrJs) {}],
+    setters: [function (_coreInputJs) {}, function (_coreTimerJs) {}, function (_EventMgrJs) {}, function (_DefinesJs) {}, function (_BallJs) {}, function (_uiBackgroundJs) {}, function (_BasketJs) {}, function (_BallMgrJs) {}, function (_GameMgrJs) {}],
     execute: function () {}
   };
 });
@@ -1587,9 +1585,9 @@ System.register("chunks:///_virtual/prerequisite-imports:main", ["../core/Input.
   r('project:///assets/maingame/scripts/EventMgr.js', 'chunks:///EventMgr.js');
   r('project:///assets/maingame/scripts/Defines.js', 'chunks:///Defines.js');
   r('project:///assets/maingame/scripts/Ball.js', 'chunks:///Ball.js');
-  r('project:///assets/maingame/scripts/BallMgr.js', 'chunks:///BallMgr.js');
   r('project:///assets/maingame/scripts/ui/Background.js', 'chunks:///ui/Background.js');
   r('project:///assets/maingame/scripts/Basket.js', 'chunks:///Basket.js');
+  r('project:///assets/maingame/scripts/BallMgr.js', 'chunks:///BallMgr.js');
   r('project:///assets/maingame/scripts/GameMgr.js', 'chunks:///GameMgr.js');
   r('virtual:///prerequisite-imports:main', 'chunks:///_virtual/prerequisite-imports:main'); 
 })(function(mid, cid) {
