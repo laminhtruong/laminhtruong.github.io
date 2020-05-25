@@ -1390,257 +1390,6 @@ System.register("chunks:///ui/Ingame.js", ["../_virtual/_rollupPluginBabelHelper
   };
 });
 
-System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./Defines.js", "./EventMgr.js", "./core/Input.js", "./Basket.js", "./BallMgr.js", "./ui/Ingame.js"], function (_export, _context) {
-  "use strict";
-
-  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, AudioSourceComponent, PhysicsSystem, Vec3, loader, Component, BallEvent, AmaReadContent, EventMgr, Input, Basket, BallMgr, Ingame, _dec, _dec2, _dec3, _dec4, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _temp, _cc$_decorator, ccclass, property, STATE, GameMgr;
-
-  _export({
-    _dec: void 0,
-    _dec2: void 0,
-    _dec3: void 0,
-    _dec4: void 0,
-    _class: void 0,
-    _class2: void 0,
-    _descriptor: void 0,
-    _descriptor2: void 0,
-    _descriptor3: void 0,
-    _descriptor4: void 0,
-    _temp: void 0,
-    STATE: void 0
-  });
-
-  return {
-    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
-      _applyDecoratedDescriptor = _virtual_rollupPluginBabelHelpersJs.applyDecoratedDescriptor;
-      _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
-      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
-      _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
-      _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
-      _initializerDefineProperty = _virtual_rollupPluginBabelHelpersJs.initializerDefineProperty;
-      _assertThisInitialized = _virtual_rollupPluginBabelHelpersJs.assertThisInitialized;
-      _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
-    }, function (_cc) {
-      cclegacy = _cc.cclegacy;
-      AudioSourceComponent = _cc.AudioSourceComponent;
-      PhysicsSystem = _cc.PhysicsSystem;
-      Vec3 = _cc.Vec3;
-      loader = _cc.loader;
-      Component = _cc.Component;
-    }, function (_DefinesJs) {
-      BallEvent = _DefinesJs.BallEvent;
-      AmaReadContent = _DefinesJs.AmaReadContent;
-    }, function (_EventMgrJs) {
-      EventMgr = _EventMgrJs.EventMgr;
-    }, function (_coreInputJs) {
-      Input = _coreInputJs.default;
-    }, function (_BasketJs) {
-      Basket = _BasketJs.default;
-    }, function (_BallMgrJs) {
-      BallMgr = _BallMgrJs.default;
-    }, function (_uiIngameJs) {
-      Ingame = _uiIngameJs.Ingame;
-    }],
-    execute: function () {
-      cclegacy._RF.push({}, "0afcbVbyR9PZLYJkXDtYNU8", "GameMgr", undefined);
-
-      _cc$_decorator = cc._decorator;
-      ccclass = _cc$_decorator.ccclass;
-      property = _cc$_decorator.property;
-
-      (function (STATE) {
-        STATE[STATE["INIT"] = 0] = "INIT";
-        STATE[STATE["LOADING"] = 1] = "LOADING";
-        STATE[STATE["LOADING_ERROR"] = 2] = "LOADING_ERROR";
-        STATE[STATE["TOUCH_TO_PLAY"] = 3] = "TOUCH_TO_PLAY";
-        STATE[STATE["PLAYING"] = 4] = "PLAYING";
-      })(STATE || (STATE = {}));
-
-      GameMgr = (_dec = property({
-        type: BallMgr
-      }), _dec2 = property({
-        type: Basket
-      }), _dec3 = property({
-        type: Ingame
-      }), _dec4 = property({
-        type: AudioSourceComponent
-      }), ccclass(_class = (_class2 = (_temp = /*#__PURE__*/function (_Component) {
-        _inherits(GameMgr, _Component);
-
-        function GameMgr() {
-          var _getPrototypeOf2;
-
-          var _this;
-
-          _classCallCheck(this, GameMgr);
-
-          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-          }
-
-          _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(GameMgr)).call.apply(_getPrototypeOf2, [this].concat(args)));
-
-          _initializerDefineProperty(_this, "ballMgr", _descriptor, _assertThisInitialized(_this));
-
-          _initializerDefineProperty(_this, "basket", _descriptor2, _assertThisInitialized(_this));
-
-          _initializerDefineProperty(_this, "viewIngame", _descriptor3, _assertThisInitialized(_this));
-
-          _initializerDefineProperty(_this, "mainAudio", _descriptor4, _assertThisInitialized(_this));
-
-          return _this;
-        }
-
-        _createClass(GameMgr, [{
-          key: "onLoad",
-          value: function onLoad() {
-            PhysicsSystem.instance.gravity = new Vec3(0, -40, 0);
-          }
-        }, {
-          key: "start",
-          value: function start() {
-            this.Init();
-            EventMgr.instance.on(BallEvent.COMBO, this.OnCombo, this);
-          }
-        }, {
-          key: "update",
-          value: function update(deltaTime) {
-            switch (this.state) {
-              case STATE.INIT:
-                break;
-
-              case STATE.LOADING:
-                break;
-
-              case STATE.LOADING_ERROR:
-                break;
-
-              case STATE.TOUCH_TO_PLAY:
-                if (Input.instance.isHold) {
-                  this.ballMgr.Play();
-                  this.basket.Play();
-                  this.SetState(STATE.PLAYING);
-                }
-
-                break;
-
-              case STATE.PLAYING:
-                break;
-            }
-          }
-        }, {
-          key: "SetState",
-          value: function SetState(state) {
-            var _this2 = this;
-
-            this.state = state;
-
-            switch (state) {
-              case STATE.INIT:
-                this.SetState(STATE.LOADING);
-                break;
-
-              case STATE.LOADING:
-                loader.load("https://laminhtruong.github.io/dunk-n-beat/songs/WeThreeKings_BiometrixRemix.mp3", function (error, clip) {
-                  if (error == null) {
-                    _this2.mainAudio.clip = clip;
-                    AmaReadContent("https://laminhtruong.github.io/dunk-n-beat/songs/WeThreeKings_BiometrixRemix.bin").then(function (notes) {
-                      _this2.ballMgr.SetNotes(notes);
-
-                      _this2.SetState(STATE.TOUCH_TO_PLAY);
-                    })["catch"](function (error) {
-                      console.log(error);
-
-                      _this2.SetState(STATE.LOADING_ERROR);
-                    });
-                  } else {
-                    console.log(error);
-
-                    _this2.SetState(STATE.LOADING_ERROR);
-                  }
-                });
-                break;
-
-              case STATE.LOADING_ERROR:
-                break;
-
-              case STATE.TOUCH_TO_PLAY:
-                this.ballMgr.Init();
-                this.basket.Init();
-                break;
-            }
-          }
-        }, {
-          key: "Init",
-          value: function Init() {
-            this.score = 0;
-            this.lifes = 3;
-            this.viewIngame.Init(this.lifes);
-            this.SetState(STATE.INIT);
-          }
-        }, {
-          key: "OnCombo",
-          value: function OnCombo(args) {
-            if (!args.miss) {
-              if (!args.perfect) {
-                this.basket.Shake(new Vec3(0.1, -0.2, 0.1));
-              } else {
-                this.basket.Shake(new Vec3(0.2, -0.5, 0.2));
-              }
-
-              this.basket.Flash(args.perfect);
-            } else {
-              if (this.lifes > 0) {
-                this.lifes--;
-                this.viewIngame.SetLife(this.lifes);
-                if (this.lifes == 0) ;
-              }
-            }
-
-            this.score += args.combo;
-            this.viewIngame.SetScore(this.score);
-            this.viewIngame.SetCombo(args.combo);
-          }
-        }]);
-
-        return GameMgr;
-      }(Component), _temp), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "ballMgr", [_dec], {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        initializer: function initializer() {
-          return null;
-        }
-      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "basket", [_dec2], {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        initializer: function initializer() {
-          return null;
-        }
-      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "viewIngame", [_dec3], {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        initializer: function initializer() {
-          return null;
-        }
-      }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, "mainAudio", [_dec4], {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        initializer: function initializer() {
-          return null;
-        }
-      })), _class2)) || _class);
-
-      cclegacy._RF.pop();
-
-      _export("default", GameMgr);
-    }
-  };
-});
-
 System.register("chunks:///ui/Background.js", ["../_virtual/_rollupPluginBabelHelpers.js", "cc", "../Defines.js", "../EventMgr.js", "../core/Timer.js"], function (_export, _context) {
   "use strict";
 
@@ -1798,11 +1547,264 @@ System.register("chunks:///ui/Background.js", ["../_virtual/_rollupPluginBabelHe
   };
 });
 
-System.register("chunks:///_virtual/prerequisite-imports:main", ["../Defines.js", "../EventMgr.js", "../Ball.js", "../core/Input.js", "../Basket.js", "../core/Timer.js", "../BallMgr.js", "../ui/Ingame.js", "../GameMgr.js", "../ui/Background.js"], function (_export, _context) {
+System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./Defines.js", "./EventMgr.js", "./core/Input.js", "./Basket.js", "./BallMgr.js", "./ui/Ingame.js"], function (_export, _context) {
+  "use strict";
+
+  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, AudioSourceComponent, PhysicsSystem, Vec3, loader, Component, BallEvent, AmaReadContent, EventMgr, Input, Basket, BallMgr, Ingame, _dec, _dec2, _dec3, _dec4, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _temp, _cc$_decorator, ccclass, property, STATE, GameMgr;
+
+  _export({
+    _dec: void 0,
+    _dec2: void 0,
+    _dec3: void 0,
+    _dec4: void 0,
+    _class: void 0,
+    _class2: void 0,
+    _descriptor: void 0,
+    _descriptor2: void 0,
+    _descriptor3: void 0,
+    _descriptor4: void 0,
+    _temp: void 0,
+    STATE: void 0
+  });
+
+  return {
+    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
+      _applyDecoratedDescriptor = _virtual_rollupPluginBabelHelpersJs.applyDecoratedDescriptor;
+      _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
+      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
+      _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
+      _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
+      _initializerDefineProperty = _virtual_rollupPluginBabelHelpersJs.initializerDefineProperty;
+      _assertThisInitialized = _virtual_rollupPluginBabelHelpersJs.assertThisInitialized;
+      _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
+    }, function (_cc) {
+      cclegacy = _cc.cclegacy;
+      AudioSourceComponent = _cc.AudioSourceComponent;
+      PhysicsSystem = _cc.PhysicsSystem;
+      Vec3 = _cc.Vec3;
+      loader = _cc.loader;
+      Component = _cc.Component;
+    }, function (_DefinesJs) {
+      BallEvent = _DefinesJs.BallEvent;
+      AmaReadContent = _DefinesJs.AmaReadContent;
+    }, function (_EventMgrJs) {
+      EventMgr = _EventMgrJs.EventMgr;
+    }, function (_coreInputJs) {
+      Input = _coreInputJs.default;
+    }, function (_BasketJs) {
+      Basket = _BasketJs.default;
+    }, function (_BallMgrJs) {
+      BallMgr = _BallMgrJs.default;
+    }, function (_uiIngameJs) {
+      Ingame = _uiIngameJs.Ingame;
+    }],
+    execute: function () {
+      cclegacy._RF.push({}, "0afcbVbyR9PZLYJkXDtYNU8", "GameMgr", undefined);
+
+      _cc$_decorator = cc._decorator;
+      ccclass = _cc$_decorator.ccclass;
+      property = _cc$_decorator.property;
+
+      (function (STATE) {
+        STATE[STATE["INIT"] = 0] = "INIT";
+        STATE[STATE["LOADING"] = 1] = "LOADING";
+        STATE[STATE["LOADING_ERROR"] = 2] = "LOADING_ERROR";
+        STATE[STATE["TOUCH_TO_PLAY"] = 3] = "TOUCH_TO_PLAY";
+        STATE[STATE["PLAYING"] = 4] = "PLAYING";
+      })(STATE || (STATE = {}));
+
+      GameMgr = (_dec = property({
+        type: BallMgr
+      }), _dec2 = property({
+        type: Basket
+      }), _dec3 = property({
+        type: Ingame
+      }), _dec4 = property({
+        type: AudioSourceComponent
+      }), ccclass(_class = (_class2 = (_temp = /*#__PURE__*/function (_Component) {
+        _inherits(GameMgr, _Component);
+
+        function GameMgr() {
+          var _getPrototypeOf2;
+
+          var _this;
+
+          _classCallCheck(this, GameMgr);
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(GameMgr)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+          _initializerDefineProperty(_this, "ballMgr", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "basket", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "viewIngame", _descriptor3, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "mainAudio", _descriptor4, _assertThisInitialized(_this));
+
+          return _this;
+        }
+
+        _createClass(GameMgr, [{
+          key: "onLoad",
+          value: function onLoad() {
+            PhysicsSystem.instance.gravity = new Vec3(0, -40, 0);
+          }
+        }, {
+          key: "start",
+          value: function start() {
+            this.Init();
+            EventMgr.instance.on(BallEvent.COMBO, this.OnCombo, this);
+          }
+        }, {
+          key: "update",
+          value: function update(deltaTime) {
+            PhysicsSystem.instance.deltaTime = deltaTime;
+
+            switch (this.state) {
+              case STATE.INIT:
+                break;
+
+              case STATE.LOADING:
+                break;
+
+              case STATE.LOADING_ERROR:
+                break;
+
+              case STATE.TOUCH_TO_PLAY:
+                if (Input.instance.isHold) {
+                  this.ballMgr.Play();
+                  this.basket.Play();
+                  this.SetState(STATE.PLAYING);
+                }
+
+                break;
+
+              case STATE.PLAYING:
+                break;
+            }
+          }
+        }, {
+          key: "SetState",
+          value: function SetState(state) {
+            var _this2 = this;
+
+            this.state = state;
+
+            switch (state) {
+              case STATE.INIT:
+                this.SetState(STATE.LOADING);
+                break;
+
+              case STATE.LOADING:
+                loader.load("https://laminhtruong.github.io/dunk-n-beat/songs/WeThreeKings_BiometrixRemix.mp3", function (error, clip) {
+                  if (error == null) {
+                    _this2.mainAudio.clip = clip;
+                    AmaReadContent("https://laminhtruong.github.io/dunk-n-beat/songs/WeThreeKings_BiometrixRemix.bin").then(function (notes) {
+                      _this2.ballMgr.SetNotes(notes);
+
+                      _this2.SetState(STATE.TOUCH_TO_PLAY);
+                    })["catch"](function (error) {
+                      console.log(error);
+
+                      _this2.SetState(STATE.LOADING_ERROR);
+                    });
+                  } else {
+                    console.log(error);
+
+                    _this2.SetState(STATE.LOADING_ERROR);
+                  }
+                });
+                break;
+
+              case STATE.LOADING_ERROR:
+                break;
+
+              case STATE.TOUCH_TO_PLAY:
+                this.ballMgr.Init();
+                this.basket.Init();
+                break;
+            }
+          }
+        }, {
+          key: "Init",
+          value: function Init() {
+            this.score = 0;
+            this.lifes = 3;
+            this.viewIngame.Init(this.lifes);
+            this.SetState(STATE.INIT);
+          }
+        }, {
+          key: "OnCombo",
+          value: function OnCombo(args) {
+            if (!args.miss) {
+              if (!args.perfect) {
+                this.basket.Shake(new Vec3(0.1, -0.2, 0.1));
+              } else {
+                this.basket.Shake(new Vec3(0.2, -0.5, 0.2));
+              }
+
+              this.basket.Flash(args.perfect);
+            } else {
+              if (this.lifes > 0) {
+                this.lifes--;
+                this.viewIngame.SetLife(this.lifes);
+                if (this.lifes == 0) ;
+              }
+            }
+
+            this.score += args.combo;
+            this.viewIngame.SetScore(this.score);
+            this.viewIngame.SetCombo(args.combo);
+          }
+        }]);
+
+        return GameMgr;
+      }(Component), _temp), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "ballMgr", [_dec], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "basket", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "viewIngame", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, "mainAudio", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      })), _class2)) || _class);
+
+      cclegacy._RF.pop();
+
+      _export("default", GameMgr);
+    }
+  };
+});
+
+System.register("chunks:///_virtual/prerequisite-imports:main", ["../Defines.js", "../EventMgr.js", "../Ball.js", "../core/Input.js", "../Basket.js", "../core/Timer.js", "../BallMgr.js", "../ui/Ingame.js", "../ui/Background.js", "../GameMgr.js"], function (_export, _context) {
   "use strict";
 
   return {
-    setters: [function (_DefinesJs) {}, function (_EventMgrJs) {}, function (_BallJs) {}, function (_coreInputJs) {}, function (_BasketJs) {}, function (_coreTimerJs) {}, function (_BallMgrJs) {}, function (_uiIngameJs) {}, function (_GameMgrJs) {}, function (_uiBackgroundJs) {}],
+    setters: [function (_DefinesJs) {}, function (_EventMgrJs) {}, function (_BallJs) {}, function (_coreInputJs) {}, function (_BasketJs) {}, function (_coreTimerJs) {}, function (_BallMgrJs) {}, function (_uiIngameJs) {}, function (_uiBackgroundJs) {}, function (_GameMgrJs) {}],
     execute: function () {}
   };
 });
@@ -1816,8 +1818,8 @@ System.register("chunks:///_virtual/prerequisite-imports:main", ["../Defines.js"
   r('project:///assets/maingame/scripts/core/Timer.js', 'chunks:///core/Timer.js');
   r('project:///assets/maingame/scripts/BallMgr.js', 'chunks:///BallMgr.js');
   r('project:///assets/maingame/scripts/ui/Ingame.js', 'chunks:///ui/Ingame.js');
-  r('project:///assets/maingame/scripts/GameMgr.js', 'chunks:///GameMgr.js');
   r('project:///assets/maingame/scripts/ui/Background.js', 'chunks:///ui/Background.js');
+  r('project:///assets/maingame/scripts/GameMgr.js', 'chunks:///GameMgr.js');
   r('virtual:///prerequisite-imports:main', 'chunks:///_virtual/prerequisite-imports:main'); 
 })(function(mid, cid) {
     System.register(mid, [cid], function (_export, _context) {
