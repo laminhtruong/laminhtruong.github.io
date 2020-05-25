@@ -23,6 +23,55 @@ System.register("chunks:///_virtual/_rollupPluginBabelHelpers.js", [], function 
     return Constructor;
   }
 
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      if (enumerableOnly) symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
   function _inherits(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function");
@@ -115,9 +164,11 @@ System.register("chunks:///_virtual/_rollupPluginBabelHelpers.js", [], function 
     assertThisInitialized: _assertThisInitialized,
     classCallCheck: _classCallCheck,
     createClass: _createClass,
+    defineProperty: _defineProperty,
     getPrototypeOf: _getPrototypeOf,
     inherits: _inherits,
     initializerDefineProperty: _initializerDefineProperty,
+    objectSpread2: _objectSpread2,
     possibleConstructorReturn: _possibleConstructorReturn,
     setPrototypeOf: _setPrototypeOf
   });

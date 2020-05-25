@@ -38,6 +38,10 @@ window._CCSettings = {
             "d4ca4923-0a4c-4c0d-b525-9bfbe15ae6fe@42538",
             "f8f6cdb2-0efb-4acf-9b8a-a9abd686d403"
         ],
+        "06d64cd8f": [
+            "13bb9810-9d83-4051-8d2b-aad8b9788dd8",
+            "84f5bb45-f583-48b2-b8f0-6fff400d5953@f9941"
+        ],
         "0d88f05c3": [
             "1baf0fc9-befa-459c-8bdd-af1a450a0319",
             "6d026390-c564-4be1-8044-50ba3910f4b9",
@@ -51,11 +55,12 @@ window._CCSettings = {
             "ea7478b0-408d-4052-b703-f0d2355e095f",
             "f94ea71f-a21d-4963-b49d-d199cd5e2074"
         ],
-        "0656f46ad": [
+        "0a6104df1": [
             "1a2ab68a-9f14-4646-bfb6-ea2760dfed2d@6c48a",
             "8bccf71e-d4a1-4f67-bb15-074a6402e98b@6c48a",
             "33a9a0a3-c7d0-41c7-b419-3b4347e50e91@6c48a",
             "45ad7b89-f619-4f93-bbaa-c52b8bd29bea@6c48a",
+            "84f5bb45-f583-48b2-b8f0-6fff400d5953@6c48a",
             "99b67364-3437-47a3-afbe-82d76b43651a@6c48a",
             "365c166b-1164-4e13-99c5-657d6ad7e5d6@6c48a",
             "2860f3f0-48fd-4061-aa69-a3364f36c16c@6c48a",

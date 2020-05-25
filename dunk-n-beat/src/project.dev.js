@@ -1,238 +1,3 @@
-System.register("chunks:///core/Input.js", ["../_virtual/_rollupPluginBabelHelpers.js", "cc"], function (_export, _context) {
-  "use strict";
-
-  var _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _createClass, cclegacy, Vec2, Node, Component, _class, _class2, _temp, _cc$_decorator, ccclass, property, Input;
-
-  _export({
-    _class: void 0,
-    _class2: void 0,
-    _temp: void 0
-  });
-
-  return {
-    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
-      _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
-      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
-      _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
-      _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
-      _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
-    }, function (_cc) {
-      cclegacy = _cc.cclegacy;
-      Vec2 = _cc.Vec2;
-      Node = _cc.Node;
-      Component = _cc.Component;
-    }],
-    execute: function () {
-      cclegacy._RF.push({}, "86a1eETgqhC7LCRoYW35gpp", "Input", undefined);
-
-      _cc$_decorator = cc._decorator;
-      ccclass = _cc$_decorator.ccclass;
-      property = _cc$_decorator.property;
-      Input = ccclass(_class = (_temp = _class2 = /*#__PURE__*/function (_Component) {
-        _inherits(Input, _Component);
-
-        function Input() {
-          var _getPrototypeOf2;
-
-          var _this;
-
-          _classCallCheck(this, Input);
-
-          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-          }
-
-          _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Input)).call.apply(_getPrototypeOf2, [this].concat(args)));
-          _this.position = new Vec2(0, 0);
-          _this.prevPosition = new Vec2(0, 0);
-          _this.delta = new Vec2(0, 0);
-          _this.isHold = false;
-          return _this;
-        }
-
-        _createClass(Input, [{
-          key: "onLoad",
-          value: function onLoad() {
-            Input.instance = this;
-            this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
-            this.node.on(Node.EventType.TOUCH_END, this.onTouchEnd, this);
-            this.node.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
-          }
-        }, {
-          key: "start",
-          value: function start() {}
-        }, {
-          key: "update",
-          value: function update(deltaTime) {
-            if (this.isHold) {
-              cc.Vec2.subtract(this.delta, this.position, this.prevPosition);
-              this.prevPosition = this.position;
-            }
-          }
-        }, {
-          key: "onTouchStart",
-          value: function onTouchStart(event) {
-            this.position = event.touch.getLocation();
-            this.prevPosition = event.touch.getLocation();
-            this.isHold = true;
-          }
-        }, {
-          key: "onTouchEnd",
-          value: function onTouchEnd(event) {
-            this.delta = new cc.Vec2(0, 0);
-            this.isHold = false;
-          }
-        }, {
-          key: "onTouchMove",
-          value: function onTouchMove(event) {
-            this.position = event.touch.getLocation();
-          }
-        }]);
-
-        return Input;
-      }(Component), _class2.instance = null, _temp)) || _class;
-
-      cclegacy._RF.pop();
-
-      _export("default", Input);
-    }
-  };
-});
-
-System.register("chunks:///core/Timer.js", ["../_virtual/_rollupPluginBabelHelpers.js", "cc"], function (_export, _context) {
-  "use strict";
-
-  var _createClass, _classCallCheck, cclegacy, Timer;
-
-  return {
-    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
-      _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
-      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
-    }, function (_cc) {
-      cclegacy = _cc.cclegacy;
-    }],
-    execute: function () {
-      cclegacy._RF.push({}, "6b85cbHB39ATpO/QtAEphQG", "Timer", undefined);
-
-      Timer = /*#__PURE__*/function () {
-        function Timer() {
-          _classCallCheck(this, Timer);
-
-          this.timer = 0;
-          this.duration = 0;
-          this.overhead = 0;
-          this.isDone = true;
-        }
-
-        _createClass(Timer, [{
-          key: "SetDuration",
-          value: function SetDuration(duration) {
-            this.timer = this.duration = duration;
-            this.overhead = 0;
-            this.isDone = false;
-          }
-        }, {
-          key: "AddTime",
-          value: function AddTime(duration) {
-            this.timer += duration;
-            this.overhead = 0;
-            this.isDone = false;
-          }
-        }, {
-          key: "GetTimePercent",
-          value: function GetTimePercent() {
-            return this.timer / this.duration;
-          }
-        }, {
-          key: "Reset",
-          value: function Reset() {
-            this.timer = this.duration;
-            this.overhead = 0;
-            this.isDone = false;
-          }
-        }, {
-          key: "IsDone",
-          value: function IsDone() {
-            return this.timer == 0;
-          }
-        }, {
-          key: "JustFinished",
-          value: function JustFinished() {
-            if (this.timer > 0) {
-              return false;
-            }
-
-            if (this.isDone) {
-              return false;
-            }
-
-            this.isDone = true;
-            return true;
-          }
-        }, {
-          key: "Update",
-          value: function Update(deltaTime) {
-            if (this.timer == 0) {
-              return;
-            }
-
-            this.timer -= deltaTime;
-
-            if (this.timer < 0) {
-              this.overhead = -this.timer;
-              this.timer = 0;
-            }
-          }
-        }]);
-
-        return Timer;
-      }();
-
-      cclegacy._RF.pop();
-
-      _export("default", Timer);
-    }
-  };
-});
-
-System.register("chunks:///EventMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc"], function (_export, _context) {
-  "use strict";
-
-  var _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, cclegacy, EventTarget, EventMgr;
-
-  return {
-    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
-      _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
-      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
-      _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
-      _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
-    }, function (_cc) {
-      cclegacy = _cc.cclegacy;
-      EventTarget = _cc.EventTarget;
-    }],
-    execute: function () {
-      cclegacy._RF.push({}, "f8ad5rydN9EIZ62nOSFY4Dg", "EventMgr", undefined);
-
-      _export("EventMgr", EventMgr = /*#__PURE__*/function (_EventTarget) {
-        _inherits(EventMgr, _EventTarget);
-
-        function EventMgr() {
-          _classCallCheck(this, EventMgr);
-
-          return _possibleConstructorReturn(this, _getPrototypeOf(EventMgr).apply(this, arguments));
-        }
-
-        return EventMgr;
-      }(EventTarget));
-
-      EventMgr.instance = null;
-      EventMgr.instance = new EventMgr();
-
-      cclegacy._RF.pop();
-    }
-  };
-});
-
 System.register("chunks:///Defines.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc"], function (_export, _context) {
   "use strict";
 
@@ -277,6 +42,7 @@ System.register("chunks:///Defines.js", ["./_virtual/_rollupPluginBabelHelpers.j
 
       (function (BallEvent) {
         BallEvent["SCORE"] = "OnScore";
+        BallEvent["COMBO"] = "OnCombo";
         BallEvent["COLLISION_WITH_BASKET"] = "OnCollisionWithBasket";
       })(BallEvent || _export("BallEvent", BallEvent = {}));
 
@@ -296,10 +62,48 @@ System.register("chunks:///Defines.js", ["./_virtual/_rollupPluginBabelHelpers.j
   };
 });
 
-System.register("chunks:///Ball.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./EventMgr.js", "./Defines.js"], function (_export, _context) {
+System.register("chunks:///EventMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc"], function (_export, _context) {
   "use strict";
 
-  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, Node, ColliderComponent, Vec3, math, PhysicsSystem, RigidBodyComponent, Component, EventMgr, Config, ColliderGroup, BallEvent, _dec, _class, _class2, _descriptor, _temp, ccclass, property, STATE, Ball;
+  var _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, cclegacy, EventTarget, EventMgr;
+
+  return {
+    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
+      _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
+      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
+      _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
+      _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
+    }, function (_cc) {
+      cclegacy = _cc.cclegacy;
+      EventTarget = _cc.EventTarget;
+    }],
+    execute: function () {
+      cclegacy._RF.push({}, "f8ad5rydN9EIZ62nOSFY4Dg", "EventMgr", undefined);
+
+      _export("EventMgr", EventMgr = /*#__PURE__*/function (_EventTarget) {
+        _inherits(EventMgr, _EventTarget);
+
+        function EventMgr() {
+          _classCallCheck(this, EventMgr);
+
+          return _possibleConstructorReturn(this, _getPrototypeOf(EventMgr).apply(this, arguments));
+        }
+
+        return EventMgr;
+      }(EventTarget));
+
+      EventMgr.instance = null;
+      EventMgr.instance = new EventMgr();
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///Ball.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./Defines.js", "./EventMgr.js"], function (_export, _context) {
+  "use strict";
+
+  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, Node, ColliderComponent, Vec3, math, PhysicsSystem, RigidBodyComponent, Component, Config, ColliderGroup, BallEvent, EventMgr, _dec, _class, _class2, _descriptor, _temp, ccclass, property, STATE, Ball;
 
   _export({
     _dec: void 0,
@@ -330,12 +134,12 @@ System.register("chunks:///Ball.js", ["./_virtual/_rollupPluginBabelHelpers.js",
       PhysicsSystem = _cc.PhysicsSystem;
       RigidBodyComponent = _cc.RigidBodyComponent;
       Component = _cc.Component;
-    }, function (_EventMgrJs) {
-      EventMgr = _EventMgrJs.EventMgr;
     }, function (_DefinesJs) {
       Config = _DefinesJs.default;
       ColliderGroup = _DefinesJs.ColliderGroup;
       BallEvent = _DefinesJs.BallEvent;
+    }, function (_EventMgrJs) {
+      EventMgr = _EventMgrJs.EventMgr;
     }],
     execute: function () {
       cclegacy._RF.push({}, "50312a6y8RD8bBn7w0FtWuT", "Ball", undefined);
@@ -613,167 +417,111 @@ System.register("chunks:///Ball.js", ["./_virtual/_rollupPluginBabelHelpers.js",
   };
 });
 
-System.register("chunks:///ui/Background.js", ["../_virtual/_rollupPluginBabelHelpers.js", "cc", "../core/Timer.js", "../EventMgr.js", "../Defines.js"], function (_export, _context) {
+System.register("chunks:///core/Input.js", ["../_virtual/_rollupPluginBabelHelpers.js", "cc"], function (_export, _context) {
   "use strict";
 
-  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, SpriteComponent, Color, tween, Component, Timer, EventMgr, BackgroundEvent, _dec, _dec2, _class, _class2, _descriptor, _temp, ccclass, property, Background;
+  var _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _createClass, cclegacy, Vec2, Node, Component, _class, _class2, _temp, _cc$_decorator, ccclass, property, Input;
 
   _export({
-    _dec: void 0,
-    _dec2: void 0,
     _class: void 0,
     _class2: void 0,
-    _descriptor: void 0,
     _temp: void 0
   });
 
   return {
     setters: [function (_virtual_rollupPluginBabelHelpersJs) {
-      _applyDecoratedDescriptor = _virtual_rollupPluginBabelHelpersJs.applyDecoratedDescriptor;
       _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
       _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
       _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
       _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
-      _initializerDefineProperty = _virtual_rollupPluginBabelHelpersJs.initializerDefineProperty;
-      _assertThisInitialized = _virtual_rollupPluginBabelHelpersJs.assertThisInitialized;
       _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
     }, function (_cc) {
       cclegacy = _cc.cclegacy;
-      _decorator = _cc._decorator;
-      SpriteComponent = _cc.SpriteComponent;
-      Color = _cc.Color;
-      tween = _cc.tween;
+      Vec2 = _cc.Vec2;
+      Node = _cc.Node;
       Component = _cc.Component;
-    }, function (_coreTimerJs) {
-      Timer = _coreTimerJs.default;
-    }, function (_EventMgrJs) {
-      EventMgr = _EventMgrJs.EventMgr;
-    }, function (_DefinesJs) {
-      BackgroundEvent = _DefinesJs.BackgroundEvent;
     }],
     execute: function () {
-      cclegacy._RF.push({}, "1e1d6UA2yRHB6vSyJPoF+qX", "Background", undefined);
+      cclegacy._RF.push({}, "86a1eETgqhC7LCRoYW35gpp", "Input", undefined);
 
-      ccclass = _decorator.ccclass;
-      property = _decorator.property;
+      _cc$_decorator = cc._decorator;
+      ccclass = _cc$_decorator.ccclass;
+      property = _cc$_decorator.property;
+      Input = ccclass(_class = (_temp = _class2 = /*#__PURE__*/function (_Component) {
+        _inherits(Input, _Component);
 
-      _export("Background", Background = (_dec = ccclass('Background'), _dec2 = property({
-        type: [SpriteComponent]
-      }), _dec(_class = (_class2 = (_temp = /*#__PURE__*/function (_Component) {
-        _inherits(Background, _Component);
-
-        function Background() {
+        function Input() {
           var _getPrototypeOf2;
 
           var _this;
 
-          _classCallCheck(this, Background);
+          _classCallCheck(this, Input);
 
           for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
           }
 
-          _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Background)).call.apply(_getPrototypeOf2, [this].concat(args)));
-
-          _initializerDefineProperty(_this, "Backgrounds", _descriptor, _assertThisInitialized(_this));
-
-          _this.timer = new Timer();
+          _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Input)).call.apply(_getPrototypeOf2, [this].concat(args)));
+          _this.position = new Vec2(0, 0);
+          _this.prevPosition = new Vec2(0, 0);
+          _this.delta = new Vec2(0, 0);
+          _this.isHold = false;
           return _this;
         }
 
-        _createClass(Background, [{
-          key: "start",
-          value: function start() {
-            this.timer.SetDuration(5);
-            this.StartBg();
+        _createClass(Input, [{
+          key: "onLoad",
+          value: function onLoad() {
+            Input.instance = this;
+            this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
+            this.node.on(Node.EventType.TOUCH_END, this.onTouchEnd, this);
+            this.node.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
           }
+        }, {
+          key: "start",
+          value: function start() {}
         }, {
           key: "update",
           value: function update(deltaTime) {
-            this.timer.Update(deltaTime);
-
-            if (this.timer.IsDone()) {
-              this.Fade();
-              this.timer.Reset();
+            if (this.isHold) {
+              cc.Vec2.subtract(this.delta, this.position, this.prevPosition);
+              this.prevPosition = this.position;
             }
           }
         }, {
-          key: "StartBg",
-          value: function StartBg() {
-            this.currentIndex = 0;
-
-            for (var i = 0; i < this.Backgrounds.length; i++) {
-              if (i == this.currentIndex) {
-                this.Backgrounds[i].color = new Color(255, 255, 255, 255);
-              } else {
-                this.Backgrounds[i].color = new Color(255, 255, 255, 0);
-              }
-            }
+          key: "onTouchStart",
+          value: function onTouchStart(event) {
+            this.position = event.touch.getLocation();
+            this.prevPosition = event.touch.getLocation();
+            this.isHold = true;
           }
         }, {
-          key: "UpdateBg",
-          value: function UpdateBg(deltaTime) {}
-        }, {
-          key: "Fade",
-          value: function Fade() {
-            var current = this.currentIndex;
-            var next = this.currentIndex + 1;
-
-            if (next >= this.Backgrounds.length) {
-              next = 0;
-            }
-
-            tween(this.Backgrounds[current]).to(2, {
-              color: {
-                r: 255,
-                g: 255,
-                b: 255,
-                a: 0
-              }
-            }, {
-              easing: "linear"
-            }).start();
-            tween(this.Backgrounds[next]).to(2, {
-              color: {
-                r: 255,
-                g: 255,
-                b: 255,
-                a: 255
-              }
-            }, {
-              easing: "linear"
-            }).start();
-            this.currentIndex = next;
-            EventMgr.instance.emit(BackgroundEvent.FADE, {
-              index: this.currentIndex
-            });
+          key: "onTouchEnd",
+          value: function onTouchEnd(event) {
+            this.delta = new cc.Vec2(0, 0);
+            this.isHold = false;
           }
         }, {
-          key: "GetCurrentIndex",
-          value: function GetCurrentIndex() {
-            return this.currentIndex;
+          key: "onTouchMove",
+          value: function onTouchMove(event) {
+            this.position = event.touch.getLocation();
           }
         }]);
 
-        return Background;
-      }(Component), _temp), _descriptor = _applyDecoratedDescriptor(_class2.prototype, "Backgrounds", [_dec2], {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        initializer: function initializer() {
-          return [];
-        }
-      }), _class2)) || _class));
+        return Input;
+      }(Component), _class2.instance = null, _temp)) || _class;
 
       cclegacy._RF.pop();
+
+      _export("default", Input);
     }
   };
 });
 
-System.register("chunks:///Basket.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./core/Input.js", "./EventMgr.js", "./Defines.js"], function (_export, _context) {
+System.register("chunks:///Basket.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./Defines.js", "./EventMgr.js", "./core/Input.js"], function (_export, _context) {
   "use strict";
 
-  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, Node, Color, ColliderComponent, lerp, clamp, math, tween, Vec3, ParticleSystemComponent, Component, Input, EventMgr, ColliderGroup, BackgroundEvent, _dec, _dec2, _class, _class2, _descriptor, _descriptor2, _temp, ccclass, property, STATE, Basket;
+  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, Node, Color, ColliderComponent, lerp, clamp, math, tween, Vec3, ParticleSystemComponent, Component, ColliderGroup, BackgroundEvent, EventMgr, Input, _dec, _dec2, _class, _class2, _descriptor, _descriptor2, _temp, ccclass, property, STATE, Basket;
 
   _export({
     _dec: void 0,
@@ -809,13 +557,13 @@ System.register("chunks:///Basket.js", ["./_virtual/_rollupPluginBabelHelpers.js
       Vec3 = _cc.Vec3;
       ParticleSystemComponent = _cc.ParticleSystemComponent;
       Component = _cc.Component;
-    }, function (_coreInputJs) {
-      Input = _coreInputJs.default;
-    }, function (_EventMgrJs) {
-      EventMgr = _EventMgrJs.EventMgr;
     }, function (_DefinesJs) {
       ColliderGroup = _DefinesJs.ColliderGroup;
       BackgroundEvent = _DefinesJs.BackgroundEvent;
+    }, function (_EventMgrJs) {
+      EventMgr = _EventMgrJs.EventMgr;
+    }, function (_coreInputJs) {
+      Input = _coreInputJs.default;
     }],
     execute: function () {
       cclegacy._RF.push({}, "3392a5tZUFJAZwWtbhZA1/m", "Basket", undefined);
@@ -1055,10 +803,106 @@ System.register("chunks:///Basket.js", ["./_virtual/_rollupPluginBabelHelpers.js
   };
 });
 
-System.register("chunks:///BallMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./core/Timer.js", "./EventMgr.js", "./Defines.js", "./Ball.js"], function (_export, _context) {
+System.register("chunks:///core/Timer.js", ["../_virtual/_rollupPluginBabelHelpers.js", "cc"], function (_export, _context) {
   "use strict";
 
-  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, Prefab, AudioSourceComponent, Node, instantiate, math, clamp, Component, Timer, EventMgr, Config, BallEvent, Ball, _dec, _dec2, _dec3, _class, _class2, _descriptor, _descriptor2, _descriptor3, _temp, ccclass, property, STATE, BallMgr;
+  var _createClass, _classCallCheck, cclegacy, Timer;
+
+  return {
+    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
+      _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
+      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
+    }, function (_cc) {
+      cclegacy = _cc.cclegacy;
+    }],
+    execute: function () {
+      cclegacy._RF.push({}, "6b85cbHB39ATpO/QtAEphQG", "Timer", undefined);
+
+      Timer = /*#__PURE__*/function () {
+        function Timer() {
+          _classCallCheck(this, Timer);
+
+          this.timer = 0;
+          this.duration = 0;
+          this.overhead = 0;
+          this.isDone = true;
+        }
+
+        _createClass(Timer, [{
+          key: "SetDuration",
+          value: function SetDuration(duration) {
+            this.timer = this.duration = duration;
+            this.overhead = 0;
+            this.isDone = false;
+          }
+        }, {
+          key: "AddTime",
+          value: function AddTime(duration) {
+            this.timer += duration;
+            this.overhead = 0;
+            this.isDone = false;
+          }
+        }, {
+          key: "GetTimePercent",
+          value: function GetTimePercent() {
+            return this.timer / this.duration;
+          }
+        }, {
+          key: "Reset",
+          value: function Reset() {
+            this.timer = this.duration;
+            this.overhead = 0;
+            this.isDone = false;
+          }
+        }, {
+          key: "IsDone",
+          value: function IsDone() {
+            return this.timer == 0;
+          }
+        }, {
+          key: "JustFinished",
+          value: function JustFinished() {
+            if (this.timer > 0) {
+              return false;
+            }
+
+            if (this.isDone) {
+              return false;
+            }
+
+            this.isDone = true;
+            return true;
+          }
+        }, {
+          key: "Update",
+          value: function Update(deltaTime) {
+            if (this.timer == 0) {
+              return;
+            }
+
+            this.timer -= deltaTime;
+
+            if (this.timer < 0) {
+              this.overhead = -this.timer;
+              this.timer = 0;
+            }
+          }
+        }]);
+
+        return Timer;
+      }();
+
+      cclegacy._RF.pop();
+
+      _export("default", Timer);
+    }
+  };
+});
+
+System.register("chunks:///BallMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./Defines.js", "./EventMgr.js", "./Ball.js", "./core/Timer.js"], function (_export, _context) {
+  "use strict";
+
+  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, _objectSpread2, cclegacy, _decorator, Prefab, AudioSourceComponent, Node, instantiate, math, clamp, Component, Config, BallEvent, EventMgr, Ball, Timer, _dec, _dec2, _dec3, _class, _class2, _descriptor, _descriptor2, _descriptor3, _temp, ccclass, property, STATE, BallMgr;
 
   _export({
     _dec: void 0,
@@ -1083,6 +927,7 @@ System.register("chunks:///BallMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
       _initializerDefineProperty = _virtual_rollupPluginBabelHelpersJs.initializerDefineProperty;
       _assertThisInitialized = _virtual_rollupPluginBabelHelpersJs.assertThisInitialized;
       _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
+      _objectSpread2 = _virtual_rollupPluginBabelHelpersJs.objectSpread2;
     }, function (_cc) {
       cclegacy = _cc.cclegacy;
       _decorator = _cc._decorator;
@@ -1093,15 +938,15 @@ System.register("chunks:///BallMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
       math = _cc.math;
       clamp = _cc.clamp;
       Component = _cc.Component;
-    }, function (_coreTimerJs) {
-      Timer = _coreTimerJs.default;
-    }, function (_EventMgrJs) {
-      EventMgr = _EventMgrJs.EventMgr;
     }, function (_DefinesJs) {
       Config = _DefinesJs.default;
       BallEvent = _DefinesJs.BallEvent;
+    }, function (_EventMgrJs) {
+      EventMgr = _EventMgrJs.EventMgr;
     }, function (_BallJs) {
       Ball = _BallJs.default;
+    }, function (_coreTimerJs) {
+      Timer = _coreTimerJs.default;
     }],
     execute: function () {
       cclegacy._RF.push({}, "b69cb2ma7FGN4AP/vv6f0Lr", "BallMgr", undefined);
@@ -1309,10 +1154,18 @@ System.register("chunks:///BallMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
           key: "OnScore",
           value: function OnScore(args) {
             if (!args.miss) {
-              this.combo++;
+              if (args.perfect) {
+                this.combo++;
+              } else {
+                this.combo = 1;
+              }
             } else {
               this.combo = 0;
             }
+
+            EventMgr.instance.emit(BallEvent.COMBO, _objectSpread2({}, args, {
+              combo: this.combo
+            }));
           }
         }]);
 
@@ -1347,20 +1200,212 @@ System.register("chunks:///BallMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
   };
 });
 
-System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./core/Input.js", "./EventMgr.js", "./Defines.js", "./Basket.js", "./BallMgr.js"], function (_export, _context) {
+System.register("chunks:///ui/Ingame.js", ["../_virtual/_rollupPluginBabelHelpers.js", "cc"], function (_export, _context) {
   "use strict";
 
-  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, AudioSourceComponent, EventTarget, PhysicsSystem, Vec3, loader, Component, Input, EventMgr, BallEvent, AmaReadContent, Basket, BallMgr, _dec, _dec2, _dec3, _class, _class2, _descriptor, _descriptor2, _descriptor3, _temp, _cc$_decorator, ccclass, property, STATE, GameMgr;
+  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, Prefab, Node, LabelComponent, instantiate, SpriteComponent, Color, tween, Vec3, Component, _dec, _dec2, _dec3, _dec4, _dec5, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _temp, ccclass, property, Ingame;
 
   _export({
     _dec: void 0,
     _dec2: void 0,
     _dec3: void 0,
+    _dec4: void 0,
+    _dec5: void 0,
     _class: void 0,
     _class2: void 0,
     _descriptor: void 0,
     _descriptor2: void 0,
     _descriptor3: void 0,
+    _descriptor4: void 0,
+    _temp: void 0
+  });
+
+  return {
+    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
+      _applyDecoratedDescriptor = _virtual_rollupPluginBabelHelpersJs.applyDecoratedDescriptor;
+      _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
+      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
+      _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
+      _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
+      _initializerDefineProperty = _virtual_rollupPluginBabelHelpersJs.initializerDefineProperty;
+      _assertThisInitialized = _virtual_rollupPluginBabelHelpersJs.assertThisInitialized;
+      _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
+    }, function (_cc) {
+      cclegacy = _cc.cclegacy;
+      _decorator = _cc._decorator;
+      Prefab = _cc.Prefab;
+      Node = _cc.Node;
+      LabelComponent = _cc.LabelComponent;
+      instantiate = _cc.instantiate;
+      SpriteComponent = _cc.SpriteComponent;
+      Color = _cc.Color;
+      tween = _cc.tween;
+      Vec3 = _cc.Vec3;
+      Component = _cc.Component;
+    }],
+    execute: function () {
+      cclegacy._RF.push({}, "c0430wYDwtD3JkGqQ19Hnu4", "Ingame", undefined);
+
+      ccclass = _decorator.ccclass;
+      property = _decorator.property;
+
+      _export("Ingame", Ingame = (_dec = ccclass('Ingame'), _dec2 = property({
+        type: Prefab
+      }), _dec3 = property({
+        type: Node
+      }), _dec4 = property({
+        type: LabelComponent
+      }), _dec5 = property({
+        type: LabelComponent
+      }), _dec(_class = (_class2 = (_temp = /*#__PURE__*/function (_Component) {
+        _inherits(Ingame, _Component);
+
+        function Ingame() {
+          var _getPrototypeOf2;
+
+          var _this;
+
+          _classCallCheck(this, Ingame);
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Ingame)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+          _initializerDefineProperty(_this, "lifePrefab", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "lifeContainer", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "score", _descriptor3, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "combo", _descriptor4, _assertThisInitialized(_this));
+
+          _this.comboText = ["None", "Great", "Awesome", "Bravo", "Fantastic", "Superb", "Incredible"];
+          _this.lifeSprite = [];
+          return _this;
+        }
+
+        _createClass(Ingame, [{
+          key: "start",
+          value: function start() {// Your initialization goes here.
+          }
+        }, {
+          key: "update",
+          value: function update(deltaTime) {// Your update function goes here.
+          }
+        }, {
+          key: "Init",
+          value: function Init(lifes) {
+            if (lifes > 1) {
+              if (this.lifeSprite.length == 0) {
+                var w = 60;
+                var x = -(lifes - 1) * w / 2.0;
+                var y = 0;
+
+                for (var i = 0; i < lifes; i++) {
+                  var life = instantiate(this.lifePrefab);
+                  life.parent = this.lifeContainer;
+                  life.setPosition(x + w * i, y, 0);
+                  this.lifeSprite.push(life.getComponent(SpriteComponent));
+                }
+              }
+            }
+
+            this.SetScore(0);
+            this.SetCombo(0);
+          }
+        }, {
+          key: "SetLife",
+          value: function SetLife(count) {
+            for (var i = 0; i < this.lifeSprite.length; i++) {
+              if (i < count) {
+                this.lifeSprite[i].color = new Color(255, 255, 255, 255);
+              } else {
+                this.lifeSprite[i].color = new Color(255, 255, 255, 128);
+              }
+            }
+          }
+        }, {
+          key: "SetScore",
+          value: function SetScore(score) {
+            this.score.string = score;
+          }
+        }, {
+          key: "SetCombo",
+          value: function SetCombo(combo) {
+            if (combo <= 0) {
+              this.combo.string = "";
+            } else {
+              if (combo >= this.comboText.length) {
+                this.combo.string = (this.comboText[this.comboText.length - 1] + " +" + (combo - (this.comboText.length - 1))).toUpperCase();
+              } else {
+                this.combo.string = this.comboText[combo].toUpperCase();
+              }
+
+              this.combo.node.setScale(1.5, 1.5, 1.5);
+              tween(this.combo.node).stop();
+              tween(this.combo.node).to(0.5, {
+                scale: new Vec3(1, 1, 1)
+              }, {
+                easing: "elasticOut"
+              }).start();
+            }
+          }
+        }]);
+
+        return Ingame;
+      }(Component), _temp), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "lifePrefab", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "lifeContainer", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "score", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, "combo", [_dec5], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.js", "cc", "./Defines.js", "./EventMgr.js", "./core/Input.js", "./Basket.js", "./BallMgr.js", "./ui/Ingame.js"], function (_export, _context) {
+  "use strict";
+
+  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, AudioSourceComponent, PhysicsSystem, Vec3, loader, Component, BallEvent, AmaReadContent, EventMgr, Input, Basket, BallMgr, Ingame, _dec, _dec2, _dec3, _dec4, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _temp, _cc$_decorator, ccclass, property, STATE, GameMgr;
+
+  _export({
+    _dec: void 0,
+    _dec2: void 0,
+    _dec3: void 0,
+    _dec4: void 0,
+    _class: void 0,
+    _class2: void 0,
+    _descriptor: void 0,
+    _descriptor2: void 0,
+    _descriptor3: void 0,
+    _descriptor4: void 0,
     _temp: void 0,
     STATE: void 0
   });
@@ -1378,22 +1423,23 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
     }, function (_cc) {
       cclegacy = _cc.cclegacy;
       AudioSourceComponent = _cc.AudioSourceComponent;
-      EventTarget = _cc.EventTarget;
       PhysicsSystem = _cc.PhysicsSystem;
       Vec3 = _cc.Vec3;
       loader = _cc.loader;
       Component = _cc.Component;
-    }, function (_coreInputJs) {
-      Input = _coreInputJs.default;
-    }, function (_EventMgrJs) {
-      EventMgr = _EventMgrJs.EventMgr;
     }, function (_DefinesJs) {
       BallEvent = _DefinesJs.BallEvent;
       AmaReadContent = _DefinesJs.AmaReadContent;
+    }, function (_EventMgrJs) {
+      EventMgr = _EventMgrJs.EventMgr;
+    }, function (_coreInputJs) {
+      Input = _coreInputJs.default;
     }, function (_BasketJs) {
       Basket = _BasketJs.default;
     }, function (_BallMgrJs) {
       BallMgr = _BallMgrJs.default;
+    }, function (_uiIngameJs) {
+      Ingame = _uiIngameJs.Ingame;
     }],
     execute: function () {
       cclegacy._RF.push({}, "0afcbVbyR9PZLYJkXDtYNU8", "GameMgr", undefined);
@@ -1415,6 +1461,8 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
       }), _dec2 = property({
         type: Basket
       }), _dec3 = property({
+        type: Ingame
+      }), _dec4 = property({
         type: AudioSourceComponent
       }), ccclass(_class = (_class2 = (_temp = /*#__PURE__*/function (_Component) {
         _inherits(GameMgr, _Component);
@@ -1436,9 +1484,10 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
 
           _initializerDefineProperty(_this, "basket", _descriptor2, _assertThisInitialized(_this));
 
-          _initializerDefineProperty(_this, "mainAudio", _descriptor3, _assertThisInitialized(_this));
+          _initializerDefineProperty(_this, "viewIngame", _descriptor3, _assertThisInitialized(_this));
 
-          _this.eventTarget = new EventTarget();
+          _initializerDefineProperty(_this, "mainAudio", _descriptor4, _assertThisInitialized(_this));
+
           return _this;
         }
 
@@ -1451,7 +1500,7 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
           key: "start",
           value: function start() {
             this.Init();
-            EventMgr.instance.on(BallEvent.SCORE, this.OnScore, this);
+            EventMgr.instance.on(BallEvent.COMBO, this.OnCombo, this);
           }
         }, {
           key: "update",
@@ -1500,9 +1549,13 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
 
                       _this2.SetState(STATE.TOUCH_TO_PLAY);
                     })["catch"](function (error) {
+                      console.log(error);
+
                       _this2.SetState(STATE.LOADING_ERROR);
                     });
                   } else {
+                    console.log(error);
+
                     _this2.SetState(STATE.LOADING_ERROR);
                   }
                 });
@@ -1520,13 +1573,14 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
         }, {
           key: "Init",
           value: function Init() {
+            this.score = 0;
+            this.lifes = 3;
+            this.viewIngame.Init(this.lifes);
             this.SetState(STATE.INIT);
           }
         }, {
-          key: "OnScore",
-          value: function OnScore(args) {
-            console.log("Miss: " + args.miss, "Perfect:" + args.perfect);
-
+          key: "OnCombo",
+          value: function OnCombo(args) {
             if (!args.miss) {
               if (!args.perfect) {
                 this.basket.Shake(new Vec3(0.1, -0.2, 0.1));
@@ -1535,7 +1589,17 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
               }
 
               this.basket.Flash(args.perfect);
+            } else {
+              if (this.lifes > 0) {
+                this.lifes--;
+                this.viewIngame.SetLife(this.lifes);
+                if (this.lifes == 0) ;
+              }
             }
+
+            this.score += args.combo;
+            this.viewIngame.SetScore(this.score);
+            this.viewIngame.SetCombo(args.combo);
           }
         }]);
 
@@ -1554,7 +1618,14 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
         initializer: function initializer() {
           return null;
         }
-      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "mainAudio", [_dec3], {
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "viewIngame", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, "mainAudio", [_dec4], {
         configurable: true,
         enumerable: true,
         writable: true,
@@ -1570,25 +1641,183 @@ System.register("chunks:///GameMgr.js", ["./_virtual/_rollupPluginBabelHelpers.j
   };
 });
 
-System.register("chunks:///_virtual/prerequisite-imports:main", ["../core/Input.js", "../core/Timer.js", "../EventMgr.js", "../Defines.js", "../Ball.js", "../ui/Background.js", "../Basket.js", "../BallMgr.js", "../GameMgr.js"], function (_export, _context) {
+System.register("chunks:///ui/Background.js", ["../_virtual/_rollupPluginBabelHelpers.js", "cc", "../Defines.js", "../EventMgr.js", "../core/Timer.js"], function (_export, _context) {
+  "use strict";
+
+  var _applyDecoratedDescriptor, _inherits, _classCallCheck, _possibleConstructorReturn, _getPrototypeOf, _initializerDefineProperty, _assertThisInitialized, _createClass, cclegacy, _decorator, SpriteComponent, Color, tween, Component, BackgroundEvent, EventMgr, Timer, _dec, _dec2, _class, _class2, _descriptor, _temp, ccclass, property, Background;
+
+  _export({
+    _dec: void 0,
+    _dec2: void 0,
+    _class: void 0,
+    _class2: void 0,
+    _descriptor: void 0,
+    _temp: void 0
+  });
+
+  return {
+    setters: [function (_virtual_rollupPluginBabelHelpersJs) {
+      _applyDecoratedDescriptor = _virtual_rollupPluginBabelHelpersJs.applyDecoratedDescriptor;
+      _inherits = _virtual_rollupPluginBabelHelpersJs.inherits;
+      _classCallCheck = _virtual_rollupPluginBabelHelpersJs.classCallCheck;
+      _possibleConstructorReturn = _virtual_rollupPluginBabelHelpersJs.possibleConstructorReturn;
+      _getPrototypeOf = _virtual_rollupPluginBabelHelpersJs.getPrototypeOf;
+      _initializerDefineProperty = _virtual_rollupPluginBabelHelpersJs.initializerDefineProperty;
+      _assertThisInitialized = _virtual_rollupPluginBabelHelpersJs.assertThisInitialized;
+      _createClass = _virtual_rollupPluginBabelHelpersJs.createClass;
+    }, function (_cc) {
+      cclegacy = _cc.cclegacy;
+      _decorator = _cc._decorator;
+      SpriteComponent = _cc.SpriteComponent;
+      Color = _cc.Color;
+      tween = _cc.tween;
+      Component = _cc.Component;
+    }, function (_DefinesJs) {
+      BackgroundEvent = _DefinesJs.BackgroundEvent;
+    }, function (_EventMgrJs) {
+      EventMgr = _EventMgrJs.EventMgr;
+    }, function (_coreTimerJs) {
+      Timer = _coreTimerJs.default;
+    }],
+    execute: function () {
+      cclegacy._RF.push({}, "1e1d6UA2yRHB6vSyJPoF+qX", "Background", undefined);
+
+      ccclass = _decorator.ccclass;
+      property = _decorator.property;
+
+      _export("Background", Background = (_dec = ccclass('Background'), _dec2 = property({
+        type: [SpriteComponent]
+      }), _dec(_class = (_class2 = (_temp = /*#__PURE__*/function (_Component) {
+        _inherits(Background, _Component);
+
+        function Background() {
+          var _getPrototypeOf2;
+
+          var _this;
+
+          _classCallCheck(this, Background);
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Background)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+          _initializerDefineProperty(_this, "Backgrounds", _descriptor, _assertThisInitialized(_this));
+
+          _this.timer = new Timer();
+          return _this;
+        }
+
+        _createClass(Background, [{
+          key: "start",
+          value: function start() {
+            this.timer.SetDuration(10);
+            this.StartBg();
+          }
+        }, {
+          key: "update",
+          value: function update(deltaTime) {
+            this.timer.Update(deltaTime);
+
+            if (this.timer.IsDone()) {
+              this.Fade();
+              this.timer.Reset();
+            }
+          }
+        }, {
+          key: "StartBg",
+          value: function StartBg() {
+            this.currentIndex = 0;
+
+            for (var i = 0; i < this.Backgrounds.length; i++) {
+              if (i == this.currentIndex) {
+                this.Backgrounds[i].color = new Color(255, 255, 255, 255);
+              } else {
+                this.Backgrounds[i].color = new Color(255, 255, 255, 0);
+              }
+            }
+          }
+        }, {
+          key: "UpdateBg",
+          value: function UpdateBg(deltaTime) {}
+        }, {
+          key: "Fade",
+          value: function Fade() {
+            var current = this.currentIndex;
+            var next = this.currentIndex + 1;
+
+            if (next >= this.Backgrounds.length) {
+              next = 0;
+            }
+
+            tween(this.Backgrounds[current]).to(2, {
+              color: {
+                r: 255,
+                g: 255,
+                b: 255,
+                a: 0
+              }
+            }, {
+              easing: "linear"
+            }).start();
+            tween(this.Backgrounds[next]).to(2, {
+              color: {
+                r: 255,
+                g: 255,
+                b: 255,
+                a: 255
+              }
+            }, {
+              easing: "linear"
+            }).start();
+            this.currentIndex = next;
+            EventMgr.instance.emit(BackgroundEvent.FADE, {
+              index: this.currentIndex
+            });
+          }
+        }, {
+          key: "GetCurrentIndex",
+          value: function GetCurrentIndex() {
+            return this.currentIndex;
+          }
+        }]);
+
+        return Background;
+      }(Component), _temp), _descriptor = _applyDecoratedDescriptor(_class2.prototype, "Backgrounds", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return [];
+        }
+      }), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/prerequisite-imports:main", ["../Defines.js", "../EventMgr.js", "../Ball.js", "../core/Input.js", "../Basket.js", "../core/Timer.js", "../BallMgr.js", "../ui/Ingame.js", "../GameMgr.js", "../ui/Background.js"], function (_export, _context) {
   "use strict";
 
   return {
-    setters: [function (_coreInputJs) {}, function (_coreTimerJs) {}, function (_EventMgrJs) {}, function (_DefinesJs) {}, function (_BallJs) {}, function (_uiBackgroundJs) {}, function (_BasketJs) {}, function (_BallMgrJs) {}, function (_GameMgrJs) {}],
+    setters: [function (_DefinesJs) {}, function (_EventMgrJs) {}, function (_BallJs) {}, function (_coreInputJs) {}, function (_BasketJs) {}, function (_coreTimerJs) {}, function (_BallMgrJs) {}, function (_uiIngameJs) {}, function (_GameMgrJs) {}, function (_uiBackgroundJs) {}],
     execute: function () {}
   };
 });
 
 (function(r) {
-  r('project:///assets/maingame/scripts/core/Input.js', 'chunks:///core/Input.js');
-  r('project:///assets/maingame/scripts/core/Timer.js', 'chunks:///core/Timer.js');
-  r('project:///assets/maingame/scripts/EventMgr.js', 'chunks:///EventMgr.js');
   r('project:///assets/maingame/scripts/Defines.js', 'chunks:///Defines.js');
+  r('project:///assets/maingame/scripts/EventMgr.js', 'chunks:///EventMgr.js');
   r('project:///assets/maingame/scripts/Ball.js', 'chunks:///Ball.js');
-  r('project:///assets/maingame/scripts/ui/Background.js', 'chunks:///ui/Background.js');
+  r('project:///assets/maingame/scripts/core/Input.js', 'chunks:///core/Input.js');
   r('project:///assets/maingame/scripts/Basket.js', 'chunks:///Basket.js');
+  r('project:///assets/maingame/scripts/core/Timer.js', 'chunks:///core/Timer.js');
   r('project:///assets/maingame/scripts/BallMgr.js', 'chunks:///BallMgr.js');
+  r('project:///assets/maingame/scripts/ui/Ingame.js', 'chunks:///ui/Ingame.js');
   r('project:///assets/maingame/scripts/GameMgr.js', 'chunks:///GameMgr.js');
+  r('project:///assets/maingame/scripts/ui/Background.js', 'chunks:///ui/Background.js');
   r('virtual:///prerequisite-imports:main', 'chunks:///_virtual/prerequisite-imports:main'); 
 })(function(mid, cid) {
     System.register(mid, [cid], function (_export, _context) {
