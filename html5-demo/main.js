@@ -41,52 +41,6 @@ window.boot = boot;
 // Generate options to init cc.game
 function initOptions () {
 
-    var uuids = settings.uuids;
-    var rawAssets = settings.rawAssets;
-    var assetTypes = settings.assetTypes;
-    var realRawAssets = settings.rawAssets = {};
-    for (var mount in rawAssets) {
-        var entries = rawAssets[mount];
-        var realEntries = realRawAssets[mount] = {};
-        for (var id in entries) {
-            var entry = entries[id];
-            var type = entry[1];
-            // retrieve minified raw asset
-            if (typeof type === 'number') {
-                entry[1] = assetTypes[type];
-            }
-            // retrieve uuid
-            realEntries[uuids[id] || id] = entry;
-        }
-    }
-    var scenes = settings.scenes;
-    for (var i = 0; i < scenes.length; ++i) {
-        var scene = scenes[i];
-        if (typeof scene.uuid === 'number') {
-            scene.uuid = uuids[scene.uuid];
-        }
-    }
-    var packedAssets = settings.packedAssets;
-    for (var packId in packedAssets) {
-        var packedIds = packedAssets[packId];
-        for (var j = 0; j < packedIds.length; ++j) {
-            if (typeof packedIds[j] === 'number') {
-                packedIds[j] = uuids[packedIds[j]];
-            }
-        }
-    }
-    var subpackages = settings.subpackages;
-    for (var subId in subpackages) {
-        var uuidArray = subpackages[subId].uuids;
-        if (uuidArray) {
-            for (var k = 0, l = uuidArray.length; k < l; k++) {
-                if (typeof uuidArray[k] === 'number') {
-                    uuidArray[k] = uuids[uuidArray[k]];
-                }
-            }
-        }
-    }
-
     // asset library options
     const assetOptions = {
         libraryPath: 'res/import',
@@ -181,7 +135,7 @@ canvas.height = bcr.height;
 var boot = window.boot;
 boot.prepare.engine = function() {
     var importMap = { imports: { }, };
-    importMap.imports['cc'] = './cocos3d-js.min.js';
+    importMap.imports['cc'] = './cocos3d-js.js';
     var importMapElement = document.createElement('script');
     importMapElement.type = 'systemjs-importmap';
     importMapElement.text = JSON.stringify(importMap, undefined, 2);
