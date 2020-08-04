@@ -2,7 +2,8 @@ window.boot = function () {
     var settings = window._CCSettings;
     window._CCSettings = undefined;
     var onProgress = null;
-    
+
+    cc.macro.ENABLE_TRANSPARENT_CANVAS = true;
     let { RESOURCES, INTERNAL, MAIN, START_SCENE } = cc.AssetManager.BuiltinBundleName;
     function setLoadingDisplay () {
         // Loading splash scene
@@ -59,7 +60,7 @@ window.boot = function () {
         var bundle = cc.assetManager.bundles.find(function (b) {
             return b.getSceneInfo(launchScene);
         });
-        
+
         bundle.loadScene(launchScene, null, onProgress,
             function (err, scene) {
                 if (!err) {
@@ -89,12 +90,12 @@ window.boot = function () {
         collisionMatrix: settings.collisionMatrix,
     };
 
-    cc.assetManager.init({ 
+    cc.assetManager.init({
         bundleVers: settings.bundleVers,
         remoteBundles: settings.remoteBundles,
         server: settings.server
     });
-    
+
     let bundleRoot = [INTERNAL, MAIN];
     settings.hasStartSceneBundle && bundleRoot.push(START_SCENE);
     settings.hasResourcesBundle && bundleRoot.push(RESOURCES);
@@ -118,7 +119,7 @@ window.boot = function () {
 if (window.jsb) {
     var isRuntime = (typeof loadRuntime === 'function');
     if (isRuntime) {
-        require('src/settings.a5533.js');
+        require('src/settings.c18b5.js');
         require('src/cocos2d-runtime.js');
         if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
             require('src/physics.js');
@@ -126,7 +127,7 @@ if (window.jsb) {
         require('jsb-adapter/engine/index.js');
     }
     else {
-        require('src/settings.a5533.js');
+        require('src/settings.c18b5.js');
         require('src/cocos2d-jsb.js');
         if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
             require('src/physics.js');
