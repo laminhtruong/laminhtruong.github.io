@@ -42,7 +42,8 @@
 </head>
 <body>
   <div>
-    <video id="video" style="position: absolute; left: 0px; width: 100%; height: 100%; transform: scale(-1, 1)"></video>
+    <canvas id="VideoCanvas" style="position: absolute; left: 0px; width: 100%; height: 100%; transform: scale(-1, 1);"></canvas>
+    <video id="Video" style="position: absolute; left: 0px; width: 100%; height: 100%; transform: scale(-1, 1); display: none"></video>
   </div>
   <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
   <div id="splash">
@@ -52,8 +53,10 @@
   </div>
 
 <script src="libs/ml5.min.js" charset="utf-8"></script>
-<script src="src/settings.c18b5.js" charset="utf-8"></script>
-<script src="main.aa5a1.js" charset="utf-8"></script>
+<script src="libs/picojs/pico.js" charset="utf-8"></script>
+<script src="libs/picojs/lploc.js" charset="utf-8"></script>
+<script src="src/settings.dec3b.js" charset="utf-8"></script>
+<script src="main.53f30.js" charset="utf-8"></script>
 
 <script type="text/javascript">
 (function () {
