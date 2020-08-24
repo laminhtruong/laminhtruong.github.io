@@ -4,47 +4,9 @@
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
 </head>
 
-<body onclick="StartGame()">
+<body onclick="sendDataToGame()">
     <script src="./src/pusher.min.js" charset="utf-8"></script>
-    <script>
-        HttpRequest = function (method, url, body)
-        {
-            return new Promise((resolve, reject) =>
-            {
-                var xhr = new XMLHttpRequest();
-                xhr.open(method, url, true);
-
-                xhr.setRequestHeader("Content-type", "application/json");
-                xhr.onreadystatechange = () =>
-                {
-                    if (xhr.readyState == 4)
-                    {
-                        if (xhr.status == 200)
-                        {
-                            resolve(xhr.response);
-                        }
-                        else
-                        {
-                            reject(xhr.response);
-                        }
-                    }
-                }
-                xhr.send(body);
-            })
-        }
-
-        StartGame = function ()
-        {
-            var body = {
-                "channel": "utop",
-                "event": "start-game",
-                "message": {
-                    "userid": "xxx-xxx"
-                }
-            }
-            HttpRequest('post', 'https://utop-pusher.herokuapp.com/push', JSON.stringify(body));
-        }
-    </script>
+    <script src="./src/main.js" charset="utf-8"></script>
 </body>
 
 </html>
