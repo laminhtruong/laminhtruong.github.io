@@ -74,7 +74,10 @@ function sendDataToGame()
                         "channel": "utop",
                         "event": "start-game",
                         "message": {
-                            "sessionID": userParams.b
+                            "IDChannel": userParams.channel,
+                            "IDUser": userParams.c,
+                            "GameCode": userParams.gamecode,
+                            "sessionID": userParams.b,
                         }
                     };
                     httpRequest('post', 'https://utop-pusher.herokuapp.com/push', JSON.stringify(body));
