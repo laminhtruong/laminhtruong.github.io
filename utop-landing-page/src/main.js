@@ -1,4 +1,4 @@
-var userParams = getParams(location.href || "");
+var userParams = getParams(location && location.href || "");
 var baseURL = "https://gameapiutop.azurewebsites.net/api";
 
 function httpRequest(method, url, body, success, error)
@@ -24,27 +24,33 @@ function httpRequest(method, url, body, success, error)
     xhr.send(body);
 }
 
+function parseUrl(url)
+{
+    var regex = /[?&]([^=#]+)=([^&#]*)/g,
+        params = {},
+        match;
+    while (match = regex.exec(url))
+    {
+        params[match[1]] = match[2];
+    }
+    return params;
+}
+
 function getParams(url)
 {
-    var array = url.split("?");
-    var array = array[1] && array[1].split("&") || [];
-    var params = {};
-
-    array.forEach(item =>
+    var params = parseUrl(url);
+    Object.keys(params).forEach(key =>
     {
-        var data = item.split("=");
-        if (data[0] == 'd')
+        if (key == "initCustomParams")
         {
-            let key = data.shift();
-            let value = data.join("=");
-            params[key] = value;
+            params["custom"] = parseUrl(params[key]);
+            delete params[key];
         }
-        else
+        else if (key == "d")
         {
-            params[data[0]] = decodeURIComponent(data[1]);
+            params[key] = JSON.parse(params[key]);
         }
     });
-
     return params;
 }
 
