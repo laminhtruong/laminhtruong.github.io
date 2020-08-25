@@ -94,3 +94,19 @@ function sendDataToGame()
 
         });
 }
+
+function closeGame()
+{
+    try
+    {
+        var message = {
+            name: 'redirect',
+            body: 'UTop'
+        };
+        ReactNativeWebView.postMessage(JSON.stringify(message));
+    }
+    catch (e)
+    {
+
+    }
+}

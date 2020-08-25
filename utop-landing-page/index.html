@@ -1,12 +1,15 @@
 <html>
 
 <head>
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
 </head>
 
-<body onclick="sendDataToGame()">
+<body">
     <script src="./src/pusher.min.js" charset="utf-8"></script>
     <script src="./src/main.js" charset="utf-8"></script>
+    <img class="buttonClose" src="./assets/close.png" onclick="closeGame()">
+    <div class="buttonPlay" onclick="sendDataToGame()">
 </body>
 
 </html>

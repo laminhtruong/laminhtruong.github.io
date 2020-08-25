@@ -27,3 +27,20 @@ body {
 
     overflow: hidden;
 }
+
+.buttonPlay {
+    position: absolute;
+    width: 325px;
+    height: 110px;
+    left: 50%;
+    bottom: 15px;
+    transform: translate(-50%, 0);
+}
+
+.buttonClose {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 75px;
+    height: 75px;
+}
