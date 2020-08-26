@@ -48,7 +48,7 @@ function getParams(url)
         }
         else if (key == "d")
         {
-            params[key] = JSON.parse(params[key]);
+            params[key] = JSON.parse(decodeURIComponent(params[key]));
         }
     });
     return params;
