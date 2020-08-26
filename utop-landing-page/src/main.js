@@ -13,11 +13,11 @@ function httpRequest(method, url, body, success, error)
         {
             if (xhr.status == 200)
             {
-                success(xhr.response);
+                success && success(xhr.response);
             }
             else
             {
-                error(xhr.response);
+                error && error(xhr.response);
             }
         }
     };
