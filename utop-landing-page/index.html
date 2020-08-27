@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Cocos Creator | flappy-bird</title>
+  <title>Ăn Càng Nhiều - Quà Càng Chill</title>
 
   <!--http://www.html5rocks.com/en/mobile/mobifying/-->
   <meta name="viewport"
@@ -37,20 +37,18 @@
   <!--<link rel="apple-touch-icon" href=".png" />-->
   <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
 
-  <link rel="stylesheet" type="text/css" href="style-mobile.acb82.css"/>
+  <link rel="stylesheet" type="text/css" href="style-mobile.efb7f.css"/>
   <link rel="icon" href="favicon.8de18.ico"/>
 </head>
 <body>
   <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
   <div id="splash">
-    <div class="progress-bar stripes">
-      <span style="width: 0%"></span>
-    </div>
+    <img class="loading-icon" src="loading-icon.544fb.png" />
   </div>
 
 <script src="libs/pusher.min.js" charset="utf-8"></script>
-<script src="src/settings.f0a12.js" charset="utf-8"></script>
-<script src="main.8abf9.js" charset="utf-8"></script>
+<script src="src/settings.514d3.js" charset="utf-8"></script>
+<script src="main.eea1b.js" charset="utf-8"></script>
 
 <script type="text/javascript">
 (function () {
@@ -61,7 +59,7 @@
 
     var debug = window._CCSettings.debug;
     var splash = document.getElementById('splash');
-    splash.style.display = 'none';
+    splash.style.display = 'block';
 
     function loadScript (moduleName, cb) {
       function scriptLoaded () {

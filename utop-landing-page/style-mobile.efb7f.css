@@ -91,6 +91,30 @@ p.footer {
   background-size: 45%;
 }
 
+#splash .loading-icon {
+  width: calc(135px * 0.5);
+  height: calc(123px * 0.5);
+
+  position: absolute;
+  top: calc(50% - 10px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  animation: loading-spin 2s linear infinite;
+}
+
+@keyframes loading-spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
 .progress-bar {
     position: absolute;
     display: none;
