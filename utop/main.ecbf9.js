@@ -8,10 +8,15 @@ window.boot = function () {
     function setLoadingDisplay () {
         // Loading splash scene
         var splash = document.getElementById('splash');
+        var progressBar = splash.querySelector('.progress-bar span');
         onProgress = function (finish, total) {
             var percent = 100 * finish / total;
+            if (progressBar) {
+                progressBar.style.width = percent.toFixed(2) + '%';
+            }
         };
         splash.style.display = 'block';
+        progressBar.style.width = '0%';
 
         cc.director.once(cc.Director.EVENT_AFTER_SCENE_LAUNCH, function () {
             splash.style.display = 'none';
@@ -114,7 +119,7 @@ window.boot = function () {
 if (window.jsb) {
     var isRuntime = (typeof loadRuntime === 'function');
     if (isRuntime) {
-        require('src/settings.c571e.js');
+        require('src/settings.7eebe.js');
         require('src/cocos2d-runtime.js');
         if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
             require('src/physics.js');
@@ -122,7 +127,7 @@ if (window.jsb) {
         require('jsb-adapter/engine/index.js');
     }
     else {
-        require('src/settings.c571e.js');
+        require('src/settings.7eebe.js');
         require('src/cocos2d-jsb.js');
         if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
             require('src/physics.js');
