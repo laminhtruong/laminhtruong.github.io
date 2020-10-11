@@ -43,7 +43,7 @@
 <body>
   <div>
     <canvas id="VideoCanvas" style="position: absolute; left: 0px; height: 100%; transform: scale(-1, 1);"></canvas>
-    <video id="Video" style="position: absolute; left: 0px; transform: scale(-1, 1); z-index: -1"></video>
+    <video id="Video" style="position: absolute; left: 0px; transform: scale(-1, 1); z-index: -1;"></video>
   </div>
   <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
   <div id="splash">
@@ -54,9 +54,9 @@
 <script src="libs/qrcode.js" charset="utf-8"></script>
 <script src="libs/pusher.min.js" charset="utf-8"></script>
 <script src="libs/picojs/pico.js" charset="utf-8"></script>
-<script src="src/settings.8f082.js" charset="utf-8"></script>
-<script src="parameters.3de2c.js" charset="utf-8"></script>
-<script src="main.e0015.js" charset="utf-8"></script>
+<script src="src/settings.54409.js" charset="utf-8"></script>
+<script src="parameters.3c083.js" charset="utf-8"></script>
+<script src="main.902dd.js" charset="utf-8"></script>
 
 <script type="text/javascript">
 (function () {
@@ -82,7 +82,7 @@
       document.body.appendChild(domScript);
     }
 
-    loadScript(debug ? 'cocos2d-js.js' : 'cocos2d-js-min.7e626.js', function () {
+    loadScript(debug ? 'cocos2d-js.js' : 'cocos2d-js-min.9bff6.js', function () {
       if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
         loadScript(debug ? 'physics.js' : 'physics-min.js', window.boot);
       }
