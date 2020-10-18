@@ -2,7 +2,8 @@ window.boot = function () {
     var settings = window._CCSettings;
     window._CCSettings = undefined;
     var onProgress = null;
-    
+
+    cc.macro.ENABLE_TRANSPARENT_CANVAS = true;
     var RESOURCES = cc.AssetManager.BuiltinBundleName.RESOURCES;
     var INTERNAL = cc.AssetManager.BuiltinBundleName.INTERNAL;
     var MAIN = cc.AssetManager.BuiltinBundleName.MAIN;
@@ -63,7 +64,7 @@ window.boot = function () {
         var bundle = cc.assetManager.bundles.find(function (b) {
             return b.getSceneInfo(launchScene);
         });
-        
+
         bundle.loadScene(launchScene, null, onProgress,
             function (err, scene) {
                 if (!err) {
@@ -93,12 +94,12 @@ window.boot = function () {
         collisionMatrix: settings.collisionMatrix,
     };
 
-    cc.assetManager.init({ 
+    cc.assetManager.init({
         bundleVers: settings.bundleVers,
         remoteBundles: settings.remoteBundles,
         server: settings.server
     });
-    
+
     var bundleRoot = [INTERNAL];
     settings.hasResourcesBundle && bundleRoot.push(RESOURCES);
 
