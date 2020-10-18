@@ -62,7 +62,7 @@ body {
 }
 
 canvas {
-  background-color: transparent;
+  background-color: red;
 }
 
 a:link, a:visited {
