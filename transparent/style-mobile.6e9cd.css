@@ -34,7 +34,7 @@ body {
   margin: 0;
 
   cursor: default;
-  color: transparent;
+  color: #888;
   background-color: transparent;
 
   text-align: center;
@@ -62,7 +62,7 @@ body {
 }
 
 canvas {
-  background-color: red;
+  background-color: transparent;
 }
 
 a:link, a:visited {
