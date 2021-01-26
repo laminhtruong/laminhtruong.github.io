@@ -14,7 +14,7 @@ ngại vật
 Voucher/Coupon Utop giảm giá 50.000 đồng cho đơn hàng từ 100.000 đồng, ăn thoả thích tại khu ăn uống Aeon Mall Tân Phú (Katong, Tealive, Món Hàn, Món Việt, Haisancua.com, Bangkok House, Cơm Ngon Lẩu Công Chúa, Hoàng Gia, ChiChiKo, Hoài Bão, Papaxot, Việt Deli, Lotteria, Bobapop, BJ Tokbokki)
 
 <b><color=#7d1012>THỂ LỆ TRÒ CHƠI</color></b>
-- Trò chơi có 1 cấp độ, bạn sẽ thắng khi đạt được 400 điểm trong 1 lượt chơi với thời gian tối đa là 1 phút`
+- Trò chơi có 1 cấp độ, bạn sẽ thắng khi đạt được 300 điểm trong 1 lượt chơi với thời gian tối đa là 1 phút`
 
 userParams.helpBitexco = `<b>Tải app Utop</b> và <b>đăng kí tài khoản.</b>
 Dùng camera trên app để <b>quét mã QR trên màn hình TV.</b>
@@ -30,4 +30,4 @@ ngại vật
 Voucher/Coupon Utop giảm giá 50.000 đồng cho đơn hàng từ 100.000 đồng, ăn thoả thích tại khu ăn uống Aeon Mall Tân Phú (Katong, Tealive, Món Hàn, Món Việt, Haisancua.com, Bangkok House, Cơm Ngon Lẩu Công Chúa, Hoàng Gia, ChiChiKo, Hoài Bão, Papaxot, Việt Deli, Lotteria, Bobapop, BJ Tokbokki)
 
 <b><color=#7d1012>THỂ LỆ TRÒ CHƠI</color></b>
-- Trò chơi có 1 cấp độ, bạn sẽ thắng khi đạt được 400 điểm trong 1 lượt chơi với thời gian tối đa là 1 phút`
+- Trò chơi có 1 cấp độ, bạn sẽ thắng khi đạt được 300 điểm trong 1 lượt chơi với thời gian tối đa là 1 phút`
