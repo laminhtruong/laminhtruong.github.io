@@ -1,0 +1,16 @@
+{
+"companyName": "Gamenotes",
+"productName": "fruit-ninja",
+"productVersion": "1.0.0",
+"dataUrl": "New folder.data.unityweb",
+"wasmCodeUrl": "New folder.wasm.code.unityweb",
+"wasmFrameworkUrl": "New folder.wasm.framework.unityweb",
+"graphicsAPI": ["WebGL 2.0","WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20",
+"cacheControl": {"default": "must-revalidate"},
+"developmentBuild": false,
+"multithreading": false,
+"unityVersion": "2019.4.21f1"
+}
