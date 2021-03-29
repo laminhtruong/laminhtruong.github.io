@@ -1,55 +1,59 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, user-scalable=no"/>
-    <title>Unity WebGL Player | fruit-ninja</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <style>
-      body {
-          position: fixed;
-          width: 100%;
-          height: 100%;
-          left: 0px;
-          top: 0px;
-          padding: 0px;
-          margin: 0px;
-          transform: translateZ(0);
-          -ms-content-zooming: none;
-          background-color: rgba(0, 0, 0, 0);
-      }
-  </style>
-    <script src="TemplateData/UnityProgress.js"></script>
-    <script src="TemplateData/jquery-3.6.0.min.js"></script>
-    <script src="Build/UnityLoader.js"></script>
-    <script>
-      UnityLoader.instantiate("unityContainer", "Build/Game.json");
-    </script>
-  </head>
-  <body>
-    <div id="content" class="webgl-content">
-      <div id="unityContainer" style="width: 100%; height: 100%"></div>
-    </div>
-    <script>
-      setTimeout(() =>
-      {
-        let content = document.getElementById("content");
-        if (window.innerWidth < window.innerHeight)
-        {
-          content.style.width = window.innerHeight + "px";
-          content.style.height = window.innerWidth + "px";
-          content.style.transform = "translate(-50%, -50%) rotate(90deg)";
-        }
-        else
-        {
-          content.style.width = window.innerWidth + "px";
-          content.style.height = window.innerHeight + "px";
-        }
 
-        $("#unityContainer").find("button").click();
-      }, 1);
-    </script>
-  </body>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, user-scalable=no" />
+	<title>Unity WebGL Player | fruit-ninja</title>
+	<link rel="shortcut icon" href="TemplateData/favicon.ico">
+	<link rel="stylesheet" href="TemplateData/style.css">
+	<style>
+		body {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			left: 0px;
+			top: 0px;
+			padding: 0px;
+			margin: 0px;
+			transform: translateZ(0);
+			-ms-content-zooming: none;
+			background-color: rgba(0, 0, 0, 0);
+		}
+	</style>
+	<script src="TemplateData/UnityProgress.js"></script>
+	<script src="jquery-3.6.0.min.js"></script>
+	<script src="API.js"></script>
+	<script src="Build/UnityLoader.js"></script>
+	<script>
+		var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Game.json");
+	</script>
+</head>
+
+<body>
+	<div id="content" class="webgl-content">
+		<div id="unityContainer" style="width: 100%; height: 100%"></div>
+	</div>
+	<script>
+		setTimeout(() =>
+		{
+			let content = document.getElementById("content");
+			if (window.innerWidth < window.innerHeight)
+			{
+				content.style.width = window.innerHeight + "px";
+				content.style.height = window.innerWidth + "px";
+				content.style.transform = "translate(-50%, -50%) rotate(90deg)";
+			}
+			else
+			{
+				content.style.width = window.innerWidth + "px";
+				content.style.height = window.innerHeight + "px";
+			}
+
+			$("#unityContainer").find("button").click();
+		}, 1);
+	</script>
+</body>
+
 </html>

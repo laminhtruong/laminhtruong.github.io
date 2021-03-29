@@ -1,7 +1,7 @@
 {
-"companyName": "Gamenotes",
+"companyName": "DefaultCompany",
 "productName": "fruit-ninja",
-"productVersion": "1.0.0",
+"productVersion": "0.1",
 "dataUrl": "Game.data.unityweb",
 "wasmCodeUrl": "Game.wasm.code.unityweb",
 "wasmFrameworkUrl": "Game.wasm.framework.unityweb",
