@@ -2,6 +2,25 @@ let API_URL = 'https://utop-app-game-qa.azurewebsites.net/GamePlay';
 let transaction = '';
 let session = '';
 
+window.ParseUrl = function(url)
+{
+    let regex = /[?&]([^=#]+)=([^&#]*)/g;
+    let params = {};
+    let match;
+
+    while (match = regex.exec(url))
+    {
+        params[match[1]] = decodeURIComponent(match[2]);
+    }
+    return params;
+}
+
+window.UpdateParams = function()
+{
+    let customParams = this.ParseUrl(window.location.href);
+    session = customParams.sessionID;
+}
+
 window.HttpRequest = function (method, url, body)
 {
     return new Promise((resolve, reject) =>
@@ -126,3 +145,5 @@ window.UnityShowLose = function (message)
 {
     unityInstance.SendMessage('GameMgr', 'ShowLose', message);
 };
+
+window.UpdateParams();
