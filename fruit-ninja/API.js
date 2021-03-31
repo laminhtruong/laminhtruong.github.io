@@ -1,7 +1,6 @@
 let API_URL = 'https://utop-app-game-qa.azurewebsites.net/GamePlay';
 let transaction = '';
-var params = window.UpdateParams();
-let session = params.b;
+let session = '';
 
 window.ParseUrl = function(url)
 {
@@ -163,3 +162,6 @@ window.UnityShowLose = function (message)
 {
     unityInstance.SendMessage('GameMgr', 'ShowLose', message);
 };
+
+let params = window.UpdateParams();
+session = params.b;
