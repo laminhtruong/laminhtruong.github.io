@@ -66,11 +66,10 @@ window.HttpRequest = function (method, url, body)
 window.StartGame = function ()
 {
     let body = {
-        "idChannel": 1,
         "gamecode": 1,
         "sessionID": session || 1
     };
-    HttpRequest('post', '/StartGame', JSON.stringify(body))
+    HttpRequest('post', '/StartUtopGame', JSON.stringify(body))
         .then(response =>
         {
             try
