@@ -23,7 +23,6 @@
 		}
 	</style>
 	<script src="TemplateData/UnityProgress.js"></script>
-	<script src="jquery-3.6.0.min.js"></script>
 	<script src="API.js"></script>
 	<script src="Build/UnityLoader.js"></script>
 	<script>
@@ -39,19 +38,10 @@
 		setTimeout(() =>
 		{
 			let content = document.getElementById("content");
-			if (window.innerWidth < window.innerHeight)
-			{
-				content.style.width = window.innerHeight + "px";
-				content.style.height = window.innerWidth + "px";
-				content.style.transform = "translate(-50%, -50%) rotate(90deg)";
-			}
-			else
-			{
-				content.style.width = window.innerWidth + "px";
-				content.style.height = window.innerHeight + "px";
-			}
+			content.style.width = window.innerWidth + "px";
+			content.style.height = window.innerHeight + "px";
 
-			$("#unityContainer").find("button").click();
+			document.querySelector("button").click();
 		}, 1);
 	</script>
 </body>
