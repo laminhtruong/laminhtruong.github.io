@@ -147,6 +147,22 @@ window.EndGame = function (score)
         });
 };
 
+window.CloseGame = function()
+{
+    try
+    {
+        let message = {
+            name: 'redirect',
+            body: 'UTop'
+        };
+        window.ReactNativeWebView.postMessage(JSON.stringify(message));
+    }
+    catch (e)
+    {
+
+    }
+}
+
 window.UnityShowPopup = function (message)
 {
     unityInstance.SendMessage('GameMgr', 'ShowPopup', message);
