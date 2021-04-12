@@ -147,6 +147,11 @@ window.EndGame = function (score)
         });
 };
 
+window.Home = function()
+{
+    window.parent.location.href = "https://iomgame.com/Utopmini/landing-page-game.html";
+}
+
 window.CloseGame = function ()
 {
     try
