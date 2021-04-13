@@ -149,7 +149,7 @@ window.EndGame = function (score)
 
 window.Home = function()
 {
-    window.location.href = "https://iomgame.com/Utopmini/landing-page-game.html";
+    window.parent.location.href = "https://iomgame.com/Utopmini/landing-page-game.html" + "?" + window.location.href.split("?")[1];
 }
 
 window.CloseGame = function ()
