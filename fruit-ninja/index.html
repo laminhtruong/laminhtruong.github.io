@@ -41,7 +41,12 @@
 			content.style.width = window.innerWidth + "px";
 			content.style.height = window.innerHeight + "px";
 
-			document.querySelector("button").click();
+			let button = document.querySelector("button");
+			if (button)
+			{
+				button.click();
+			}
+
 		}, 1);
 	</script>
 </body>
