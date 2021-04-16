@@ -1,4 +1,5 @@
 let API_URL = 'https://utop-app-game-qa.azurewebsites.net/GamePlay';
+let LANDING_URL = 'https://iomgame.com/Utopmini/landing-page-game.html'
 let transaction = '';
 let session = '';
 
@@ -78,7 +79,6 @@ window.StartGame = function ()
                 if (data.code == 0)
                 {
                     transaction = data.idTrans;
-                    //Start Unity game here
                 }
                 else
                 {
@@ -149,7 +149,7 @@ window.EndGame = function (score)
 
 window.Home = function()
 {
-    window.parent.location.href = "https://iomgame.com/Utopmini/landing-page-game.html" + "?" + window.location.href.split("?")[1];
+    window.parent.location.href = LANDING_URL + "?" + window.location.href.split("?")[1];
 }
 
 window.CloseGame = function ()
