@@ -25,7 +25,7 @@
   <meta name="full-screen" content="yes"/>
   <meta name="x5-fullscreen" content="true"/>
   <meta name="360-fullscreen" content="true"/>
-
+  
   <!-- force screen orientation on some browser -->
   <meta name="screen-orientation" content=""/>
   <meta name="x5-orientation" content="">
@@ -39,7 +39,8 @@
 
   <link rel="stylesheet" type="text/css" href="style-mobile.6e9cd.css"/>
   <link rel="icon" href="favicon.8de18.ico"/>
-  <script type="text/javascript" src="parameters.js">	
+  <script type="text/javascript">
+	{{params}}
   </script>
 </head>
 <body>
@@ -50,8 +51,8 @@
     </div>
   </div>
 
-<script src="src/settings.b0fca.js" charset="utf-8"></script>
-<script src="main.36ffc.js" charset="utf-8"></script>
+<script src="src/settings.06562.js" charset="utf-8"></script>
+<script src="main.35d75.js" charset="utf-8"></script>
 
 <script type="text/javascript">
 (function () {
@@ -77,7 +78,7 @@
       document.body.appendChild(domScript);
     }
 
-    loadScript(debug ? 'cocos2d-js.js' : 'cocos2d-js-min.a00fc.js', function () {
+    loadScript(debug ? 'cocos2d-js.js' : 'cocos2d-js-min.5d6e7.js', function () {
       if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
         loadScript(debug ? 'physics.js' : 'physics-min.js', window.boot);
       }
