@@ -1,4 +1,4 @@
-System.register(["./application.410d1.js"], function (_export, _context) {
+System.register(["./application.51086.js"], function (_export, _context) {
   "use strict";
 
   var createApplication, canvas, $p, bcr;
@@ -85,8 +85,8 @@ System.register(["./application.410d1.js"], function (_export, _context) {
   }
 
   return {
-    setters: [function (_application410d1Js) {
-      createApplication = _application410d1Js.createApplication;
+    setters: [function (_application51086Js) {
+      createApplication = _application51086Js.createApplication;
     }],
     execute: function () {
       canvas = document.getElementById('GameCanvas');
