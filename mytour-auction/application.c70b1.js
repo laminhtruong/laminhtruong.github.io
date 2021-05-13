@@ -94,7 +94,7 @@ System.register([], function (_export, _context) {
 
     function loadSettingsJson(cc) {
       var server = '';
-      var settings = 'src/settings.ab19d.json';
+      var settings = 'src/settings.037c6.json';
       return new Promise(function (resolve, reject) {
         if (typeof fsUtils !== 'undefined' && !settings.startsWith('http')) {
           var result = fsUtils.readJsonSync(settings);
@@ -144,7 +144,7 @@ System.register([], function (_export, _context) {
       }
     }
 
-    var gameOptions = getGameOptions(settings, findCanvas);
+    var gameOptions = getGameOptions(cc, settings, findCanvas);
     return Promise.resolve(cc.game.init(gameOptions));
   }
 
@@ -171,7 +171,7 @@ System.register([], function (_export, _context) {
     });
   }
 
-  function getGameOptions(settings, findCanvas) {
+  function getGameOptions(cc, settings, findCanvas) {
     // asset library options
     var assetOptions = {
       bundleVers: settings.bundleVers,
@@ -180,8 +180,7 @@ System.register([], function (_export, _context) {
       subpackages: settings.subpackages
     };
     var options = {
-      debugMode: settings.debug ? 1 : 3,
-      // cc.debug.DebugMode.INFO : cc.debug.DebugMode.ERROR,
+      debugMode: settings.debug ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
       showFPS: !false && settings.debug,
       frameRate: 60,
       groupList: settings.groupList,
