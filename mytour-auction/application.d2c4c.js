@@ -94,7 +94,7 @@ System.register([], function (_export, _context) {
 
     function loadSettingsJson(cc) {
       var server = '';
-      var settings = 'src/settings.037c6.json';
+      var settings = 'src/settings.dd942.json';
       return new Promise(function (resolve, reject) {
         if (typeof fsUtils !== 'undefined' && !settings.startsWith('http')) {
           var result = fsUtils.readJsonSync(settings);
