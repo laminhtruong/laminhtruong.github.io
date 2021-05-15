@@ -1,94 +1,12 @@
-<!DOCTYPE html>
 <html>
+    <head>
+        <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1" />
 
-<head>
-	<meta charset="utf-8">
-
-	<title>Cocos Creator | mytour-auction
-	</title>
-
-	<!--http://www.html5rocks.com/en/mobile/mobifying/-->
-	<meta name="viewport"
-		content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1" />
-
-	<!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<meta name="format-detection" content="telephone=no">
-
-	<!-- force webkit on 360 -->
-	<meta name="renderer" content="webkit" />
-	<meta name="force-rendering" content="webkit" />
-	<!-- force edge on IE -->
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta name="msapplication-tap-highlight" content="no">
-
-	<!-- force full screen on some browser -->
-	<meta name="full-screen" content="yes" />
-	<meta name="x5-fullscreen" content="true" />
-	<meta name="360-fullscreen" content="true" />
-
-	<!-- force screen orientation on some browser -->
-	<meta name="screen-orientation" content="auto" />
-	<meta name="x5-orientation" content="auto">
-
-	<!--fix fireball/issues/3568 -->
-	<!--<meta name="browsermode" content="application">-->
-	<meta name="x5-page-mode" content="app">
-
-	<!--<link rel="apple-touch-icon" href=".png" />-->
-	<!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
-
-	<link rel="stylesheet" type="text/css" href="style.css" />
-	<!-- Google -->
-	<script src="https://apis.google.com/js/api:client.js"></script>
-	<!-- Facebook -->
-	<script>
-		window.fbAsyncInit = function ()
-		{
-			FB.init({
-				appId: '208824514081140',
-				autoLogAppEvents: true,
-				xfbml: true,
-				version: 'v10.0'
-			});
-		};
-	</script>
-	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
-	<!-- 3rd libs -->
-	<script src="./libs/copy-to-clipboard.js"></script>
-	<script src="./libs/crypto-js.min.js"></script>
-	<script type="module" src="https://unpkg.com/web-social-share@latest/dist/websocialshare/websocialshare.esm.js"></script>
-</head>
-
-<body>
-	<canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
-	
-<!-- Polyfills bundle. -->
-<script src="src/polyfills.bundle.js" charset="utf-8"> </script>
-
-<!-- SystemJS support. -->
-<script src="src/system.bundle.js" charset="utf-8"> </script>
-
-<!-- Import map -->
-<script src="src/import-map.json" type="systemjs-importmap" charset="utf-8"> </script>
-
-<script>
-    System.import('./index.1482f.js').catch(function(err) { console.error(err); })
-</script>
-
-		<script type="module" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script>
-		<script nomodule="" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
-		<web-social-share show="false">
-			<ion-icon name="logo-facebook" size="large" ariaLabel="Facebook" slot="facebook"
-				style="display: block; color: #3b5998;"></ion-icon>
-			<ion-icon name="logo-twitter" size="large" ariaLabel="Twitter" slot="twitter"
-				style="display: block; color: #00aced;"></ion-icon>
-			<ion-icon name="logo-whatsapp" size="large" ariaLabel="WhatsApp" slot="whatsapp"
-				style="display: block; color: #25D366;"></ion-icon>
-			<ion-icon name="copy-outline" size="large" ariaLabel="Copy" slot="copy"
-				style="display: block; color: #000000;"></ion-icon>
-		</web-social-share>
-</body>
-
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <script src="main.js"></script>
+    </head>
+    <body onload="Alignment()">
+        <div class="background"></div>
+        <iframe id="game" src="" style="display: none;"></iframe>
+    </body>
 </html>
