@@ -1,4 +1,4 @@
-System.register(["./application.f802c.js"], function (_export, _context) {
+System.register(["./application.295f2.js"], function (_export, _context) {
   "use strict";
 
   var createApplication, canvas, $p, bcr;
@@ -85,8 +85,8 @@ System.register(["./application.f802c.js"], function (_export, _context) {
   }
 
   return {
-    setters: [function (_applicationF802cJs) {
-      createApplication = _applicationF802cJs.createApplication;
+    setters: [function (_application295f2Js) {
+      createApplication = _application295f2Js.createApplication;
     }],
     execute: function () {
       canvas = document.getElementById('GameCanvas');
