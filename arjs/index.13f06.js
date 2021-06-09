@@ -1,4 +1,4 @@
-System.register(["./application.ff203.js"], function (_export, _context) {
+System.register(["./application.10867.js"], function (_export, _context) {
   "use strict";
 
   var createApplication, canvas, $p, bcr;
@@ -85,8 +85,8 @@ System.register(["./application.ff203.js"], function (_export, _context) {
   }
 
   return {
-    setters: [function (_applicationFf203Js) {
-      createApplication = _applicationFf203Js.createApplication;
+    setters: [function (_application10867Js) {
+      createApplication = _application10867Js.createApplication;
     }],
     execute: function () {
       canvas = document.getElementById('GameCanvas');
