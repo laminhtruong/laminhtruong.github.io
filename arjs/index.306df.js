@@ -1,4 +1,4 @@
-System.register(["./application.baf32.js"], function (_export, _context) {
+System.register(["./application.23b45.js"], function (_export, _context) {
   "use strict";
 
   var createApplication, canvas, $p, bcr;
@@ -85,8 +85,8 @@ System.register(["./application.baf32.js"], function (_export, _context) {
   }
 
   return {
-    setters: [function (_applicationBaf32Js) {
-      createApplication = _applicationBaf32Js.createApplication;
+    setters: [function (_application23b45Js) {
+      createApplication = _application23b45Js.createApplication;
     }],
     execute: function () {
       canvas = document.getElementById('GameCanvas');
