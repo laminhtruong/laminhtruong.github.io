@@ -28,6 +28,9 @@ function Alignment()
     {
         iframe.style.height = window.innerHeight;
         iframe.style.width = window.innerHeight * 9 / 16;
+
+        var background = document.getElementById("background");
+        background.style.backgroundImage = `url(${"./images/bg.jpg"})`;
     }
 
     iframe.style.display = "block";
