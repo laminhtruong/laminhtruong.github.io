@@ -4,7 +4,7 @@ window.RULE_URL = 'https://mytour.vn/lp/theledaugianguocmytour';
 window.SHARE_URL = 'https://feed-dev.mytour.vn'
 window.STORE_URL = 'https://mytour.onelink.me/4281031074/1ec8c4c7?af_qr=true';
 window.DOWNLOAD_MULTIPLY = 3;
-window.FACEBOOK_APP_ID = '208824514081140';
-window.GOOGLE_APP_ID = '22807595564-aphe2ofiu08oo4aq01dauj5dibstl4pk.apps.googleusercontent.com';
 window.BIDDING_REFRESH_TIME = 300;
 window.TURN_REFRESH_TIME = 300;
+window.FACEBOOK_APP_ID = '208824514081140';
+window.GOOGLE_APP_ID = '22807595564-aphe2ofiu08oo4aq01dauj5dibstl4pk.apps.googleusercontent.com';
