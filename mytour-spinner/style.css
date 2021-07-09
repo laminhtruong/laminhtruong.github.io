@@ -1,110 +1,33 @@
-html {
-  -ms-touch-action: none;
+body{
+    overflow: hidden;
 }
 
-body, canvas, div {
-  display: block;
-  outline: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+iframe {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    padding: 0;
+    border: 0;
+    margin: 0;
+    transform: translate(-50%, 0);
+    cursor: default;
+    color: #fff;
+    background-color: #fff;
 
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  -khtml-user-select: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    text-align: center;
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+
+    display: flex;
+    flex-direction: column;
 }
 
-/* Remove spin of input type number */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    /* display: none; <- Crashes Chrome on hover */
-    -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
-}
-
-body {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  margin: 0;
-
-  cursor: default;
-  color: #fff;
-  background-color: #fff;
-
-  text-align: center;
-  font-family: Helvetica, Verdana, Arial, sans-serif;
-
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-#Cocos2dGameContainer {
-  position: absolute;
-  margin: 0;
-  overflow: hidden;
-  left: 0px;
-  top: 0px;
-
-  display: -webkit-box;
-  -webkit-box-orient: horizontal;
-  -webkit-box-align: center;
-  -webkit-box-pack: center;
-}
-
-canvas {
-  background-color: rgba(255, 255, 255, 0);
-}
-
-a:link, a:visited {
-  color: #666;
-}
-
-a:active, a:hover {
-  color: #666;
-}
-
-p.header {
-  font-size: small;
-}
-
-p.footer {
-  font-size: x-small;
-}
-
-.progress-bar {
-  background-color: #fff;
-  position: absolute;
-  left: 25%;
-  top: 45%;
-  height: 14px;
-  padding: 2px;
-  width: 50%;
-  border:1px solid #ff2e63;
-  border-radius: 4px;
-}
-
-.progress-bar span {
-  display: block;
-  width: 0%;
-  height: 100%;
-  border-radius: 4px;
-  transition: width .1s ease-in-out;
-  background-color: #ff2e63;
-}
-
-.progress-percent {
-  position: absolute;
-  left: 25%;
-  top: 48.5%;
-  font-size: 12px;
-  font-weight: 100;
-  color: #ff2e63;
-  width: 50%;
+.background {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, 0);
+    background-image: url("./images/bg.jpg");
+    background-position: center center;
 }
