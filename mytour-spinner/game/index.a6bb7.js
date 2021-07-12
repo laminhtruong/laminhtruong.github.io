@@ -1,4 +1,4 @@
-System.register(["./application.c5390.js"], function (_export, _context) {
+System.register(["./application.3211a.js"], function (_export, _context) {
   "use strict";
 
   var createApplication, canvas, $p, bcr;
@@ -85,8 +85,8 @@ System.register(["./application.c5390.js"], function (_export, _context) {
   }
 
   return {
-    setters: [function (_applicationC5390Js) {
-      createApplication = _applicationC5390Js.createApplication;
+    setters: [function (_application3211aJs) {
+      createApplication = _application3211aJs.createApplication;
     }],
     execute: function () {
       canvas = document.getElementById('GameCanvas');
