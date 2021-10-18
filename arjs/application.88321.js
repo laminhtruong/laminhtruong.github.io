@@ -26,6 +26,8 @@ System.register([], function (_export, _context) {
       }).then(function () {
         settings = window._CCSettings;
         return initializeGame(cc, settings, findCanvas).then(function () {
+          if (!settings.renderPipeline) return cc.game.run();
+        }).then(function () {
           if (settings.scriptPackages) {
             return loadModulePacks(settings.scriptPackages);
           }
@@ -34,9 +36,9 @@ System.register([], function (_export, _context) {
         }).then(function () {
           return loadAssetBundle(settings.hasResourcesBundle, settings.hasStartSceneBundle);
         }).then(function () {
-          return cc.game.run(function () {
-            return onGameStarted(cc, settings);
-          });
+          if (settings.renderPipeline) return cc.game.run();
+        }).then(function () {
+          return onGameStarted(cc, settings);
         });
       });
     }
@@ -94,7 +96,7 @@ System.register([], function (_export, _context) {
 
     function loadSettingsJson(cc) {
       var server = '';
-      var settings = 'src/settings.b8ee7.json';
+      var settings = 'src/settings.f5281.json';
       return new Promise(function (resolve, reject) {
         if (typeof fsUtils !== 'undefined' && !settings.startsWith('http')) {
           var result = fsUtils.readJsonSync(settings);
