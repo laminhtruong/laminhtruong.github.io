@@ -1,4 +1,6 @@
 import { mooncats } from './mooncat_ids_v3.js';
+import { pixelMapJson } from './database.js';
+
 export const MoonCatParser = (function ()
 {
 	var designs = [
@@ -558,7 +560,7 @@ export const MoonCatParser = (function ()
 
 
 
-					let pixelMap = localStorage.getItem(key1);
+					let pixelMap = pixelMapJson[key1];
 					if (pixelMap)
 					{
 						// console.log('FOUND: ', key1);
