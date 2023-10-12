@@ -402,7 +402,7 @@ export const MoonCatParser = (function ()
 			  6 = idle down
 			  7 = idle left
 			*/
-			size = size || 1;
+			size = size || 4;
 			let catId = mooncats[tokenId];
 			if (catId.slice(0, 2) == "0x")
 			{
@@ -471,8 +471,8 @@ export const MoonCatParser = (function ()
 				coatName = 'Tortie';
 			}
 			let idleDown = [4, 1, 2, 3];
-			let indecies = [0, 10, 9, 8, 7, 6, idleDown, 5];
-			let indeciesMirrored = [8, 10, 9, 0, 5, 6, idleDown, 7]; // 0 <> 8 && 7 <> 5
+			let indecies = [0, 1, 2, 3, 4, 5, 6, 9];
+			let indeciesMirrored = [0, 1, 2, 3, 4, 5, 6, 9]; // 0 <> 8 && 7 <> 5
 
 			console.log('k:', k, 'coat:', coatName, 'pose:', poseName, 'expression:', expressionName);
 
@@ -488,11 +488,6 @@ export const MoonCatParser = (function ()
 				{
 					spriteRow = indeciesMirrored[i];
 				}
-				if (i == 6)
-				{
-					// Handle the facing forward pose animations
-					spriteRow = spriteRow[pose];
-				}
 
 				// Sprite Columns
 				for (let j = 0; j < 8; j++)
@@ -500,6 +495,7 @@ export const MoonCatParser = (function ()
 					let walkIndex = spriteRow * 8 + j;
 					let offsetX = 0;
 					let offsetY = 0;
+
 					if (spriteRow == 1)
 					{
 						if (j == 0)
@@ -526,40 +522,47 @@ export const MoonCatParser = (function ()
 
 					if (spriteRow == 2)
 					{
-						if (j == 2 || j == 5)
+						if (k < 64)
 						{
-							offsetX = 0;
+							if (j == 3 || j == 4)
+							{
+								offsetX = -1;
+							}
 						}
-						if (j == 3 || j == 4)
+						else
 						{
-							offsetX = -1;
+							if (j == 2 || j == 5)
+							{
+								offsetX = 1;
+							}
+							if (j == 3 || j == 4)
+							{
+								offsetX = 1;
+							}
 						}
 					}
 
-					if (spriteRow == 4 && (j == 3 || j == 4))
-					{
-						offsetX = -1;
-					}
-
-					if (spriteRow == 5 && (j == 3 || j == 4))
+					if (spriteRow == 4 && (j == 2 || j == 3 || j == 4 || j == 5))
 					{
 						offsetX = 1;
 					}
 
-					if (spriteRow == 7 && (j == 3 || j == 4 || j == 2 || j == 5))
+					if (spriteRow == 5 && (j == 2 || j == 3 || j == 4 || j == 5))
 					{
 						offsetX = -1;
 					}
 
-					if (spriteRow == 9 && (j == 1 || j == 2 || j == 6))
+					if (spriteRow == 7 && (j == 3 || j == 4))
+					{
+						offsetX = 1;
+					}
+
+					if (spriteRow == 8 && (j == 1 || j == 2 || j == 6))
 					{
 						offsetX = 1;
 					}
 
 					let key1 = 'pixelmap_' + walkIndex + '_' + coatExpressionMappings[coat][expression];
-
-
-
 					let pixelMap = pixelMapJson[key1];
 					if (pixelMap)
 					{
@@ -735,7 +738,7 @@ export const MoonCatParser = (function ()
 							if (color)
 							{
 								ctx.fillStyle = color;
-								ctx.fillRect(j * size + imageOffsetY, i * size + imageOffsetX, size, size);
+								ctx.fillRect(j * size + imageOffsetY * size - 192, i * size + imageOffsetX * size - 384, size, size);
 							}
 						}
 					}
