@@ -471,8 +471,8 @@ export const MoonCatParser = (function ()
 				coatName = 'Tortie';
 			}
 			let idleDown = [4, 1, 2, 3];
-			let indecies = [0, 1, 2, 3, 4, 5, 6, 9];
-			let indeciesMirrored = [0, 1, 2, 3, 4, 5, 6, 9]; // 0 <> 8 && 7 <> 5
+			let indecies = [0, 10, 9, 8, 7, 6, idleDown, 5];
+			let indeciesMirrored = [8, 10, 9, 0, 5, 6, idleDown, 7]; // 0 <> 8 && 7 <> 5
 
 			console.log('k:', k, 'coat:', coatName, 'pose:', poseName, 'expression:', expressionName);
 
@@ -487,6 +487,11 @@ export const MoonCatParser = (function ()
 				if (k < 64)
 				{
 					spriteRow = indeciesMirrored[i];
+				}
+				if (i == 6)
+				{
+					// Handle the facing forward pose animations
+					spriteRow = spriteRow[pose];
 				}
 
 				// Sprite Columns
