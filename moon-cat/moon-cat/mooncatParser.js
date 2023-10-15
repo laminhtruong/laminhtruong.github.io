@@ -543,9 +543,22 @@ export const MoonCatParser = (function ()
 						}
 					}
 
-					if (spriteRow == 5 && (j == 2 || j == 3 || j == 4 || j == 5))
+					if (spriteRow == 5)
 					{
-						offsetX = -1;
+						if (k < 64)
+						{
+							if (j == 3 || j == 4)
+							{
+								offsetX = 1;
+							}
+						}
+						else
+						{
+							if ((j == 2 || j == 3 || j == 4 || j == 5))
+							{
+								offsetX = 1;
+							}
+						}
 					}
 
 					if (spriteRow == 7 && (j == 3 || j == 4))
