@@ -484,10 +484,10 @@ export const MoonCatParser = (function ()
 			for (let i = 0; i < 8; i++)
 			{
 				let spriteRow = indecies[i];
-				// if (k < 64)
-				// {
-				// 	spriteRow = indeciesMirrored[i];
-				// }
+				if (k < 64)
+				{
+					spriteRow = indeciesMirrored[i];
+				}
 				if (i == 6)
 				{
 					// Handle the facing forward pose animations
@@ -525,31 +525,22 @@ export const MoonCatParser = (function ()
 						}
 					}
 
-					if (spriteRow == 2)
+					if (spriteRow == 2 || spriteRow == 4)
 					{
-						// if (k < 64)
-						// {
-						// 	if (j == 3 || j == 4)
-						// 	{
-						// 		offsetX = -1;
-						// 	}
-						// }
-						// else
+						if (k < 64)
 						{
-							if (j == 2 || j == 5)
-							{
-								offsetX = 1;
-							}
 							if (j == 3 || j == 4)
+							{
+								offsetX = -1;
+							}
+						}
+						else
+						{
+							if (j == 2 || j == 3 || j == 5 || j == 4)
 							{
 								offsetX = 1;
 							}
 						}
-					}
-
-					if (spriteRow == 4 && (j == 2 || j == 3 || j == 4 || j == 5))
-					{
-						offsetX = 1;
 					}
 
 					if (spriteRow == 5 && (j == 2 || j == 3 || j == 4 || j == 5))
@@ -572,10 +563,10 @@ export const MoonCatParser = (function ()
 					if (pixelMap)
 					{
 						// console.log('FOUND: ', key1);
-						// if (k < 64)
-						// {
-						// 	pixelMap = mirror(pixelMap);
-						// }
+						if (k < 64)
+						{
+							pixelMap = mirror(pixelMap);
+						}
 						// if(k >= 64 && (spriteRow == 0 || spriteRow == 8)){
 						//   pixelMap = mirror(pixelMap);
 						// }
