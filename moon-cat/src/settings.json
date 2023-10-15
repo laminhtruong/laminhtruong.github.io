@@ -11,7 +11,7 @@
 	"bundleVers": {},
 	"subpackages": [],
 	"remoteBundles": [],
-	"hasResourcesBundle": false,
+	"hasResourcesBundle": true,
 	"hasStartSceneBundle": false,
 	"launchScene": "db://assets/scenes/Main.scene",
 	"jsList": [],
