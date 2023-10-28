@@ -402,7 +402,7 @@ export const MoonCatParser = (function ()
 			  6 = idle down
 			  7 = idle left
 			*/
-			size = size || 4;
+			size = size || 5;
 			let catId = mooncats[tokenId];
 			if (catId.slice(0, 2) == "0x")
 			{
@@ -747,7 +747,7 @@ export const MoonCatParser = (function ()
 							if (color)
 							{
 								ctx.fillStyle = color;
-								ctx.fillRect(j * size + imageOffsetY * size - 192, i * size + imageOffsetX * size - 384, size, size);
+								ctx.fillRect(j * size + imageOffsetY * size - 320, i * size + imageOffsetX * size - 640, size, size);
 							}
 						}
 					}
