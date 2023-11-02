@@ -822,6 +822,19 @@ export const MoonCatParser = (function ()
 				}
 			}
 			return canvas;
+		},
+		getPose: function (tokenId)
+		{
+			let catId = mooncats[tokenId];
+			if (catId.slice(0, 2) == "0x")
+			{
+				catId = catId.slice(2);
+			}
+			var bytes = hexToBytes(catId);
+			var k = bytes[1];
+			k = k % 128;
+
+			return k % 4;
 		}
 	};
 })();
