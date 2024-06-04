@@ -1,9 +1,9 @@
 const cacheName = "DefaultCompany-bug-battle-3d-0.1.0";
 const contentToCache = [
     "Build/5336a4b2c43054286fd70b1faa467eee.loader.js",
-    "Build/82d8b9356a7ad49781af80a245011913.framework.js.unityweb",
-    "Build/d97059f916150a608ddba2d9bdc2f5af.data.unityweb",
-    "Build/2e5d6153cd86ead913ed7e0b7eb963c1.wasm.unityweb",
+    "Build/207e37e4f65cd3399e909dbb48b7b10a.framework.js.unityweb",
+    "Build/b92664f82de4c5d711897bc4e91fbd3c.data.unityweb",
+    "Build/3b3b2eb65bffd35b268a791a9c6ec6d8.wasm.unityweb",
     "TemplateData/style.css"
 
 ];
