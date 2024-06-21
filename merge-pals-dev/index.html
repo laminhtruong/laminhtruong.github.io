@@ -64,9 +64,9 @@
     var buildUrl = "Build";
     var loaderUrl = buildUrl + "/Build.loader.js";
     var config = {
-      dataUrl: buildUrl + "/abe0d4b8d549e4b743dd6e95c6f425e8.data.unityweb",
-      frameworkUrl: buildUrl + "/83773ac154c70e6dba57e5fcadf5389e.js.unityweb",
-        codeUrl: buildUrl + "/3008fe48ae2e57e812ecde892589da2c.wasm.unityweb",
+      dataUrl: buildUrl + "/b1453210eed234bb636d26f3d669415c.data.gz",
+      frameworkUrl: buildUrl + "/3510341d23aed19738ec5c38f30aacf3.js.gz",
+        codeUrl: buildUrl + "/03b4313dce576c1e10d209797edd8a59.wasm.gz",
         streamingAssetsUrl: "StreamingAssets",
       companyName: "Mirailabs",
     productName: "PetM",
@@ -99,6 +99,7 @@
       }).then((unityInstance) => {
         loadingBar.style.display = "none";
         window.jsBridge = new Bridge();
+        Telegram.WebApp.expand();
       }).catch((message) => {
         alert(message);
       });
