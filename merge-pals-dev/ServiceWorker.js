@@ -1,9 +1,9 @@
 const cacheName = "Mirailabs-PetM-0.1.0";
 const contentToCache = [
     "Build/Build.loader.js",
-    "Build/3510341d23aed19738ec5c38f30aacf3.js.gz",
-    "Build/b1453210eed234bb636d26f3d669415c.data.gz",
-    "Build/03b4313dce576c1e10d209797edd8a59.wasm.gz",
+    "Build/3510341d23aed19738ec5c38f30aacf3.js.unityweb",
+    "Build/599447eb91f133e174922abd447b8f46.data.unityweb",
+    "Build/03b4313dce576c1e10d209797edd8a59.wasm.unityweb",
     "TemplateData/style.css"
 
 ];
