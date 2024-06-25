@@ -1,9 +1,9 @@
 var buildUrl = "Build";
 var loaderUrl = buildUrl + "/Build.loader.js";
 var config = {
-    dataUrl: buildUrl + "/ec393f5bc2650a30e6b7f06168f59148.data.unityweb",
-    frameworkUrl: buildUrl + "/c09df126e1b7d0bd653e5e2116777fb1.js.unityweb",
-    codeUrl: buildUrl + "/96b25db196a3e815cf3eb76620947d93.wasm.unityweb",
+    dataUrl: buildUrl + "/a409e437c117b9d86661f6ef6cb87851.data.unityweb",
+    frameworkUrl: buildUrl + "/69736e448eebc9f716290fc708a6649b.js.unityweb",
+    codeUrl: buildUrl + "/fff501f9cc3d51b817850097b0724f2f.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "PetM",
@@ -11,7 +11,7 @@ var config = {
 };
 
 var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-if (isMobile) {
+if(isMobile) {
     // Define a maximum pixel ratio for mobile to avoid rendering at too high resolutions
     const maxPixelRatioMobile = 2.0;
     config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
@@ -24,32 +24,32 @@ var loadingBar = document.querySelector("#unity-loading-bar-inner");
 var unityGame;
 var script = document.createElement("script");
 script.src = loaderUrl;
-script.onload = function () {
-    createUnityInstance(canvas, config, function (progress) {
+script.onload = function() {
+    createUnityInstance(canvas, config, function(progress) {
         loadingBar.style.width = 100 * progress + "%";
-    }).then(function (unityInstance) {
+    }).then(function(unityInstance) {
         unityGame = unityInstance;
         loadingContainer.classList.add("finished");
-    }).catch(function (message) {
+    }).catch(function(message) {
         alert(message);
     });
 };
 document.body.appendChild(script);
-function runUnityCommand(method, params) {
-    unityGame?.SendMessage("WebBridge", method, params);
+function runUnityCommand(method,params){
+    unityGame?.SendMessage("WebBridge",method,params);
 }
-function UnityTaskCallBack(taskId, success, data) {
-    runUnityCommand("UnityTaskCallBack", JSON.stringify({
+function UnityTaskCallBack(taskId,success,data){
+    runUnityCommand("UnityTaskCallBack",JSON.stringify({
         taskId,
         success,
-        data: JSON.stringify(data)
+        data: ((typeof data === 'object' && data !== null)?JSON.stringify(data):data)
     }));
 }
 
 Telegram.WebApp.expand();
-const tonWeb = new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
+const tonWeb=new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: location.protocol + '//' + location.hostname + '/static/tonconnect-manifest.json'
+    manifestUrl: 'https://jsonblob.com/api/jsonBlob/1254741318562603008'
 });
 
 tonConnectUI.onStatusChange(walletAndwalletInfo => {
