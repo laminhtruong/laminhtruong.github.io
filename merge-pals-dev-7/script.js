@@ -1,13 +1,31 @@
 var buildUrl = "Build";
 var loaderUrl = buildUrl + "/Build.loader.js";
 var config = {
-    dataUrl: buildUrl + "/3f9cc1fa199fa7d68e0d1c33a5e79b45.data.unityweb",
-    frameworkUrl: buildUrl + "/eb52bccb11e44fa2f567a63f2b7a0d6f.js.unityweb",
-    codeUrl: buildUrl + "/14d6e413bf076031b62eb860c297b63c.wasm.unityweb",
+    dataUrl: buildUrl + "/1d35d0f353549d7160bf6e27fc45308b.data.unityweb?v=0.1.0",
+    frameworkUrl: buildUrl + "/d141907998f3baf4ced4049b980089e2.js.unityweb?v=0.1.0",
+    codeUrl: buildUrl + "/76d9296b7c1840e1865a724ba3e2dc0c.wasm.unityweb?v=0.1.0",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
     productVersion: "0.1.0",
+
+    cacheControl: function (url) {
+        // Caching enabled for .data and .bundle files.
+        // Revalidate if file is up to date before loading from cache
+        if (url.match(/\.data/) || url.match(/\.bundle/)) {
+            return "must-revalidate";
+        }
+
+        // Caching enabled for .mp4 and .custom files
+        // Load file from cache without revalidation.
+        if (url.match(/\.mp4/) || url.match(/\.custom/)) {
+            return "immutable";
+        }
+
+        // Disable explicit caching for all other files.
+        // Note: the default browser cache may cache them anyway.
+        return "no-store";
+    },
 };
 
 var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
