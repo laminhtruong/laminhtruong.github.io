@@ -13,7 +13,7 @@
     <canvas id="unity-canvas"></canvas>
   </div>
   <div id="unity-loading-container">
-    <img src="logo.svg" class="logo" alt="Logo Mirailabs">
+    <img src="logo.png" class="logo" alt="Logo Mirailabs">
     <div id="unity-loading-bar">
       <div id="unity-loading-bar-inner"></div>
     </div>
@@ -27,13 +27,14 @@
 
     gtag('config', 'G-P4C8F51ZZ7');
   </script>
+  <script>
+    alert = function (message) { console.log(`ALERT ${message}`); };
+  </script>
   <script src="Build/Build.loader.js"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
   <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
   <script src="script.js"></script>
-  <!-- Parse Unity rich text to render stylized browser console logs -->
-  <script src="./pretty-console.js"></script>
 </body>
 
 </html>

@@ -60,8 +60,7 @@ body {
 }
 
 #unity-loading-container .logo {
-    width: 15%;
-    height: 15%;
+    scale: 0.5;
 }
 
 #unity-loading-bar {
@@ -71,6 +70,7 @@ body {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 10px;
+    top: -30px;
 }
 
 #unity-loading-bar-inner {
@@ -79,7 +79,7 @@ body {
     top: 0%;
     width: 1%;
     height: 100%;
-    background-color: #ccc;
+    background-color: #f79520;
     border-radius: 10px;
     transition: 400ms linear;
 }
