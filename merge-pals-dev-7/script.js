@@ -29,7 +29,7 @@ var config = {
 };
 
 var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-if(isMobile) {
+if (isMobile) {
     // Define a maximum pixel ratio for mobile to avoid rendering at too high resolutions
     const maxPixelRatioMobile = 2.0;
     config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
@@ -42,32 +42,33 @@ var loadingBar = document.querySelector("#unity-loading-bar-inner");
 var unityGame;
 var script = document.createElement("script");
 script.src = loaderUrl;
-script.onload = function() {
-    createUnityInstance(canvas, config, function(progress) {
+script.onload = function () {
+    createUnityInstance(canvas, config, function (progress) {
         loadingBar.style.width = 100 * progress + "%";
-    }).then(function(unityInstance) {
+    }).then(function (unityInstance) {
         unityGame = unityInstance;
         loadingContainer.classList.add("finished");
-    }).catch(function(message) {
+    }).catch(function (message) {
         alert(message);
     });
 };
 document.body.appendChild(script);
-function runUnityCommand(method,params){
-    unityGame?.SendMessage("WebBridge",method,params);
+function runUnityCommand(method, params) {
+    unityGame?.SendMessage("WebBridge", method, params);
 }
-function UnityTaskCallBack(taskId,success,data){
-    runUnityCommand("UnityTaskCallBack",JSON.stringify({
+function UnityTaskCallBack(taskId, success, data) {
+    runUnityCommand("UnityTaskCallBack", JSON.stringify({
         taskId,
         success,
-        data: ((typeof data === 'object' && data !== null)?JSON.stringify(data):data.toString())
+        data: ((typeof data === 'object' && data !== null) ? JSON.stringify(data) : data.toString())
     }));
 }
 
+Telegram.WebApp.ready();
 Telegram.WebApp.expand();
 Telegram.WebApp.enableClosingConfirmation();
 
-const tonWeb=new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
+const tonWeb = new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
     manifestUrl: 'https://jsonblob.com/api/jsonBlob/1254741318562603008'
 });
