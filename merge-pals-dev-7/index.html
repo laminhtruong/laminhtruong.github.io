@@ -18,33 +18,16 @@
       <div id="unity-loading-bar-inner"></div>
     </div>
   </div>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P4C8F51ZZ7"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-P4C8F51ZZ7');
-  </script>
-  <script>
-    alert = function (message) { console.log(`ALERT ${message}`); };
-  </script>
-  <script src="Build/Build.loader.js"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
-  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
-  <script src="script.js"></script>
-  <script>
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
-    Telegram.WebApp.enableClosingConfirmation();
-
     Telegram.WebApp.on('viewportChanged', (isStateStable) => {
       if (isStateStable) {
         disableScrollDown();
       }
     });
+
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+    Telegram.WebApp.enableClosingConfirmation();
 
     function disableScrollDown() {
       const scrollableEl = document.getElementById('unity-container');
@@ -75,6 +58,23 @@
       document.documentElement.addEventListener('touchmove', onTouchMove, { passive: false });
     }
   </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P4C8F51ZZ7"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-P4C8F51ZZ7');
+  </script>
+  <script>
+    alert = function (message) { console.log(`ALERT ${message}`); };
+  </script>
+  <script src="Build/Build.loader.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
+  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>
