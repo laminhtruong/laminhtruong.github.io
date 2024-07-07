@@ -19,7 +19,7 @@
     </div>
   </div>
   <script>
-    Telegram.WebApp.on('viewportChanged', (isStateStable) => {
+    Telegram.WebApp.onEvent('viewportChanged', (isStateStable) => {
       if (isStateStable) {
         disableScrollDown();
       }
