@@ -31,13 +31,15 @@
   <script>
     alert = function (message) { console.log(`ALERT ${message}`); };
 
+    Telegram.WebApp.onEvent("viewportChanged", isStateStable => {
+      if (isStateStable) {
+        disableScrollDown();
+      }
+    });
+
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
     Telegram.WebApp.enableClosingConfirmation();
-
-    setTimeout(() => {
-      disableScrollDown();
-    }, 1000);
 
     function disableScrollDown() {
       const overflow = 1;
