@@ -30,7 +30,6 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
     alert = function (message) { console.log(`ALERT ${message}`); };
-
     Telegram.WebApp.onEvent("viewportChanged", isStateStable => {
       if (isStateStable) {
         disableScrollDown();
