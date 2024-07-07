@@ -40,15 +40,13 @@
     }, 200);
 
     function disableScrollDown() {
+      const unityContainer = document.getElementById('unity-container');
       const overflow = 100;
-      document.body.style.overflowY = 'hidden';
-      document.body.style.marginTop = `${overflow}px`;
-      document.body.style.height = window.innerHeight + overflow + "px";
-      document.body.style.paddingBottom = `${overflow}px`;
-      window.scrollTo(0, overflow);
-
-      let unityContainer = document.getElementById('unity-container');
+      unityContainer.style.overflowY = 'hidden';
       unityContainer.style.marginTop = `${overflow}px`;
+      unityContainer.style.height = window.innerHeight + overflow + "px";
+      unityContainer.style.paddingBottom = `${overflow}px`;
+      window.scrollTo(0, overflow);
 
       let ts = 0;
       const onTouchStart = (e) => {
