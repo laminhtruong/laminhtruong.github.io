@@ -34,31 +34,6 @@
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
     Telegram.WebApp.enableClosingConfirmation();
-
-    setTimeout(() => {
-      disableScrollDown();
-    }, 200);
-
-    function disableScrollDown() {
-      const unityContainer = document.getElementById('unity-container');
-      const overflow = 100;
-      unityContainer.style.overflowY = 'hidden';
-      unityContainer.style.marginTop = `${overflow}px`;
-      unityContainer.style.height = window.innerHeight + overflow + "px";
-      unityContainer.style.paddingBottom = `${overflow}px`;
-      window.scrollTo(0, overflow);
-
-      let ts = 0;
-      const onTouchStart = (e) => {
-        ts = e.touches[0].clientY;
-      };
-      const onTouchMove = (e) => {
-        e.preventDefault();
-      };
-
-      document.documentElement.addEventListener('touchstart', onTouchStart, { passive: false });
-      document.documentElement.addEventListener('touchmove', onTouchMove, { passive: false });
-    }
   </script>
   <script src="Build/Build.loader.js"></script>
   <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
