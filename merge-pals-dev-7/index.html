@@ -36,32 +36,44 @@
   <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
   <script src="script.js"></script>
   <script>
-    const scrollableEl = document.getElementById('unity-container');
-    const overflow = 100;
-    document.body.style.overflowY = 'hidden';
-    document.body.style.marginTop = `${overflow}px`;
-    document.body.style.height = window.innerHeight + overflow + "px";
-    document.body.style.paddingBottom = `${overflow}px`;
-    window.scrollTo(0, overflow);
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+    Telegram.WebApp.enableClosingConfirmation();
 
-    let ts = 0;
-    const onTouchStart = (e) => {
-      ts = e.touches[0].clientY;
-    };
-    const onTouchMove = (e) => {
-      if (scrollableEl) {
-        const scroll = scrollableEl.scrollTop;
-        const te = e.changedTouches[0].clientY;
-        if (scroll <= 0 && ts < te) {
+    Telegram.WebApp.on('viewportChanged', (isStateStable) => {
+      if (isStateStable) {
+        disableScrollDown();
+      }
+    });
+
+    function disableScrollDown() {
+      const scrollableEl = document.getElementById('unity-container');
+      const overflow = 100;
+      document.body.style.overflowY = 'hidden';
+      document.body.style.marginTop = `${overflow}px`;
+      document.body.style.height = window.innerHeight + overflow + "px";
+      document.body.style.paddingBottom = `${overflow}px`;
+      window.scrollTo(0, overflow);
+
+      let ts = 0;
+      const onTouchStart = (e) => {
+        ts = e.touches[0].clientY;
+      };
+      const onTouchMove = (e) => {
+        if (scrollableEl) {
+          const scroll = scrollableEl.scrollTop;
+          const te = e.changedTouches[0].clientY;
+          if (scroll <= 0 && ts < te) {
+            e.preventDefault();
+          }
+        } else {
           e.preventDefault();
         }
-      } else {
-        e.preventDefault();
-      }
-    };
+      };
 
-    document.documentElement.addEventListener('touchstart', onTouchStart, { passive: false });
-    document.documentElement.addEventListener('touchmove', onTouchMove, { passive: false })
+      document.documentElement.addEventListener('touchstart', onTouchStart, { passive: false });
+      document.documentElement.addEventListener('touchmove', onTouchMove, { passive: false });
+    }
   </script>
 </body>
 

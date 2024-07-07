@@ -64,10 +64,6 @@ function UnityTaskCallBack(taskId, success, data) {
     }));
 }
 
-Telegram.WebApp.ready();
-Telegram.WebApp.expand();
-Telegram.WebApp.enableClosingConfirmation();
-
 const tonWeb = new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
     manifestUrl: 'https://jsonblob.com/api/jsonBlob/1254741318562603008'
