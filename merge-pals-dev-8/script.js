@@ -1,9 +1,9 @@
 var buildUrl = "Build";
 var loaderUrl = buildUrl + "/Build.loader.js";
 var config = {
-    dataUrl: buildUrl + "/93bb2ebe305f0a5d07dec0a233e5cb61.data.unityweb?v=0.1.0",
-    frameworkUrl: buildUrl + "/b73b58a11bbe0875400967d921da68bb.js.unityweb?v=0.1.0",
-    codeUrl: buildUrl + "/159ea1df8562e7ee290b27fa0f95d052.wasm.unityweb?v=0.1.0",
+    dataUrl: buildUrl + "/1b4828acc24b29b42d71c22aed6c79c6.data.unityweb?v=0.1.0",
+    frameworkUrl: buildUrl + "/fa1f7a70978a5ac4a25499a39683dd78.js.unityweb?v=0.1.0",
+    codeUrl: buildUrl + "/038fb2671da7bdcc6a9e89dc6176203d.wasm.unityweb?v=0.1.0",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
@@ -65,6 +65,7 @@ function UnityTaskCallBack(taskId,success,data){
 }
 
 const tonWeb=new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
+
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
     manifestUrl: 'https://jsonblob.com/api/jsonBlob/1254741318562603008'
 });
