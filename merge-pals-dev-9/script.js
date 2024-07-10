@@ -1,13 +1,13 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638561195311031898";
+var loaderUrl = buildUrl + "/development.loader.js?638562233042172643";
 var config = {
-    dataUrl: buildUrl + "/2b0a91e80f7a780d8d921c5d5daa586d.data.unityweb?638561195311031898",
-    frameworkUrl: buildUrl + "/1d5ff5745a4be021b987656aaf337d02.js.unityweb?638561195311031898",
-    codeUrl: buildUrl + "/a27244edc9e31f60817f245b139efd4f.wasm.unityweb?638561195311031898",
+    dataUrl: buildUrl + "/8f0149d977110a1100633b42162adab5.data.unityweb?638562233042172643",
+    frameworkUrl: buildUrl + "/cc44f95e59cd3388504ed07085a7a3cb.js.unityweb?638562233042172643",
+    codeUrl: buildUrl + "/121e02dad53c360dd196865be919331a.wasm.unityweb?638562233042172643",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
-    productVersion: "0.1.0",
+    productVersion: "1.0.0",
 
     cacheControl: function (url) {
         // Caching enabled for .data and .bundle files.
@@ -67,7 +67,7 @@ function UnityTaskCallBack(taskId,success,data){
 const tonWeb=new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
 
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://jsonblob.com/api/jsonBlob/1254741318562603008'
+    manifestUrl: 'https://mirai-labs.sgp1.cdn.digitaloceanspaces.com/merge_pal/static/1254741318562603008.json'
 });
 
 tonConnectUI.onStatusChange(walletAndwalletInfo => {
