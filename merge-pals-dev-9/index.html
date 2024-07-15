@@ -52,14 +52,19 @@
     function disableScrollDown() {
       const overflow = 100;
 
-      var unityContainer = document.getElementById('unity-container');
-      unityContainer.style.marginTop = `${overflow}px`;
-
       document.body.style.overflowY = 'hidden';
       document.body.style.marginTop = `${overflow}px`;
       document.body.style.height = window.innerHeight + overflow + "px";
       document.body.style.paddingBottom = `${overflow}px`;
       window.scrollTo(0, overflow);
+
+      var unityContainer = document.getElementById('unity-container');
+      unityContainer.style.marginTop = `${overflow}px`;
+
+      var unityLoadingContainer = document.getElementById('unity-loading-container');
+      unityLoadingContainer.style.marginTop = `${overflow}px`;
+      unityLoadingContainer.style.height = window.innerHeight + overflow + "px";
+      unityLoadingContainer.style.paddingBottom = `${overflow}px`;
 
       let ts = 0;
       const onTouchStart = (e) => {
