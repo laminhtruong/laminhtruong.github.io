@@ -2,10 +2,12 @@
 <html lang="en-us">
 
 <head>
+  <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Merge Pals</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="shortcut icon" href="Data/favicon.ico">
+  <link rel="stylesheet" href="Data/style.css">
+  <script src="https://tganalytics.xyz/index.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -13,7 +15,7 @@
     <canvas id="unity-canvas"></canvas>
   </div>
   <div id="unity-loading-container">
-    <img src="logo.png" class="logo" alt="Logo Mirailabs">
+    <img src="Data/logo.png" class="logo">
     <div id="unity-loading-bar">
       <div id="unity-loading-bar-inner"></div>
     </div>
@@ -31,7 +33,15 @@
   </script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
-    alert = function (message) { console.log(`ALERT ${message}`); };
+    // Initialize Telegram Analytics SDK
+    // window.telegramAnalytics.init({
+    //   token: 'eyJhcHBfbmFtZSI6Im1lcmdlcGFscyIsImFwcF91cmwiOiJodHRwczovL3QubWUvbWVyZ2VwYWxzYm90IiwiYXBwX2RvbWFpbiI6Imh0dHBzOi8vY2xpZW50Lm1lcmdlcGFscy5pby8ifQ==!vDMuYjbS+liH33iBK6J+K+oc0LFCoT/nhhVZDo8IZqk=',
+    //   appName: 'mergepals',
+    // });
+
+    alert = function (message) {
+      console.log(`ALERT ${message}`);
+    };
     Telegram.WebApp.onEvent("viewportChanged", isStateStable => {
       if (isStateStable) {
         disableScrollDown();
@@ -51,21 +61,17 @@
       window.scrollTo(0, overflow);
 
       let ts = 0;
-      const onTouchStart = (e) => {
-        ts = e.touches[0].clientY;
-      };
-      const onTouchMove = (e) => {
-        e.preventDefault();
-      };
+      const onTouchStart = (e) => { ts = e.touches[0].clientY; };
+      const onTouchMove = (e) => { e.preventDefault(); };
 
       document.documentElement.addEventListener('touchstart', onTouchStart, { passive: false });
       document.documentElement.addEventListener('touchmove', onTouchMove, { passive: false });
     }
   </script>
-  <script src="Build/development.loader.js?638562238391208560"></script>
   <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
   <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
-  <script src="script.js?638562238391208560"></script>
+  <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
+  <script src="script.js?638566745758672351" type="text/javascript"></script>
 </body>
 
 </html>
