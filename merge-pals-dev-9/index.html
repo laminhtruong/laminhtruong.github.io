@@ -51,6 +51,10 @@
 
     function disableScrollDown() {
       const overflow = 100;
+
+      var unityContainer = document.getElementById('unity-container');
+      unityContainer.style.marginTop = `-${overflow}px`;
+
       document.body.style.overflowY = 'hidden';
       document.body.style.marginTop = `${overflow}px`;
       document.body.style.height = window.innerHeight + overflow + "px";
