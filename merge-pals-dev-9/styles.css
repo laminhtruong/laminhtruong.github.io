@@ -49,7 +49,6 @@ body {
 
     opacity: 1;
     visibility: visible;
-    transition: 800ms linear;
 }
 
 #unity-loading-container.finished {
