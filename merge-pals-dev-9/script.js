@@ -1,13 +1,13 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638566762100822029";
+var loaderUrl = buildUrl + "/development.loader.js?638586410813519206";
 var config = {
-    dataUrl: buildUrl + "/6754a6fdb70b213c2a3128901043fae8.data.unityweb?638566762100822029",
-    frameworkUrl: buildUrl + "/4ba2751d13eece24e5c0cb1772c25a49.js.unityweb?638566762100822029",
-    codeUrl: buildUrl + "/d81d299511578ad017e0620b1de711d1.wasm.unityweb?638566762100822029",
+    dataUrl: buildUrl + "/4040724667b65fc6109ab2e88365aa89.data.unityweb?638586410813519206",
+    frameworkUrl: buildUrl + "/48d6fc4e9419b4a2ccb504ef88baa68e.js.unityweb?638586410813519206",
+    codeUrl: buildUrl + "/18fc6541e83b9c54c25525d7690518a9.wasm.unityweb?638586410813519206",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
-    productVersion: "1.0.0",
+    productVersion: "1.0.4",
 
     cacheControl: function (url) {
         // Caching enabled for .data and .bundle files.
@@ -39,18 +39,16 @@ else {
 }
 
 var canvas = document.querySelector("#unity-canvas");
-var loadingContainer = document.querySelector("#unity-loading-container");
-var loadingBar = document.querySelector("#unity-loading-bar-inner");
+var loadingBar = document.querySelector("#unity-loading-fg");
 
 var unityGame;
 var script = document.createElement("script");
 script.src = loaderUrl;
 script.onload = function () {
     createUnityInstance(canvas, config, function (progress) {
-        loadingBar.style.width = 100 * progress + "%";
+        loadingBar.style.width = 75 * progress + "%";
     }).then(function (unityInstance) {
         unityGame = unityInstance;
-        loadingContainer.classList.add("finished");
     }).catch(function (message) {
         alert(message);
     });
