@@ -5,7 +5,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Merge Pals</title>
-  <link rel="stylesheet" href="styles.1487920943.css">
+  <link rel="stylesheet" href="styles.1420024023.css">
+  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/museo-sans-rounded">
   <script src="https://tganalytics.xyz/index.js" type="text/javascript"></script>
 </head>
 
@@ -14,10 +15,11 @@
     <canvas id="unity-canvas"></canvas>
   </div>
   <div id="unity-loading-container">
-    <img src="logo.png" class="logo" alt="Logo Mirailabs">
-    <div id="unity-loading-bar">
-      <div id="unity-loading-bar-inner"></div>
+    <div id="unity-loading-bg">
+      <div id="unity-loading-fg"></div>
     </div>
+    <div id="unity-loading-text">Downloading game data</div>
+    <div id="unity-loading-version">v1.0.5</div>
   </div>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7YXRJ2WSVP"></script>
@@ -38,38 +40,18 @@
       appName: 'mergepals',
     });
 
-    alert = function (message) { console.log(`ALERT ${message}`); };
-    Telegram.WebApp.onEvent("viewportChanged", isStateStable => {
-      if (isStateStable) {
-        disableScrollDown();
-      }
-    });
-
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
     Telegram.WebApp.enableClosingConfirmation();
+    Telegram.WebApp.disableVerticalSwipes();
 
-    function disableScrollDown() {
-      const overflow = 2;
+    alert = function (message) { console.log(`ALERT ${message}`); };
 
-      document.body.style.overflowY = 'hidden';
-      document.body.style.marginTop = `${overflow}px`;
-      document.body.style.height = window.innerHeight + overflow + "px";
-      document.body.style.paddingBottom = `${overflow}px`;
-      window.scrollTo(0, overflow);
-
-      let ts = 0;
-      const onTouchStart = (e) => { ts = e.touches[0].clientY; };
-      const onTouchMove = (e) => { e.preventDefault(); };
-
-      document.documentElement.addEventListener('touchstart', onTouchStart, { passive: false });
-      document.documentElement.addEventListener('touchmove', onTouchMove, { passive: false });
-    }
   </script>
   <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
   <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
   <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
-  <script src="script.js?638576040091565078"></script>
+  <script src="script.js?638587951092464846"></script>
 </body>
 
 </html>
