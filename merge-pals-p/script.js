@@ -1,11 +1,11 @@
-var buildUrl = "Build";
-var loaderUrl = buildUrl + "/production.loader.js?638620918160193735";
+var buildUrl = "https://cdn.mirailabs.co/merge_pal/web-build/Build";
+var loaderUrl = buildUrl + "/production.loader.js?638621691942485683";
 var config = {
-    dataUrl: buildUrl + "/a7b630e31d1c07f237a341f379a3787f.data.unityweb",
-    frameworkUrl: buildUrl + "/a08796be8e9d6f0da222e97c1de2ebba.js.unityweb",
-    codeUrl: buildUrl + "/b8647149283e071332b2a1a3ed215f54.wasm.unityweb",
-    symbolsUrl: buildUrl + "/2436361a9a624a4fa6190c5c36c3c956.json.unityweb",
-    streamingAssetsUrl: "StreamingAssets",
+    dataUrl: buildUrl + "/2938fc3bbc74a1c92686f191c0c4cb64.data.unityweb",
+    frameworkUrl: buildUrl + "/df56fd0e4dfef58326e869ce5d9e30b1.js.unityweb",
+    codeUrl: buildUrl + "/c008b421d0374dca87926ce5cf004023.wasm.unityweb",
+    symbolsUrl: buildUrl + "/ba7fb66b24f4a1ca4237b6971480e6c3.json.unityweb",
+    streamingAssetsUrl: "https://cdn.mirailabs.co/merge_pal/web-build/StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
     productVersion: "1.1.4",
