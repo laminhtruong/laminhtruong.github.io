@@ -1,9 +1,10 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/a0eb54968f12b724932ff61ec1f2137c.loader.js?638652347447627349";
+var loaderUrl = buildUrl + "/69b0e0207a7dd6505101a3e8266a8789.loader.js?638654412339188900";
 var config = {
-    dataUrl: buildUrl + "/434fe31eb6cfee32e46526c35a49b017.data",
-    frameworkUrl: buildUrl + "/35487dd4aefdcba2c9b82f409f53fee9.framework.js",
-    codeUrl: buildUrl + "/1021265e8fd738caa97a2f8f70c0bad8.wasm",
+    dataUrl: buildUrl + "/768012ce350b6a5aca282cd79bee7967.data.unityweb",
+    frameworkUrl: buildUrl + "/9137e053c056c5b50b32b5ca3acdd646.framework.js.unityweb",
+    codeUrl: buildUrl + "/dcba6b11953d08c2a730cbf4c7da6752.wasm.unityweb",
+    symbolsUrl: buildUrl + "/851ec3760b7216a123a25554a9014d9d.symbols.json.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "sg-byte",
     productName: "mashup",
