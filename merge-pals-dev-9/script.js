@@ -1,8 +1,8 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638659655023138180";
+var loaderUrl = buildUrl + "/development.loader.js?638659678741539347";
 var config = {
-    dataUrl: buildUrl + "/7754543a397082c99fb83c0ca6fd599a.data.unityweb",
-    frameworkUrl: buildUrl + "/36bb4c9ed390f8114dba0ee482cb81c8.js.unityweb",
+    dataUrl: buildUrl + "/3cf4b464a36ba7a34a3f94d3755c8367.data.unityweb",
+    frameworkUrl: buildUrl + "/e17d07be2a4897b9a19cecafc25712be.js.unityweb",
     codeUrl: buildUrl + "/c29e46ad5ead8fe55b9523876a2db2b2.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
