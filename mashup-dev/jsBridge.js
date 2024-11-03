@@ -70,10 +70,10 @@ JsBridge.TelegramOpenLink = function (args) {
 JsBridge.TelegramOpenInvoice = function (args) {
 	Telegram.WebApp.openInvoice(args.url, status => {
 		if (status == "paid") {
-			UnityTaskCallBack(args.taskId, true, status);
+			this.SendTaskCallback(args.taskId, true, status);
 		}
 		else {
-			UnityTaskCallBack(args.taskId, false, status);
+			this.SendTaskCallback(args.taskId, false, status);
 		}
 	});
 };
