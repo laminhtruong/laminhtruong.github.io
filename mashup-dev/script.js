@@ -1,7 +1,7 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/69b0e0207a7dd6505101a3e8266a8789.loader.js?638662586898121199";
+var loaderUrl = buildUrl + "/69b0e0207a7dd6505101a3e8266a8789.loader.js?638662596089515577";
 var config = {
-    dataUrl: buildUrl + "/8f76ad7230e29185160e9235c43f19fd.data.unityweb",
+    dataUrl: buildUrl + "/982b1ff683960d1dcd1c85b3080598e3.data.unityweb",
     frameworkUrl: buildUrl + "/38fba50ef46be0eb1094378da28b0f73.framework.js.unityweb",
     codeUrl: buildUrl + "/60b6667e426d5191d3232c717a2aba6a.wasm.unityweb",
     symbolsUrl: buildUrl + "/252872d1c4c821160840b3483d744d32.symbols.json.unityweb",
