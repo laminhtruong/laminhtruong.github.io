@@ -67,6 +67,17 @@ JsBridge.TelegramOpenLink = function (args) {
 	}
 };
 
+JsBridge.TelegramOpenInvoice = function (args) {
+	Telegram.WebApp.openInvoice(args.url, status => {
+		if (status == "paid") {
+			UnityTaskCallBack(args.taskId, true, status);
+		}
+		else {
+			UnityTaskCallBack(args.taskId, false, status);
+		}
+	});
+};
+
 JsBridge.TelegramShareStory = function (args) {
 	var mediaUrl = args.mediaUrl;
 	var text = args.text;
