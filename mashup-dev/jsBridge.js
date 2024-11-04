@@ -49,8 +49,18 @@ JsBridge.SetLoadingText = function (args) {
 };
 
 JsBridge.IsMobile = function () {
-	var data = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-	return this.GetData(data);
+	var platform = Telegram.WebApp.platform;
+	return platform === "android" || platform === "ios";
+};
+
+JsBridge.CopyToClipboard = function (args) {
+	ClipboardJS.copy(UTF8ToString(args.text));
+};
+
+JsBridge.GetGameConfig = function () {
+	return this.GetData({
+		"invite_link": "https://t.me/laminhtruongbot/mashupdev/startapp?{0}",
+	});
 };
 
 //-------------------- Telegram Function --------------------
