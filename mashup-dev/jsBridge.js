@@ -54,7 +54,7 @@ JsBridge.IsMobile = function () {
 };
 
 JsBridge.CopyToClipboard = function (args) {
-	ClipboardJS.copy(UTF8ToString(args.text));
+	ClipboardJS.copy(args.text);
 };
 
 JsBridge.GetGameConfig = function () {
