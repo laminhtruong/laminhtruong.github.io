@@ -1,9 +1,9 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638664245940469028";
+var loaderUrl = buildUrl + "/development.loader.js?638664254356389315";
 var config = {
-    dataUrl: buildUrl + "/c908b4fc38cb66fec6d54264e32b2eea.data.unityweb",
-    frameworkUrl: buildUrl + "/8ae4924106c80affbe00c68db01bbc68.js.unityweb",
-    codeUrl: buildUrl + "/26e3cca043a2d4f7e9724a4416928435.wasm.unityweb",
+    dataUrl: buildUrl + "/2fd34f6a9656b04832a9c5b1dc286e55.data.unityweb",
+    frameworkUrl: buildUrl + "/b3c9f4b47954959eb427877388bf9ef4.js.unityweb",
+    codeUrl: buildUrl + "/5d5d342f6fa0dd42e4c779dc44e10693.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
