@@ -1,13 +1,13 @@
 class TelegramModule {
 	getInitData() {
-		if (!Telegram) return "";
+		if (typeof Telegram === 'undefined') return "";
 		return Telegram.WebApp.initData;
 	}
 
 	openLink(args) {
 		var url = args.url;
-		if (!Telegram) {
-			window.open(url, "_blank");
+		if (typeof Telegram === 'undefined') {
+			window.open(url);
 			return;
 		}
 		if (url.startsWith("https://t.me")) {
