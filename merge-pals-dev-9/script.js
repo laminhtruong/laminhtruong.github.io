@@ -1,9 +1,9 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638664903407341359";
+var loaderUrl = buildUrl + "/development.loader.js?638665924887440414";
 var config = {
-    dataUrl: buildUrl + "/6544fcbcacbda49a293c05c7727f758a.data.unityweb",
-    frameworkUrl: buildUrl + "/b922d24f679316fc09e0208fbe09ec54.js.unityweb",
-    codeUrl: buildUrl + "/3c73ee6a7cc94b7838c7b2a3e48df862.wasm.unityweb",
+    dataUrl: buildUrl + "/b8b4d3eda35b149dae7d9972799c72ca.data.unityweb",
+    frameworkUrl: buildUrl + "/ccaed30f933dfa1f15c0a42179136993.js.unityweb",
+    codeUrl: buildUrl + "/bb10c4fe0414228d54429afea941f954.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
@@ -54,28 +54,4 @@ script.onload = function () {
     });
 };
 document.body.appendChild(script);
-function runUnityCommand(method, params) {
-    unityGame?.SendMessage("WebBridge", method, params);
-}
-function UnityTaskCallBack(taskId, success, data) {
-    runUnityCommand("UnityTaskCallBack", JSON.stringify({
-        taskId,
-        success,
-        data: ((typeof data === 'object' && data !== null) ? JSON.stringify(data) : data.toString())
-    }));
-}
 
-const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://mirai-labs.sgp1.cdn.digitaloceanspaces.com/merge_pal/static/1254741318562603008.json'
-});
-
-tonConnectUI.onStatusChange(walletAndwalletInfo => {
-    runUnityCommand("StatusChange");
-});
-tonConnectUI.connectionRestored.then(restored => {
-    if (restored) {
-        console.log('Connection restored.');
-    } else {
-        console.log('Connection was not restored.');
-    }
-});
