@@ -35,7 +35,7 @@ class WorldAppModule {
 				statement: args.statement,
 			});
 
-		UnityTaskCallBack(args.taskId, finalPayload.status === "success", finalPayload);
+		UnityModule.sendTaskCallback(args.taskId, finalPayload.status === "success", finalPayload);
 	}
 }
 
