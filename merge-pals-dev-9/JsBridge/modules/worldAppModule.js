@@ -39,17 +39,21 @@ class WorldAppModule {
 	}
 	
 	async pay(args){
-		const tokens=args.tokens.map(token => ({
+		const tokens = args.tokens.map((token) => ({
 			symbol: token.symbol,
 			token_amount: tokenToDecimals(token.token_amount, "WLD").toString(),
 		}));
 		const { finalPayload } = await WorldAppMiniKit.commandsAsync.pay({
 			reference: args.reference,
 			to: args.to,
-			tokens: args.tokens,
+			tokens: tokens,
 			description: args.description,
 		});
-		UnityModule.sendTaskCallback(args.taskId, finalPayload.status === "success", finalPayload);
+		UnityModule.sendTaskCallback(
+			args.taskId,
+			finalPayload.status === "success",
+			finalPayload
+		);
 	}
 }
 
