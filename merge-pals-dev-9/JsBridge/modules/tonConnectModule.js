@@ -3,15 +3,15 @@ import UnityModule from './unityModule.js';
 class TonConnectModule {
 	init(args) {
 		if (typeof tonConnectUI === 'undefined') return;
+
+		tonConnectUI.onStatusChange(wallet => {
+			this.updateUserFriendlyAddress();
+			return unityGame.SendMessage("UnityBridge", "WalletStatusChange", JSON.stringify(wallet));
+		});
+
 		if (tonConnectUI.wallet !== null) {
 			this.updateUserFriendlyAddress();
-			return unityGame.SendMessage("UnityBridge", "WalletStatusChange", JSON.stringify(tonConnectUI.wallet));
-		}
-		else {
-			tonConnectUI.onStatusChange(wallet => {
-				this.updateUserFriendlyAddress();
-				return unityGame.SendMessage("UnityBridge", "WalletStatusChange", JSON.stringify(wallet));
-			});
+			unityGame.SendMessage("UnityBridge", "WalletStatusChange", JSON.stringify(tonConnectUI.wallet));
 		}
 	};
 

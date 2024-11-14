@@ -5,6 +5,7 @@
     <type fullname="Game.Runtime.DecorationClickableHouse" preserve="all" />
     <type fullname="Game.Runtime.VfxTimer" preserve="all" />
     <type fullname="Game.UI.GrabMachineAnimation" preserve="all" />
+    <type fullname="Outline" preserve="all" />
   </assembly>
   <assembly fullname="spine-unity, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="Spine.Unity.SkeletonDataAsset" preserve="all" />
