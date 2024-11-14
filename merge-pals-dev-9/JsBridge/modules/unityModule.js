@@ -43,7 +43,8 @@ class UnityModule {
 	}
 
 	isProduction() {
-		var isProduction = window.location.host.indexOf("client.mergepals.io") > -1;
+		var host = window.location.host;
+		var isProduction = host.indexOf("client.mergepals.io") > -1 || host.indexOf("client-world-app.mergepals.io") > -1;
 		return this.getData(isProduction);
 	}
 }
