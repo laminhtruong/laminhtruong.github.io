@@ -79,11 +79,12 @@ JsBridge.TelegramOpenLink = function (args) {
 
 JsBridge.TelegramOpenInvoice = function (args) {
 	Telegram.WebApp.openInvoice(args.url, status => {
-		if (status == "paid") {
-			this.SendTaskCallback(args.taskId, true, status);
+		var isPaid = status == "paid";
+		if (isPaid) {
+			this.SendTaskCallback(args.taskId, true, isPaid);
 		}
 		else {
-			this.SendTaskCallback(args.taskId, false, status);
+			this.SendTaskCallback(args.taskId, false, isPaid);
 		}
 	});
 };
