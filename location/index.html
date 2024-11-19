@@ -10,9 +10,12 @@
 <body>
 	<script src="https://telegram.org/js/telegram-web-app.js"></script>
 	<script>
-		Telegram.WebApp.LocationManager.init();
-		Telegram.WebApp.LocationManager.getLocation(data => {
-			console.log("AAAAAAAAAA " + JSON.stringify(data));
+		Telegram.WebApp.LocationManager.init(status => {
+			console.log("init status: " + status);
+
+			Telegram.WebApp.LocationManager.getLocation(data => {
+				console.log("AAAAAAAAAA " + JSON.stringify(data));
+			});
 		});
 
 	</script>
