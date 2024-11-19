@@ -1,10 +1,10 @@
-var buildUrl = "https://cdn.mirailabs.co/games/mergepals.io/web-build//Build";
+var buildUrl = "Build";
 var loaderUrl = buildUrl + "/production.loader.js?638676200068723001";
 var config = {
     dataUrl: buildUrl + "/b69b8bd473655f42461a1b33112557b0.data.unityweb",
     frameworkUrl: buildUrl + "/3a518eca160c82ba27b780f24825b8a1.js.unityweb",
     codeUrl: buildUrl + "/8879ce31be15b046b07d06b6375a2423.wasm.unityweb",
-    streamingAssetsUrl: "https://cdn.mirailabs.co/games/mergepals.io/web-build//StreamingAssets",
+    streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
     productVersion: "1.3.3",
