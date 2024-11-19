@@ -1,13 +1,13 @@
-var buildUrl = "Build";
-var loaderUrl = buildUrl + "/production.loader.js?638667688873536233";
+var buildUrl = "https://cdn.mirailabs.co/games/mergepals.io/web-build//Build";
+var loaderUrl = buildUrl + "/production.loader.js?638676200068723001";
 var config = {
-    dataUrl: buildUrl + "/a295e91912c73405749e83e184d7a8e6.data.unityweb",
-    frameworkUrl: buildUrl + "/d80e5cb09f613cf7807bc19b07de393f.js.unityweb",
-    codeUrl: buildUrl + "/1ed9f041ab0a77a3d18f70c0d2e7a211.wasm.unityweb",
-    streamingAssetsUrl: "StreamingAssets",
+    dataUrl: buildUrl + "/b69b8bd473655f42461a1b33112557b0.data.unityweb",
+    frameworkUrl: buildUrl + "/3a518eca160c82ba27b780f24825b8a1.js.unityweb",
+    codeUrl: buildUrl + "/8879ce31be15b046b07d06b6375a2423.wasm.unityweb",
+    streamingAssetsUrl: "https://cdn.mirailabs.co/games/mergepals.io/web-build//StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
-    productVersion: "1.3.2",
+    productVersion: "1.3.3",
 
     cacheControl: function (url) {
         // Caching enabled for .data and .bundle files.
@@ -65,8 +65,21 @@ function UnityTaskCallBack(taskId, success, data) {
     }));
 }
 
+const miraiWallet = {
+    appName: "miraiapp-tg",
+    name: "Mirai App",
+    imageUrl: "https://cdn.mirailabs.co/miraihub/miraiapp-tg-icon-288.png",
+    aboutUrl: "https://mirai.app",
+    universalLink: "https://t.me/MiraiAppBot/app",
+    bridgeUrl: "https://bridge.tonapi.io/bridge",
+    platforms: ["ios", "android", "macos", "windows", "linux"],
+}
+
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://mirai-labs.sgp1.cdn.digitaloceanspaces.com/merge_pal/static/1254741318562603008.json'
+    manifestUrl: 'https://cdn.mirailabs.co/merge_pal/static/1254741318562603008.json',
+    walletsListConfiguration: {
+        includeWallets: [miraiWallet]
+    }
 });
 
 tonConnectUI.onStatusChange(walletAndwalletInfo => {

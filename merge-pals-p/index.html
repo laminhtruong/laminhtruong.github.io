@@ -20,9 +20,9 @@
       <div id="unity-loading-fg"></div>
     </div>
     <div id="unity-loading-text">Downloading game data</div>
-    <div id="unity-loading-version" ontouchstart="touchStart(event)">Version: 1.3.2</div>
+    <div id="unity-loading-version" ontouchstart="touchStart(event)">Version: 1.3.3</div>
   </div>
-  <script src="debug.js?638667688873536233"></script>
+  <script src="debug.js?638676200068723001"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7YXRJ2WSVP"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -44,9 +44,9 @@
 
     randomSplash = function () {
       var splash = document.getElementById('unity-loading-container');
-      var max = 4;
-      var index = Math.floor(Math.random() * max)
-      splash.style.backgroundImage = `url('Splash/s_new_${index}.webp')`;
+      var max = 8;
+      var index = Math.floor(Math.random() * max) + 1;
+      splash.style.backgroundImage = `url('Splash/splash_${index}.png')`;
     }
 
     Telegram.WebApp.ready();
@@ -61,7 +61,7 @@
   <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
   <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
   <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
-  <script src="script.js?638667688873536233"></script>
+  <script src="script.js?638676200068723001"></script>
 </body>
 
 </html>
