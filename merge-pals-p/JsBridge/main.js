@@ -1,9 +1,9 @@
-import telegramModule from './modules/telegramModule.js?638683135850266822';
-import unityModule from './modules/unityModule.js?638683135850266822';
-import tonConnectModule from './modules/tonConnectModule.js?638683135850266822';
-import tonWebModule from './modules/tonWebModule.js?638683135850266822';
-import adsgramModule from './modules/adsgramModule.js?638683135850266822';
-import worldAppModule from './modules/worldAppModule.js?638683135850266822';
+import telegramModule from './modules/telegramModule.js?638683160671127859';
+import unityModule from './modules/unityModule.js?638683160671127859';
+import tonConnectModule from './modules/tonConnectModule.js?638683160671127859';
+import tonWebModule from './modules/tonWebModule.js?638683160671127859';
+import adsgramModule from './modules/adsgramModule.js?638683160671127859';
+import worldAppModule from './modules/worldAppModule.js?638683160671127859';
 
 window.telegramModule = telegramModule;
 window.unityModule = unityModule;
