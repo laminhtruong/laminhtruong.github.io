@@ -1,13 +1,13 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/production.loader.js?638676200068723001";
+var loaderUrl = buildUrl + "/production.loader.js?638683135850266822";
 var config = {
-    dataUrl: buildUrl + "/b69b8bd473655f42461a1b33112557b0.data.unityweb",
-    frameworkUrl: buildUrl + "/3a518eca160c82ba27b780f24825b8a1.js.unityweb",
-    codeUrl: buildUrl + "/8879ce31be15b046b07d06b6375a2423.wasm.unityweb",
+    dataUrl: buildUrl + "/8324c8b4f8b9d85830d6b1406402a330.data.unityweb",
+    frameworkUrl: buildUrl + "/70f975a4a01e8edf0712918456ce960a.js.unityweb",
+    codeUrl: buildUrl + "/c18748258ce0d72f4732ff72bba278fd.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
-    productVersion: "1.3.3",
+    productVersion: "1.4.0",
 
     cacheControl: function (url) {
         // Caching enabled for .data and .bundle files.
@@ -54,16 +54,6 @@ script.onload = function () {
     });
 };
 document.body.appendChild(script);
-function runUnityCommand(method, params) {
-    unityGame?.SendMessage("WebBridge", method, params);
-}
-function UnityTaskCallBack(taskId, success, data) {
-    runUnityCommand("UnityTaskCallBack", JSON.stringify({
-        taskId,
-        success,
-        data: ((typeof data === 'object' && data !== null) ? JSON.stringify(data) : data.toString())
-    }));
-}
 
 const miraiWallet = {
     appName: "miraiapp-tg",
@@ -74,21 +64,9 @@ const miraiWallet = {
     bridgeUrl: "https://bridge.tonapi.io/bridge",
     platforms: ["ios", "android", "macos", "windows", "linux"],
 }
-
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
     manifestUrl: 'https://cdn.mirailabs.co/merge_pal/static/1254741318562603008.json',
     walletsListConfiguration: {
         includeWallets: [miraiWallet]
-    }
-});
-
-tonConnectUI.onStatusChange(walletAndwalletInfo => {
-    runUnityCommand("StatusChange");
-});
-tonConnectUI.connectionRestored.then(restored => {
-    if (restored) {
-        console.log('Connection restored.');
-    } else {
-        console.log('Connection was not restored.');
     }
 });
