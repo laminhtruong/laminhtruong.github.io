@@ -59,6 +59,7 @@ JsBridge.CopyToClipboard = function (args) {
 
 JsBridge.GetGameConfig = function () {
 	return this.GetData({
+		"bot_name": "@animix_bot",
 		"invite_link": "https://t.me/laminhtruongbot/mashupdev?startapp={0}",
 	});
 };
