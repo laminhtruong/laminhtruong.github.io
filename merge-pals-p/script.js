@@ -1,13 +1,13 @@
-var buildUrl = "Build";
-var loaderUrl = buildUrl + "/production.loader.js?638687322573003182";
+var buildUrl = "https://cdn.mirailabs.co/games/mergepals.io/web-build/Build";
+var loaderUrl = buildUrl + "/production.loader.js?638689222020222788";
 var config = {
-    dataUrl: buildUrl + "/2e71925112ccc88fa070ffebeab348fc.data.unityweb",
-    frameworkUrl: buildUrl + "/5c72f03c9f256a7d3cc7d5874145899f.js.unityweb",
-    codeUrl: buildUrl + "/f4d09b6a05f7b7f6735328c645822e64.wasm.unityweb",
-    streamingAssetsUrl: "StreamingAssets",
+    dataUrl: buildUrl + "/48ed694ef79eca527e42f5ff04750214.data.unityweb",
+    frameworkUrl: buildUrl + "/52fb36c70aff090da8b54cc4e9e1b099.js.unityweb",
+    codeUrl: buildUrl + "/6842b3e7a018970b5cae7c02eb7c853a.wasm.unityweb",
+    streamingAssetsUrl: "https://cdn.mirailabs.co/games/mergepals.io/web-build/StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
-    productVersion: "1.4.0",
+    productVersion: "1.4.1",
 
     cacheControl: function (url) {
         // Caching enabled for .data and .bundle files.
@@ -60,7 +60,7 @@ const miraiWallet = {
     name: "Mirai App",
     imageUrl: "https://cdn.mirailabs.co/miraihub/miraiapp-tg-icon-288.png",
     aboutUrl: "https://mirai.app",
-    universalLink: "https://t.me/MiraiAppBot/app",
+    universalLink: "https://t.me/MiraiAppBot?attach=wallet",
     bridgeUrl: "https://bridge.tonapi.io/bridge",
     platforms: ["ios", "android", "macos", "windows", "linux"],
 }
