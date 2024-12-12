@@ -1,4 +1,4 @@
-class UnityModule {
+class BridgeModule {
 	init() {
 		document.addEventListener("visibilitychange", function () {
 			unityGame.SendMessage("UnityBridge", "OnVisibilityChange", document.visibilityState);
@@ -56,4 +56,4 @@ class UnityModule {
 	}
 }
 
-export default new UnityModule;
+export default new BridgeModule;
