@@ -1,4 +1,4 @@
-import unityModule from "./unityModule.js";
+import UnityModule from "./unityModule.js";
 
 class TonWebModule {
 
@@ -29,9 +29,9 @@ class TonWebModule {
 			const bocData = TonWeb.utils.base64ToBytes(boc.boc);
 			const cellResp = TonWeb.boc.Cell.oneFromBoc(bocData);
 			const hash = TonWeb.utils.bytesToBase64(await cellResp.hash());
-			unityModule.sendTaskCallback(args.taskId, true, hash);
+			UnityModule.sendTaskCallback(args.taskId, true, hash);
 		} catch (error) {
-			unityModule.sendTaskCallback(args.taskId, false, error)
+			UnityModule.sendTaskCallback(args.taskId, false, error)
 		}
 	}
 
@@ -69,9 +69,9 @@ class TonWebModule {
 			const msgBody = TonWeb.utils.base64ToBytes(result.boc);
 			const msgCell = TonWeb.boc.Cell.oneFromBoc(msgBody);
 			const hash = TonWeb.utils.bytesToBase64(await msgCell.hash());
-			unityModule.sendTaskCallback(args.taskId, true, hash);
+			UnityModule.sendTaskCallback(args.taskId, true, hash);
 		} catch (error) {
-			unityModule.sendTaskCallback(args.taskId, false, error)
+			UnityModule.sendTaskCallback(args.taskId, false, error)
 		}
 	}
 
@@ -109,9 +109,9 @@ class TonWebModule {
 			const msgBody = TonWeb.utils.base64ToBytes(result.boc);
 			const msgCell = TonWeb.boc.Cell.oneFromBoc(msgBody);
 			const hash = TonWeb.utils.bytesToBase64(await msgCell.hash());
-			unityModule.sendTaskCallback(args.taskId, true, hash);
+			UnityModule.sendTaskCallback(args.taskId, true, hash);
 		} catch (error) {
-			unityModule.sendTaskCallback(args.taskId, false, error);
+			UnityModule.sendTaskCallback(args.taskId, false, error);
 		}
 	}
 
