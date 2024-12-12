@@ -1,7 +1,7 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638695989178967888";
+var loaderUrl = buildUrl + "/development.loader.js?638695995308976535";
 var config = {
-    dataUrl: buildUrl + "/62d71ecf255e94a76783c79ed35de573.data.unityweb",
+    dataUrl: buildUrl + "/316a7d2e07d7195db78ae93483f5c5d7.data.unityweb",
     frameworkUrl: buildUrl + "/2608358dc2f43da50fc88d0f7feaefe2.js.unityweb",
     codeUrl: buildUrl + "/639a0b518296ebdfca36cccd01fa0844.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
@@ -55,18 +55,3 @@ script.onload = function () {
 };
 document.body.appendChild(script);
 
-const miraiWallet = {
-    appName: "miraiapp-tg",
-    name: "Mirai App",
-    imageUrl: "https://cdn.mirailabs.co/miraihub/miraiapp-tg-icon-288.png",
-    aboutUrl: "https://mirai.app",
-    universalLink: "https://t.me/mirai_app_dev_bot?attach=wallet",
-    bridgeUrl: "https://bridge.tonapi.io/bridge",
-    platforms: ["ios", "android", "macos", "windows", "linux"],
-}
-const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://cdn.mirailabs.co/merge_pal/static/1254741318562603008.json',
-    walletsListConfiguration: {
-        includeWallets: [miraiWallet]
-    }
-});
