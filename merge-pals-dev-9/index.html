@@ -4,11 +4,9 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preload" href="Build/e4749cbaa198489cc7f10647c86ce5df.data.unityweb" as="fetch"
-    type="application/octet-stream" crossorigin>
+  <link rel="preload" href="Build/62d71ecf255e94a76783c79ed35de573.data.unityweb" as="fetch" type="application/octet-stream" crossorigin>
   <link rel="preload" href="Build/2608358dc2f43da50fc88d0f7feaefe2.js.unityweb" as="script">
-  <link rel="preload" href="Build/fcd9536be677d4462837db73a86151f5.wasm.unityweb" as="fetch" type="application/wasm"
-    crossorigin>
+  <link rel="preload" href="Build/639a0b518296ebdfca36cccd01fa0844.wasm.unityweb" as="fetch" type="application/wasm" crossorigin>
   <title>Merge Pals</title>
   <link rel="stylesheet" href="styles.654196268.css">
   <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/museo-sans-rounded">
@@ -26,8 +24,8 @@
     <div id="unity-loading-text">Downloading game data</div>
     <div id="unity-loading-version" ontouchstart="touchStart(event)">Version: 1.4.2</div>
   </div>
-  <script src="debug.js?638695964158076929"></script>
-  <script type="module" src="JsBridge/main.js?638695964158076929"></script>
+  <script src="debug.js?638695989178967888"></script>
+  <script type="module" src="JsBridge/main.js?638695989178967888"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7YXRJ2WSVP"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -38,18 +36,16 @@
   </script>
 
   </script>
-  <script type="module">
-    import {
-      MiniKit,
-      tokenToDecimals,
-    } from "https://cdn.jsdelivr.net/npm/@worldcoin/minikit-js@1.3.0/+esm";
-    window.WorldAppMiniKit = MiniKit;
-    window.tokenToDecimals = tokenToDecimals;
-    window.WorldAppMiniKit.install();
-    console.log(
-      "World App Mini Kit install status",
-      WorldAppMiniKit.isInstalled()
-    );
+  <script src="https://client.mergepals.io/telegram-web-app.js"></script>
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/TONSolutions/telemetree-pixel@main/telemetree-pixel.js"></script>
+  <script>
+    const telemetreeBuilder = telemetree({
+      projectId: "688bf046-f990-4e46-9e26-f65277224c80",
+      apiKey: "5cbf02a4-4f53-4255-9fa0-9f91dde453e6",
+      appName: "Merge Pals",
+      isTelegramContext: true, // use false, if a website is not in Telegram Web App context
+    });
   </script>
 
   <script>
@@ -61,13 +57,19 @@
       splash.style.backgroundImage = `url('Splash/splash_${index}.png')`;
     }
 
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+    Telegram.WebApp.enableClosingConfirmation();
+    Telegram.WebApp.disableVerticalSwipes();
 
     alert = function (message) { console.log(`ALERT ${message}`); };
     randomSplash();
 
   </script>
+  <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
+  <script src="https://cdn.mirailabs.co/games/mergepals.io/statics/tonconnect-ui.min.js"></script>
   <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
-  <script src="script.js?638695964158076929"></script>
+  <script src="script.js?638695989178967888"></script>
 </body>
 
 </html>
