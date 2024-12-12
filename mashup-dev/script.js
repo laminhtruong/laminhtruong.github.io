@@ -1,10 +1,10 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/69b0e0207a7dd6505101a3e8266a8789.loader.js?638692957220332593";
+var loaderUrl = buildUrl + "/69b0e0207a7dd6505101a3e8266a8789.loader.js?638696356115622117";
 var config = {
-    dataUrl: buildUrl + "/27584656d028779961978fdba8afbcf8.data.unityweb",
-    frameworkUrl: buildUrl + "/c973ad10bf6880eef9be6ca748db6c46.framework.js.unityweb",
-    codeUrl: buildUrl + "/cd5060d5fa3a95133f651d2d6b103db5.wasm.unityweb",
-    symbolsUrl: buildUrl + "/269d212b6f13f4fa113dd60f0f4d3e05.symbols.json.unityweb",
+    dataUrl: buildUrl + "/5e4932450067eb9c08fe7752a360cb21.data.unityweb",
+    frameworkUrl: buildUrl + "/ee9e35cecdb7189ca78754a69ab57db1.framework.js.unityweb",
+    codeUrl: buildUrl + "/daa8d289a355fc53141bc0010acbbb20.wasm.unityweb",
+    symbolsUrl: buildUrl + "/57ced77419c4d1e4feafe30f66c87e10.symbols.json.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "sg-byte",
     productName: "mashup",
@@ -55,7 +55,3 @@ script.onload = function () {
     });
 };
 document.body.appendChild(script);
-
-const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://mirai-labs.sgp1.cdn.digitaloceanspaces.com/merge_pal/static/1254741318562603008.json'
-});
