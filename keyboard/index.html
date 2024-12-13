@@ -3,32 +3,21 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 	<title>Document</title>
 </head>
 
 <body>
-	<script type="module">
-		import Keyboard from 'https://cdn.jsdelivr.net/npm/@capacitor/keyboard@6.0.3/+esm'
+	<input type="text" id="my-input" />
 
-		Keyboard.addListener('keyboardWillShow', info => {
-			console.log('keyboard will show with height:', info.keyboardHeight);
-		});
+	<script>
+		const inputHandler = document.getElementById("my-input");
 
-		Keyboard.addListener('keyboardDidShow', info => {
-			console.log('keyboard did show with height:', info.keyboardHeight);
-		});
-
-		Keyboard.addListener('keyboardWillHide', () => {
-			console.log('keyboard will hide');
-		});
-
-		Keyboard.addListener('keyboardDidHide', () => {
-			console.log('keyboard did hide');
+		visualViewport.addEventListener('resize', (event) => {
+			inputHandler.style.position = "fixed";
+			inputHandler.style.top = event.target.height > 600 ? `0px` : `${event.target.height}px`;
 		});
 	</script>
-
-	<input type="text" id="input" />
 </body>
 
 </html>
