@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<script type="module">
+		import Keyboard from 'https://cdn.jsdelivr.net/npm/@capacitor/keyboard@6.0.3/+esm'
+
+		Keyboard.addListener('keyboardWillShow', info => {
+			console.log('keyboard will show with height:', info.keyboardHeight);
+		});
+
+		Keyboard.addListener('keyboardDidShow', info => {
+			console.log('keyboard did show with height:', info.keyboardHeight);
+		});
+
+		Keyboard.addListener('keyboardWillHide', () => {
+			console.log('keyboard will hide');
+		});
+
+		Keyboard.addListener('keyboardDidHide', () => {
+			console.log('keyboard did hide');
+		});
+	</script>
+
+	<input type="text" id="input" />
+</body>
+
+</html>
