@@ -16,7 +16,7 @@
 		inputHandler.style.height = '50px';
 
 		visualViewport.addEventListener('resize', (event) => {
-			inputHandler.style.top = event.target.height > 600 ? `0px` : `${event.target.height}px`;
+			inputHandler.style.top = event.target.height > 600 ? `0px` : `${event.target.height - 100}px`;
 		});
 	</script>
 </body>
