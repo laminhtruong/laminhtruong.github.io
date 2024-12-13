@@ -1,5 +1,5 @@
-import telegramModule from './modules/telegramModule.js?638697240442268996';
-import bridgeModule from './modules/bridgeModule.js?638697240442268996';
+import telegramModule from './modules/telegramModule.js?638697248747083987';
+import bridgeModule from './modules/bridgeModule.js?638697248747083987';
 
 window.telegramModule = telegramModule;
 window.bridgeModule = bridgeModule;
