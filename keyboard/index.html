@@ -12,9 +12,10 @@
 
 	<script>
 		const inputHandler = document.getElementById("my-input");
+		inputHandler.style.position = "absolute";
+		inputHandler.style.height = '50px';
 
 		visualViewport.addEventListener('resize', (event) => {
-			inputHandler.style.position = "fixed";
 			inputHandler.style.top = event.target.height > 600 ? `0px` : `${event.target.height}px`;
 		});
 	</script>
