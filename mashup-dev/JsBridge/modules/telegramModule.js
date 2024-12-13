@@ -1,6 +1,20 @@
 import BridgeModule from "./bridgeModule.js";
 
 class TelegramModule {
+	init() {
+		Telegram.WebApp.BackButton.onClick(() => {
+			unityGame.SendMessage("UnityBridge", "OnBackButtonClicked", "");
+		});
+	}
+
+	setBackButton(args) {
+		if (args.visible) {
+			Telegram.WebApp.BackButton.show();
+		} else {
+			Telegram.WebApp.BackButton.hide();
+		}
+	}
+
 	getInitData() {
 		if (typeof Telegram === 'undefined') return "";
 		return Telegram.WebApp.initData;
