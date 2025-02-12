@@ -1,9 +1,7 @@
 <linker>
   <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-    <type fullname="Game.Runtime.Billboarding" preserve="all" />
     <type fullname="Game.Runtime.Decoration2d" preserve="all" />
     <type fullname="Game.Runtime.DecorationClickableHouse" preserve="all" />
-    <type fullname="Game.Runtime.VfxTimer" preserve="all" />
     <type fullname="Game.UI.GrabMachineAnimation" preserve="all" />
     <type fullname="Outline" preserve="all" />
   </assembly>
@@ -26,11 +24,6 @@
     <type fullname="UnityEngine.ResourceManagement.ResourceProviders.LegacyResourcesProvider" preserve="all" />
     <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
   </assembly>
-  <assembly fullname="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-    <type fullname="UnityEngine.AnimationClip" preserve="all" />
-    <type fullname="UnityEngine.Animator" preserve="all" />
-    <type fullname="UnityEngine.RuntimeAnimatorController" preserve="all" />
-  </assembly>
   <assembly fullname="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.AudioClip" preserve="all" />
   </assembly>
@@ -43,20 +36,14 @@
     <type fullname="UnityEngine.Object" preserve="all" />
     <type fullname="UnityEngine.RectTransform" preserve="all" />
     <type fullname="UnityEngine.Shader" preserve="all" />
-    <type fullname="UnityEngine.SkinnedMeshRenderer" preserve="all" />
     <type fullname="UnityEngine.Sprite" preserve="all" />
     <type fullname="UnityEngine.TextAsset" preserve="all" />
     <type fullname="UnityEngine.Texture2D" preserve="all" />
     <type fullname="UnityEngine.Transform" preserve="all" />
     <type fullname="UnityEngine.Events.PersistentCallGroup" preserve="nothing" serialized="true" />
   </assembly>
-  <assembly fullname="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-    <type fullname="UnityEngine.ParticleSystem" preserve="all" />
-    <type fullname="UnityEngine.ParticleSystemRenderer" preserve="all" />
-  </assembly>
   <assembly fullname="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.BoxCollider" preserve="all" />
-    <type fullname="UnityEngine.CapsuleCollider" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.CanvasRenderer" preserve="all" />
