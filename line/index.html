@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<script src="https://static.kaiawallet.io/js/dapp-portal-sdk-1.2.6.js"></script>
+	<script>
+		const connect = async () => {
+			const sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
+			const provider = sdk.getWalletProvider()
+
+			console.log(provider);
+		}
+
+		connect();
+	</script>
+</body>
+
+</html>
