@@ -15,19 +15,16 @@
 	<script>
 		const connect = async () => {
 			try {
-				alert('init liff');
-				await liff.init({ liffId: '2006898896-KvlkD1WM' });
-				alert('sdk initializing');
-				const sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
-				alert('sdk initialized');
-				const provider = sdk.getWalletProvider()
-				alert('provider initialized');
-				const accounts = await provider.request({ method: 'kaia_requestAccounts' });
-				alert('accounts initialized');
 
+				await liff.init({ liffId: '2006898896-KvlkD1WM' });
+				const sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
+				const provider = sdk.getWalletProvider()
+				const accounts = await provider.request({ method: 'kaia_requestAccounts' });
+
+				console.log('aaaaaaaaaaaaa', accounts);
 				if (accounts && accounts.length > 0) {
+					console.log(accounts);
 					connectedAddress = accounts[0];
-					alert(connectedAddress);
 				}
 			}
 			catch (error) {
