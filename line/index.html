@@ -14,7 +14,8 @@
 	<script>
 		const connect = async () => {
 			try {
-				const sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
+				alert('sdk initializing');
+				const sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209', chainId: '1001' });
 				alert('sdk initialized');
 				const provider = sdk.getWalletProvider()
 				alert('provider initialized');
@@ -33,7 +34,7 @@
 
 		setTimeout(() => {
 			connect();
-		}, 3000);
+		}, 1000);
 	</script>
 </body>
 
