@@ -15,8 +15,11 @@
 		const connect = async () => {
 			try {
 				const sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
+				alert('sdk initialized');
 				const provider = sdk.getWalletProvider()
+				alert('provider initialized');
 				const accounts = await provider.request({ method: 'kaia_requestAccounts' });
+				alert('accounts initialized');
 
 				if (accounts && accounts.length > 0) {
 					connectedAddress = accounts[0];
