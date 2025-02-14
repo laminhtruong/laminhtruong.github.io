@@ -21,7 +21,10 @@
 				const provider = sdk.getWalletProvider()
 				const accounts = await provider.request({ method: 'kaia_requestAccounts' });
 
-				console.log('aaaaaaaaaaaaa', accounts);
+				var idToken = liff.getIDToken();
+				alert(idToken);
+				console.log(idToken);
+
 				if (accounts && accounts.length > 0) {
 					console.log(accounts);
 					connectedAddress = accounts[0];
