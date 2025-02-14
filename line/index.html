@@ -17,9 +17,9 @@
 			try {
 
 				await liff.init({ liffId: '2006898896-KvlkD1WM' });
-				const sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
-				const provider = sdk.getWalletProvider()
-				const accounts = await provider.request({ method: 'kaia_requestAccounts' });
+				// const sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
+				// const provider = sdk.getWalletProvider()
+				// const accounts = await provider.request({ method: 'kaia_requestAccounts' });
 
 				var idToken = liff.getIDToken();
 				alert(idToken);
