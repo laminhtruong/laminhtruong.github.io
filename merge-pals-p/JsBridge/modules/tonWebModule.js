@@ -118,7 +118,7 @@ class TonWebModule {
 	convertAmount(amount, decimals) {
 		let comps = amount.toString().split(".");
 		let whole = comps[0];
-		let fraction = comps[1].substring(0, decimals);
+		let fraction = comps.length > 1 ? comps[1].substring(0, decimals) : "0";
 
 		if (!whole) whole = "0";
 		if (!fraction) fraction = "0";

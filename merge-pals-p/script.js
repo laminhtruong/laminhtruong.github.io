@@ -1,13 +1,13 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/production.loader.js?638750578843441592";
+var loaderUrl = buildUrl + "/production.loader.js?638755828338974166";
 var config = {
-    dataUrl: buildUrl + "/b3c84e5da6851dfd8431bb0a6014314f.data.unityweb",
-    frameworkUrl: buildUrl + "/e2f1acbd6211125de8f3186c1110ceb8.js.unityweb",
-    codeUrl: buildUrl + "/df8f7b869ce403698ffd2059196796a3.wasm.unityweb",
+    dataUrl: buildUrl + "/d250f1b7e4b518136347353fa357da00.data.unityweb",
+    frameworkUrl: buildUrl + "/81c1f369d92124d66db464deeed03cf0.js.unityweb",
+    codeUrl: buildUrl + "/62ffa08581679c71a575d1fcbe63f9cc.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
-    productVersion: "2.0.0",
+    productVersion: "2.1.0",
 
     cacheControl: function (url) {
         // Caching enabled for .data and .bundle files.
@@ -61,7 +61,7 @@ const miraiWallet = {
     imageUrl: "https://cdn.mirailabs.co/miraihub/miraiapp-tg-icon-288.png",
     aboutUrl: "https://mirai.app",
     universalLink: "https://t.me/MiraiAppBot?attach=wallet",
-    bridgeUrl: "https://bridge.tonapi.io/bridge",
+    bridgeUrl: "https://bridge.mirai.app",
     platforms: ["ios", "android", "macos", "windows", "linux"],
 }
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
