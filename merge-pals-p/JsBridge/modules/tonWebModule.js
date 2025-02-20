@@ -94,12 +94,14 @@ class TonWebModule {
 			cell.bits.writeCoins(TonWeb.utils.toNano('0')); // forward amount (if >0, will send notification message)
 			cell.bits.writeBit(false); // we store forwardPayload as a reference
 			cell.bits.writeBytes(comment);
+
+			const friendlyAddress = new TonWeb.utils.Address(jsonData.jettonWallet).toString(true, false, false, tonConnectUI.wallet.account.chain !== '-239');
 			const payload = TonWeb.utils.bytesToBase64(await cell.toBoc());
 			const transaction = {
 				validUntil: Math.floor(Date.now() / 1000) + 3600,
 				messages: [
 					{
-						address: jsonData.jettonWallet,
+						address: friendlyAddress,
 						amount: TonWeb.utils.toNano('0.05').toString(),
 						payload: payload,
 					},
