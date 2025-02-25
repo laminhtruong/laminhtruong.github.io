@@ -6,7 +6,7 @@ class LineModule {
 			await liff.init({ liffId: '2006898896-KvlkD1WM' });
 
 			var idToken = liff.getIDToken();
-			UnityModule.sendTaskCallback(args.taskId, false, idToken);
+			UnityModule.sendTaskCallback(args.taskId, true, idToken);
 		}
 		catch (error) {
 			UnityModule.sendTaskCallback(args.taskId, false, error);
