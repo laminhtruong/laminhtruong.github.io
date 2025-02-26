@@ -15,6 +15,8 @@ class LineModule {
 			this.sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
 
 			var idToken = liff.getIDToken();
+			console.log("ID Token: " + idToken);
+
 			UnityModule.sendTaskCallback(args.taskId, true, idToken);
 		}
 		catch (error) {
@@ -30,6 +32,7 @@ class LineModule {
 
 				if (accounts && accounts.length > 0) {
 					this.walletAddress = accounts[0];
+					console.log("Wallet address: " + this.walletAddress);
 				}
 			}
 			UnityModule.sendTaskCallback(args.taskId, true, this.walletAddress);
