@@ -1,5 +1,5 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638761849444214069";
+var loaderUrl = buildUrl + "/development.loader.js?638761849444214065";
 var config = {
     dataUrl: buildUrl + "/e998c4f78a633d7ab0b9ccf17710c887.data.unityweb",
     frameworkUrl: buildUrl + "/da83935f82a45d729767acca8058ad18.js.unityweb",
