@@ -35,11 +35,54 @@ class TonWebModule {
 		}
 	}
 
-	async claimTon(args) {
+	async sendJetton(args) {
+		try {
+			if (!tonConnectUI.connected) {
+				await tonConnectUI.connectWallet();
+			}
+			const jsonData = JSON.parse(args.data);
+			const sourceAddress = new TonWeb.utils.Address(tonConnectUI.wallet.account.address);
+			const destinationAddress = new TonWeb.utils.Address(jsonData.destinationAddress);
+			const comment = new Uint8Array([... new Uint8Array(4), ... new TextEncoder().encode(jsonData.comment)]);
+			const cell = new TonWeb.boc.Cell();
+			cell.bits.writeUint(0xf8a7ea5, 32); // opcode for jetton transfer
+			cell.bits.writeUint(0, 64); // query id
+			cell.bits.writeCoins(this.convertAmount(jsonData.amount, jsonData.token_decimals)); // store jetton amount
+			cell.bits.writeAddress(destinationAddress); // TON wallet destination address
+			cell.bits.writeAddress(sourceAddress); // response excess destination
+			cell.bits.writeBit(false); // no custom payload
+			cell.bits.writeCoins(TonWeb.utils.toNano('0')); // forward amount (if >0, will send notification message)
+			cell.bits.writeBit(false); // we store forwardPayload as a reference
+			cell.bits.writeBytes(comment);
+
+			const friendlyAddress = new TonWeb.utils.Address(jsonData.jettonWallet).toString(true, false, true, tonConnectUI.wallet.account.chain !== '-239');
+			const payload = TonWeb.utils.bytesToBase64(await cell.toBoc());
+			const transaction = {
+				validUntil: Math.floor(Date.now() / 1000) + 3600,
+				messages: [
+					{
+						address: friendlyAddress,
+						amount: TonWeb.utils.toNano('0.05').toString(),
+						payload: payload,
+					},
+				],
+			};
+			const result = await tonConnectUI.sendTransaction(transaction);
+			const msgBody = TonWeb.utils.base64ToBytes(result.boc);
+			const msgCell = TonWeb.boc.Cell.oneFromBoc(msgBody);
+			const hash = TonWeb.utils.bytesToBase64(await msgCell.hash());
+			UnityModule.sendTaskCallback(args.taskId, true, hash);
+		} catch (error) {
+			UnityModule.sendTaskCallback(args.taskId, false, error);
+		}
+	}
+
+	async claim(args) {
 		try {
 			const jsonData = JSON.parse(args.data);
 			const cell = new TonWeb.boc.Cell();
-			cell.bits.writeUint(802178298, 32); //claim op code
+			const fee = jsonData.op_code == '802178298' ? '0.01' : '0.1';
+			cell.bits.writeUint(jsonData.op_code, 32); //claim op code
 
 			const signatureCell = new TonWeb.boc.Cell();
 			const bytesSignature = TonWeb.utils.base64ToBytes(jsonData.signature);
@@ -60,7 +103,7 @@ class TonWebModule {
 				messages: [
 					{
 						address: jsonData.contract_address,
-						amount: TonWeb.utils.toNano('0.01').toString(),
+						amount: TonWeb.utils.toNano(fee).toString(),
 						payload: payload,
 					},
 				],
@@ -75,50 +118,10 @@ class TonWebModule {
 		}
 	}
 
-	async sendJetton(args) {
-		try {
-			if (!tonConnectUI.connected) {
-				await tonConnectUI.connectWallet();
-			}
-			const jsonData = JSON.parse(args.data);
-			const sourceAddress = new TonWeb.utils.Address(tonConnectUI.wallet.account.address);
-			const destinationAddress = new TonWeb.utils.Address(jsonData.destinationAddress);
-			const comment = new Uint8Array([... new Uint8Array(4), ... new TextEncoder().encode(jsonData.comment)]);
-			const cell = new TonWeb.boc.Cell();
-			cell.bits.writeUint(0xf8a7ea5, 32); // opcode for jetton transfer
-			cell.bits.writeUint(0, 64); // query id
-			cell.bits.writeCoins(this.convertAmount(jsonData.amount, jsonData.token_decimals)); // store jetton amount
-			cell.bits.writeAddress(destinationAddress); // TON wallet destination address
-			cell.bits.writeAddress(sourceAddress); // response excess destination
-			cell.bits.writeBit(false); // no custom payload
-			cell.bits.writeCoins(TonWeb.utils.toNano('0')); // forward amount (if >0, will send notification message)
-			cell.bits.writeBit(false); // we store forwardPayload as a reference
-			cell.bits.writeBytes(comment);
-			const payload = TonWeb.utils.bytesToBase64(await cell.toBoc());
-			const transaction = {
-				validUntil: Math.floor(Date.now() / 1000) + 3600,
-				messages: [
-					{
-						address: jsonData.jettonWallet,
-						amount: TonWeb.utils.toNano('0.05').toString(),
-						payload: payload,
-					},
-				],
-			};
-			const result = await tonConnectUI.sendTransaction(transaction);
-			const msgBody = TonWeb.utils.base64ToBytes(result.boc);
-			const msgCell = TonWeb.boc.Cell.oneFromBoc(msgBody);
-			const hash = TonWeb.utils.bytesToBase64(await msgCell.hash());
-			UnityModule.sendTaskCallback(args.taskId, true, hash);
-		} catch (error) {
-			UnityModule.sendTaskCallback(args.taskId, false, error);
-		}
-	}
-
 	convertAmount(amount, decimals) {
 		let comps = amount.toString().split(".");
 		let whole = comps[0];
-		let fraction = comps[1].substring(0, decimals);
+		let fraction = comps.length > 1 ? comps[1].substring(0, decimals) : "0";
 
 		if (!whole) whole = "0";
 		if (!fraction) fraction = "0";

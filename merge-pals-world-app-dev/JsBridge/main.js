@@ -1,9 +1,10 @@
-import telegramModule from './modules/telegramModule.js?638751234642696388';
-import unityModule from './modules/unityModule.js?638751234642696388';
-import tonConnectModule from './modules/tonConnectModule.js?638751234642696388';
-import tonWebModule from './modules/tonWebModule.js?638751234642696388';
-import adsgramModule from './modules/adsgramModule.js?638751234642696388';
-import worldAppModule from './modules/worldAppModule.js?638751234642696388';
+import telegramModule from './modules/telegramModule.js?638765969142315203';
+import unityModule from './modules/unityModule.js?638765969142315203';
+import tonConnectModule from './modules/tonConnectModule.js?638765969142315203';
+import tonWebModule from './modules/tonWebModule.js?638765969142315203';
+import adsgramModule from './modules/adsgramModule.js?638765969142315203';
+import worldAppModule from './modules/worldAppModule.js?638765969142315203';
+import lineModule from './modules/lineModule.js?638765969142315203';
 
 window.telegramModule = telegramModule;
 window.unityModule = unityModule;
@@ -11,6 +12,7 @@ window.tonConnectModule = tonConnectModule;
 window.tonWebModule = tonWebModule;
 window.adsgramModule = adsgramModule;
 window.worldAppModule = worldAppModule;
+window.lineModule = lineModule;
 
 window.executeFunctionByName = function (functionName, context /*, args */) {
 	var args = Array.prototype.slice.call(arguments, 2);

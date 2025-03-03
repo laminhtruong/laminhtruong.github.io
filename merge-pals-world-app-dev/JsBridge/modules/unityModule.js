@@ -10,7 +10,7 @@ class UnityModule {
 	}
 
 	sendTaskCallback(taskId, success, data) {
-		var params = {
+		let params = {
 			id: taskId,
 			success: success,
 			data: this.getData(data)
@@ -19,18 +19,18 @@ class UnityModule {
 	}
 
 	setLoadingProgress(args) {
-		var progress = args.progress;
-		var loadingBar = document.querySelector("#unity-loading-fg");
+		let progress = args.progress;
+		let loadingBar = document.querySelector("#unity-loading-fg");
 		loadingBar.style.width = 100 * args.progress + "%";
 
 		if (progress == 1) {
-			var loadingContainer = document.querySelector("#unity-loading-container");
+			let loadingContainer = document.querySelector("#unity-loading-container");
 			loadingContainer.classList.add("finished");
 		}
 	}
 
 	setLoadingText(args) {
-		var loadingText = document.querySelector("#unity-loading-text");
+		let loadingText = document.querySelector("#unity-loading-text");
 		loadingText.innerHTML = args.text;
 	}
 
@@ -43,9 +43,19 @@ class UnityModule {
 	}
 
 	isProduction() {
-		var host = window.location.host;
-		var isProduction = host.indexOf("client.mergepals.io") > -1 || host.indexOf("client-world-app.mergepals.io") > -1;
+		let host = window.location.host;
+		let isProduction = host.indexOf("client.mergepals.io") > -1 || host.indexOf("client-world-app.mergepals.io") > -1;
 		return this.getData(isProduction);
+	}
+
+	getPlatform() {
+		let platform = 'unknown';
+
+		if (typeof Telegram !== 'undefined') platform = "telegram";
+		else if (typeof window.WorldAppMiniKit !== 'undefined') platform = "world_app";
+		else if (typeof liff !== 'undefined') platform = "line";
+
+		return this.getData(platform);
 	}
 }
 
