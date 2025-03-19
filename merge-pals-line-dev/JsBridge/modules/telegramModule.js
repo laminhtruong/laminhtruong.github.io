@@ -101,6 +101,10 @@ class TelegramModule {
 		var platform = Telegram.WebApp.platform;
 		return `${(platform === "android" || platform === "ios")}`;
 	};
+
+	getOs() {
+		return UnityModule.getData(Telegram.WebApp.platform);
+	}
 }
 
 export default new TelegramModule;

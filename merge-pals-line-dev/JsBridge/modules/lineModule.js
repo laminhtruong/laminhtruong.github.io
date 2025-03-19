@@ -8,6 +8,10 @@ class LineModule {
 	}
 
 	async initSdk() {
+		if (typeof liff === 'undefined') {
+			return;
+		}
+
 		try {
 			await liff.init({ liffId: '2006898896-KvlkD1WM' });
 			if (!liff.isLoggedIn()) {
@@ -54,7 +58,6 @@ class LineModule {
 
 				if (accounts && accounts.length > 0) {
 					this.walletAddress = accounts[0];
-					console.log("Wallet address: " + this.walletAddress);
 				}
 			}
 			UnityModule.sendTaskCallback(args.taskId, true, this.walletAddress);

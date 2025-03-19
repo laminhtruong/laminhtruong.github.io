@@ -89,7 +89,7 @@ class TonWebModule {
 			signatureCell.bits.writeBytes(bytesSignature);
 			cell.refs.push(signatureCell); //Signature
 
-			const address = new TonWeb.utils.Address(jsonData.to_address);
+			const address = new TonWeb.utils.Address(jsonData.to_address).toString(true, false, true, tonConnectUI.wallet.account.chain !== '-239');
 			cell.bits.writeAddress(address); //Receiver address
 
 			const nanoAmount = TonWeb.utils.toNano(jsonData.amount.toString());
