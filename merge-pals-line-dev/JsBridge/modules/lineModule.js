@@ -71,7 +71,7 @@ class LineModule {
 	async pay(args) {
 		try {
 			const paymentProvider = this.sdk.getPaymentProvider()
-			await paymentProvider.startPayment(paymentId);
+			await paymentProvider.startPayment(args.paymentId);
 
 			UnityModule.sendTaskCallback(args.taskId, true, "success");
 		}
