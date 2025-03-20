@@ -1,13 +1,13 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/production.loader.js?638775580875841383";
+var loaderUrl = buildUrl + "/production.loader.js?638780630166634925";
 var config = {
-    dataUrl: buildUrl + "/db36314bcae2655d1bdc274d950a60eb.data.unityweb",
-    frameworkUrl: buildUrl + "/051edf9140963110e7a3b67f4e71f4b6.js.unityweb",
-    codeUrl: buildUrl + "/be858a28d8b2ba036e8cc5570172d53b.wasm.unityweb",
+    dataUrl: buildUrl + "/4c84459b7c09a65d4fac0cb4f8794f2d.data.unityweb",
+    frameworkUrl: buildUrl + "/07451a0a22720c17f411949537aa04b8.js.unityweb",
+    codeUrl: buildUrl + "/1c669d6bd43660b29bf9d829aff86a51.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
-    productVersion: "2.1.3",
+    productVersion: "2.1.4",
 
     cacheControl: function (url) {
         // Caching enabled for .data and .bundle files.
@@ -56,5 +56,5 @@ script.onload = function () {
 document.body.appendChild(script);
 
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://cdn.mirailabs.co/merge_pal/static/1254741318562603008.json'
+    manifestUrl: 'https://cdn.mirailabs.co/merge_pal/static/1254741318562603008.json',
 });

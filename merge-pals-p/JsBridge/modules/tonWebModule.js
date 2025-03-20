@@ -89,7 +89,7 @@ class TonWebModule {
 			signatureCell.bits.writeBytes(bytesSignature);
 			cell.refs.push(signatureCell); //Signature
 
-			const address = new TonWeb.utils.Address(jsonData.to_address).toString(true, false, true, tonConnectUI.wallet.account.chain !== '-239');
+			const address = new TonWeb.utils.Address(jsonData.to_address);
 			cell.bits.writeAddress(address); //Receiver address
 
 			const nanoAmount = TonWeb.utils.toNano(jsonData.amount.toString());
@@ -97,12 +97,13 @@ class TonWebModule {
 			cell.bits.writeUint(jsonData.deadline, 32); //Deadline
 			cell.bits.writeUint(Number(jsonData.order_id), 64); //txId
 
+			const friendlyAddress = new TonWeb.utils.Address(jsonData.contract_address).toString(true, false, true, tonConnectUI.wallet.account.chain !== '-239');
 			const payload = TonWeb.utils.bytesToBase64(await cell.toBoc());
 			const transaction = {
 				validUntil: Math.floor(Date.now() / 1000) + 3600,
 				messages: [
 					{
-						address: jsonData.contract_address,
+						address: friendlyAddress,
 						amount: TonWeb.utils.toNano(fee).toString(),
 						payload: payload,
 					},
