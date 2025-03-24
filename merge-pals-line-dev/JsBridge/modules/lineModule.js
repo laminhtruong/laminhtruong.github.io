@@ -14,7 +14,7 @@ class LineModule {
 		try {
 			await liff.init({ liffId: '2006898896-KvlkD1WM' });
 			if (!liff.isLoggedIn()) {
-				liff.login();
+				liff.login({ redirectUri: location.href });
 			}
 
 			this.sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
