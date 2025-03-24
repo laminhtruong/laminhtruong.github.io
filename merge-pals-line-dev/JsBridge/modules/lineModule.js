@@ -4,7 +4,6 @@ class LineModule {
 	constructor() {
 		this.sdk = null;
 		this.walletAddress = null;
-		this.initSdk();
 	}
 
 	async initSdk() {
@@ -42,6 +41,8 @@ class LineModule {
 
 	async login(args) {
 		try {
+			await this.initSdk();
+
 			let idToken = liff.getIDToken();
 			UnityModule.sendTaskCallback(args.taskId, true, idToken);
 		}
