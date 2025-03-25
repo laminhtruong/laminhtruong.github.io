@@ -1,9 +1,9 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638784917520764617";
+var loaderUrl = buildUrl + "/development.loader.js?638785133652759449";
 var config = {
-    dataUrl: buildUrl + "/0fbe17295ff655f9caa245b6fe5dfba5.data.unityweb",
-    frameworkUrl: buildUrl + "/07451a0a22720c17f411949537aa04b8.js.unityweb",
-    codeUrl: buildUrl + "/4e9add1140e13a9df8619c536fd8dcc0.wasm.unityweb",
+    dataUrl: buildUrl + "/840b7d15d72dad10bb80db75d910c4b4.data.unityweb",
+    frameworkUrl: buildUrl + "/46fa7cdef1ddcd1b4ce1242e04af6446.js.unityweb",
+    codeUrl: buildUrl + "/04c304663292540ef6a459dcecc2916a.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
@@ -28,13 +28,31 @@ var config = {
     },
 };
 
+var container = document.querySelector("#unity-container");
 var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 if (isMobile) {
-    // Define a maximum pixel ratio for mobile to avoid rendering at too high resolutions
     const maxPixelRatioMobile = 2.0;
     config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
+    container.className = "unity-mobile";
 }
 else {
+    window.addEventListener('resize', resizeCanvas);
+    document.addEventListener('DOMContentLoaded', () => {
+        resizeCanvas();
+    });
+
+    function resizeCanvas() {
+        console.log("size change:" + window.innerWidth + "," + window.innerHeight);
+        container.style.height = window.innerHeight + "px";
+
+        if (window.innerHeight < window.innerWidth) {
+            container.style.width = window.innerHeight * 9 / 16 + "px";
+        } else {
+            container.style.width = window.innerWidth + "px";
+        }
+    }
+
     config.devicePixelRatio = 2.0;
 }
 
