@@ -13,13 +13,6 @@ class LineModule {
 
 		try {
 			await liff.init({ liffId: '2006898896-KvlkD1WM' });
-
-			var decodeIdToken = liff.getDecodedIDToken();
-			if (!liff.isLoggedIn() || decodeIdToken.exp < Date.now() / 1000) {
-				liff.logout();
-				liff.login({ redirectUri: location.href });
-			}
-
 			this.sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
 		} catch (error) {
 			console.error(error);
@@ -47,6 +40,12 @@ class LineModule {
 	async login(args) {
 		try {
 			await this.initSdk();
+
+			var decodeIdToken = liff.getDecodedIDToken();
+			if (!liff.isLoggedIn() || decodeIdToken.exp < Date.now() / 1000) {
+				liff.logout();
+				liff.login({ redirectUri: location.href });
+			}
 
 			let idToken = liff.getIDToken();
 			UnityModule.sendTaskCallback(args.taskId, true, idToken);
