@@ -1,7 +1,7 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638785150346045642";
+var loaderUrl = buildUrl + "/development.loader.js?638785166501065258";
 var config = {
-    dataUrl: buildUrl + "/66d69f61b066ed29522e7722a572cb59.data.unityweb",
+    dataUrl: buildUrl + "/144129c2354bfa1a7caf9647c9ed0278.data.unityweb",
     frameworkUrl: buildUrl + "/834fb9b21c980ace39bec66f5a8c34b9.js.unityweb",
     codeUrl: buildUrl + "/c62c1d7848bb19ab28553afc011a4384.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
@@ -29,12 +29,14 @@ var config = {
 };
 
 var container = document.querySelector("#unity-container");
+var canvas = document.querySelector("#unity-canvas");
 var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 if (isMobile) {
     const maxPixelRatioMobile = 2.0;
     config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
     container.className = "unity-mobile";
+    canvas.className = "unity-mobile";
 }
 else {
     window.addEventListener('resize', resizeCanvas);
@@ -45,18 +47,20 @@ else {
     function resizeCanvas() {
         console.log("size change:" + window.innerWidth + "," + window.innerHeight);
         container.style.height = window.innerHeight + "px";
+        canvas.style.height = container.style.height;
 
         if (window.innerHeight < window.innerWidth) {
             container.style.width = window.innerHeight * 9 / 16 + "px";
+            canvas.style.width = container.style.width
         } else {
             container.style.width = window.innerWidth + "px";
+            canvas.style.width = container.style.width;
         }
     }
 
     config.devicePixelRatio = 2.0;
 }
 
-var canvas = document.querySelector("#unity-canvas");
 var loadingBar = document.querySelector("#unity-loading-fg");
 
 var unityGame;
