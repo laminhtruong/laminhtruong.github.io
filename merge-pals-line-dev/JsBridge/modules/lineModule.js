@@ -14,8 +14,9 @@ class LineModule {
 		try {
 			await liff.init({ liffId: '2006898896-KvlkD1WM' });
 
-			let decodeIdToken = liff.getDecodedIDToken();
+			var decodeIdToken = liff.getDecodedIDToken();
 			if (!liff.isLoggedIn() || decodeIdToken.exp < Date.now() / 1000) {
+				liff.logout();
 				liff.login({ redirectUri: location.href });
 			}
 
