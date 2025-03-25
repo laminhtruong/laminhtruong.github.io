@@ -23,20 +23,22 @@ class LineModule {
 		}
 	}
 
-	getReferralCode() {
+	getParam(param) {
 		let query = window.location.search.substring(1);
 		let params = query.split("&");
-		let code = "";
 
 		for (let i = 0; i < params.length; i++) {
 			let pair = params[i].split("=");
-			if (pair[0] == "referral_code") {
-				code = pair[1];
-				break;
+			if (pair[0] == param) {
+				return pair[1];
 			}
 		}
 
-		return UnityModule.getData(code);
+		return "";
+	}
+
+	getReferralCode() {
+		return UnityModule.getData(this.getParam("referral_code"));
 	}
 
 	async login(args) {
