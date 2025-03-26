@@ -37,6 +37,10 @@ class LineModule {
 		return UnityModule.getData(this.getParam("referral_code"));
 	}
 
+	getWalletAddress(args) {
+		return UnityModule.getData(this.walletAddress);
+	}
+
 	async login(args) {
 		try {
 			await this.initSdk();
@@ -86,10 +90,6 @@ class LineModule {
 		catch (error) {
 			UnityModule.sendTaskCallback(args.taskId, false, error);
 		}
-	}
-
-	async getWalletAddress(args) {
-		return UnityModule.getData(this.walletAddress);
 	}
 
 	async pay(args) {
