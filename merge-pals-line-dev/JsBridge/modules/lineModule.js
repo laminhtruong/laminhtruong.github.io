@@ -55,18 +55,43 @@ class LineModule {
 		}
 	}
 
+	async requestAccounts() {
+		const walletProvider = this.sdk.getWalletProvider()
+		const accounts = await walletProvider.request({ method: 'kaia_requestAccounts' });
+
+		if (accounts && accounts.length > 0) {
+			this.walletAddress = accounts[0];
+		}
+	}
+
+	async connectWallet(args) {
+		if (this.walletAddress == null) {
+			try {
+				await this.requestAccounts();
+				UnityModule.sendTaskCallback(args.taskId, true, this.walletAddress);
+			}
+			catch (error) {
+				UnityModule.sendTaskCallback(args.taskId, false, "");
+			}
+		}
+	}
+
+	async disconnectWallet(args) {
+		try {
+			const walletProvider = this.sdk.getWalletProvider()
+			walletProvider.disconnectWallet();
+
+			UnityModule.sendTaskCallback(args.taskId, true, "success");
+		}
+		catch (error) {
+			UnityModule.sendTaskCallback(args.taskId, false, error);
+		}
+	}
+
 	async getWalletAddress(args) {
 		try {
-			if (this.walletAddress == null) {
-				const walletProvider = this.sdk.getWalletProvider()
-				const accounts = await walletProvider.request({ method: 'kaia_requestAccounts' });
-
-				if (accounts && accounts.length > 0) {
-					this.walletAddress = accounts[0];
-				}
-			}
+			await this.requestAccounts();
 			UnityModule.sendTaskCallback(args.taskId, true, this.walletAddress);
-
 		}
 		catch (error) {
 			UnityModule.sendTaskCallback(args.taskId, false, error);
