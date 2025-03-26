@@ -91,7 +91,7 @@ class LineModule {
 		try {
 			const walletProvider = this.sdk.getWalletProvider()
 			walletProvider.disconnectWallet();
-			walletProvider.selectWalletType(null);
+			walletProvider.walletType = null;
 
 			this.walletAddress = "";
 			UnityModule.sendTaskCallback(args.taskId, true, "success");
