@@ -3,7 +3,7 @@ import UnityModule from "./unityModule.js";
 class LineModule {
 	constructor() {
 		this.sdk = null;
-		this.walletAddress = null;
+		this.walletAddress = "";
 	}
 
 	async initSdk() {
@@ -65,7 +65,7 @@ class LineModule {
 	}
 
 	async connectWallet(args) {
-		if (this.walletAddress == null) {
+		if (this.walletAddress == "") {
 			try {
 				await this.requestAccounts();
 				UnityModule.sendTaskCallback(args.taskId, true, this.walletAddress);
@@ -89,13 +89,7 @@ class LineModule {
 	}
 
 	async getWalletAddress(args) {
-		try {
-			await this.requestAccounts();
-			UnityModule.sendTaskCallback(args.taskId, true, this.walletAddress);
-		}
-		catch (error) {
-			UnityModule.sendTaskCallback(args.taskId, false, error);
-		}
+		return UnityModule.getData(this.walletAddress);
 	}
 
 	async pay(args) {
