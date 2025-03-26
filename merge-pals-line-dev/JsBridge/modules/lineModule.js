@@ -18,7 +18,7 @@ class LineModule {
 			this.sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
 
 			var walletProvider = this.sdk.getWalletProvider();
-			if (walletProvider.connected) {
+			if (walletProvider.getWalletType() != null) {
 				this.requestAccounts();
 			}
 		} catch (error) {
