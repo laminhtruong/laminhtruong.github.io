@@ -112,6 +112,16 @@ class LineModule {
 			UnityModule.sendTaskCallback(args.taskId, false, error);
 		}
 	}
+
+	async showPaymentHistory() {
+		try {
+			const paymentProvider = this.sdk.getPaymentProvider()
+			await paymentProvider.openPaymentHistory()
+		}
+		catch (error) {
+			console.error(error)
+		}
+	}
 }
 
 export default new LineModule;
