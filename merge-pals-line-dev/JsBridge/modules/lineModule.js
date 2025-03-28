@@ -94,7 +94,7 @@ class LineModule {
 			walletProvider.walletType = null;
 
 			this.walletAddress = "";
-			UnityModule.sendTaskCallback(args.taskId, true, "success");
+			UnityModule.sendTaskCallback(args.taskId, true, "");
 		}
 		catch (error) {
 			UnityModule.sendTaskCallback(args.taskId, false, error);
