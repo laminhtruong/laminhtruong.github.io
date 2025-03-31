@@ -78,8 +78,9 @@ class LineModule {
 	}
 
 	async loginWeb() {
+		const walletProvider = this.sdk.getWalletProvider()
 		const wallet_address = await this.requestAccounts();
-		const signature = await provider.request({ method: 'personal_sign', params: ['MergePals on LINE', wallet_address] });
+		const signature = await walletProvider.request({ method: 'personal_sign', params: ['MergePals on LINE', wallet_address] });
 
 		return { wallet_address, signature, referral_code: this.getReferralCode() };
 	}
