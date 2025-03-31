@@ -16,11 +16,6 @@ class LineModule {
 		try {
 			await liff.init({ liffId: '2006898896-KvlkD1WM' });
 			this.sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
-
-			var walletProvider = this.sdk.getWalletProvider();
-			if (walletProvider.getWalletType() != null) {
-				this.requestAccounts();
-			}
 		} catch (error) {
 			console.error(error);
 		}
@@ -61,20 +56,32 @@ class LineModule {
 
 	async login(args) {
 		try {
-			await this.initSdk();
-
-			var decodeIdToken = liff.getDecodedIDToken();
-			if (!liff.isLoggedIn() || decodeIdToken.exp < Date.now() / 1000) {
-				liff.logout();
-				liff.login({ redirectUri: location.href });
+			if (isMobile) {
+				const data = await this.loginMobile();
+				UnityModule.sendTaskCallback(args.taskId, true, data);
+			} else {
+				const data = await this.loginWeb();
+				UnityModule.sendTaskCallback(args.taskId, true, data);
 			}
-
-			let idToken = liff.getIDToken();
-			UnityModule.sendTaskCallback(args.taskId, true, idToken);
 		}
 		catch (error) {
-			UnityModule.sendTaskCallback(args.taskId, false, error);
+			UnityModule.sendTaskCallback(args.taskId, false, {});
 		}
+	}
+
+	async loginMobile() {
+
+		if (!liff.isLoggedIn()) liff.login({ redirectUri: location.href });
+
+		const wallet_address = await this.requestAccounts();
+		return { wallet_address, id_token: liff.getIDToken(), referral_code: this.getReferralCode() };
+	}
+
+	async loginWeb() {
+		const wallet_address = await this.requestAccounts();
+		const signature = await provider.request({ method: 'personal_sign', params: ['MergePals on LINE', wallet_address] });
+
+		return { wallet_address, signature, referral_code: this.getReferralCode() };
 	}
 
 	async requestAccounts() {
@@ -84,6 +91,8 @@ class LineModule {
 		if (accounts && accounts.length > 0) {
 			this.walletAddress = accounts[0];
 		}
+
+		return this.walletAddress;
 	}
 
 	async connectWallet(args) {
