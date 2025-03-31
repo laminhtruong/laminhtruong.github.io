@@ -53,7 +53,7 @@ class LineModule {
 			liff.shareTargetPicker([
 				{
 					type: "text",
-					text: args.link,
+					text: args.text,
 				},
 			]);
 		}

@@ -6,7 +6,7 @@ var config = {
     codeUrl: buildUrl + "/92298a45250a16e5ec78e2ddcf53a1e0.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
-    productName: "MergePals _ Mini Dapp",
+    productName: "MergePals | Mini Dapp",
     productVersion: "2.1.4",
 
     cacheControl: function (url) {
