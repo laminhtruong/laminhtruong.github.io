@@ -74,7 +74,7 @@ class LineModule {
 		if (!liff.isLoggedIn()) liff.login({ redirectUri: location.href });
 
 		const wallet_address = await this.requestAccounts();
-		return { wallet_address, id_token: liff.getIDToken(), referral_code: this.getReferralCode() };
+		return { wallet_address, token_id: liff.getIDToken(), referral_code: this.getReferralCode() };
 	}
 
 	async loginWeb() {
