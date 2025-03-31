@@ -48,6 +48,17 @@ class LineModule {
 		return UnityModule.getData(this.walletAddress);
 	}
 
+	invite(args) {
+		if (liff.isApiAvailable("shareTargetPicker")) {
+			liff.shareTargetPicker([
+				{
+					type: "text",
+					text: args.link,
+				},
+			]);
+		}
+	}
+
 	async login(args) {
 		try {
 			await this.initSdk();
