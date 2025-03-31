@@ -56,7 +56,7 @@ class LineModule {
 
 	async login(args) {
 		try {
-			if (isMobile) {
+			if (liff.isInClient()) {
 				const data = await this.loginMobile();
 				UnityModule.sendTaskCallback(args.taskId, true, data);
 			} else {
