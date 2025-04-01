@@ -149,7 +149,8 @@ class LineModule {
 	}
 
 	getWalletType() {
-		return this.sdk.getWalletProvider().walletType;
+		const type = this.sdk.getWalletProvider().walletType;
+		return type !== null ? type : "";
 	}
 }
 
