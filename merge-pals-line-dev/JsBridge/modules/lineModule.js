@@ -15,7 +15,7 @@ class LineModule {
 
 		try {
 			await liff.init({ liffId: '2006898896-KvlkD1WM' });
-			this.sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
+			this.sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209', chainId: '1001' });
 		} catch (error) {
 			console.error(error);
 		}
@@ -142,6 +142,14 @@ class LineModule {
 		catch (error) {
 			console.error(error)
 		}
+	}
+
+	isInClient() {
+		return UnityModule.getData(liff.isInClient());
+	}
+
+	getWalletType() {
+		return this.sdk.getWalletProvider().walletType;
 	}
 }
 

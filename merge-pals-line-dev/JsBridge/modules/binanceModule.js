@@ -10,9 +10,8 @@ class BinanceModule {
 			const json = JSON.parse(event.data);
 			const price = parseFloat(json.p).toFixed(2);
 
-			if (unityGame !== null) {
-				unityGame.SendMessage("UnityBridge", "OnPriceChange", price);
-			}
+			if (typeof unityGame === 'undefined') return;
+			unityGame.SendMessage("UnityBridge", "OnPriceChange", price);
 		});
 	}
 }
