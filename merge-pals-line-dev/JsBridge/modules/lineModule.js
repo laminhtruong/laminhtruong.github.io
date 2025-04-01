@@ -150,7 +150,7 @@ class LineModule {
 
 	getWalletType() {
 		const type = this.sdk.getWalletProvider().walletType;
-		return type !== null ? type : "";
+		return UnityModule.getData(type !== null ? type : "");
 	}
 }
 
