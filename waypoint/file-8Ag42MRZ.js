@@ -1,0 +1,6033 @@
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Determine whether the given `arg` is a message.
+ * If `desc` is set, determine whether `arg` is this specific message.
+ */
+function isMessage(arg, schema) {
+  const isMessage = arg !== null && typeof arg == "object" && "$typeName" in arg && typeof arg.$typeName == "string";
+  if (!isMessage) {
+    return false;
+  }
+  if (schema === undefined) {
+    return true;
+  }
+  return schema.typeName === arg.$typeName;
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Scalar value types. This is a subset of field types declared by protobuf
+ * enum google.protobuf.FieldDescriptorProto.Type The types GROUP and MESSAGE
+ * are omitted, but the numerical values are identical.
+ */
+var ScalarType;
+(function (ScalarType) {
+  // 0 is reserved for errors.
+  // Order is weird for historical reasons.
+  ScalarType[ScalarType["DOUBLE"] = 1] = "DOUBLE";
+  ScalarType[ScalarType["FLOAT"] = 2] = "FLOAT";
+  // Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT64 if
+  // negative values are likely.
+  ScalarType[ScalarType["INT64"] = 3] = "INT64";
+  ScalarType[ScalarType["UINT64"] = 4] = "UINT64";
+  // Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT32 if
+  // negative values are likely.
+  ScalarType[ScalarType["INT32"] = 5] = "INT32";
+  ScalarType[ScalarType["FIXED64"] = 6] = "FIXED64";
+  ScalarType[ScalarType["FIXED32"] = 7] = "FIXED32";
+  ScalarType[ScalarType["BOOL"] = 8] = "BOOL";
+  ScalarType[ScalarType["STRING"] = 9] = "STRING";
+  // Tag-delimited aggregate.
+  // Group type is deprecated and not supported in proto3. However, Proto3
+  // implementations should still be able to parse the group wire format and
+  // treat group fields as unknown fields.
+  // TYPE_GROUP = 10,
+  // TYPE_MESSAGE = 11,  // Length-delimited aggregate.
+  // New in version 2.
+  ScalarType[ScalarType["BYTES"] = 12] = "BYTES";
+  ScalarType[ScalarType["UINT32"] = 13] = "UINT32";
+  // TYPE_ENUM = 14,
+  ScalarType[ScalarType["SFIXED32"] = 15] = "SFIXED32";
+  ScalarType[ScalarType["SFIXED64"] = 16] = "SFIXED64";
+  ScalarType[ScalarType["SINT32"] = 17] = "SINT32";
+  ScalarType[ScalarType["SINT64"] = 18] = "SINT64";
+})(ScalarType || (ScalarType = {}));
+
+// Copyright 2008 Google Inc.  All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+// * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+// * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Code generated by the Protocol Buffer compiler is owned by the owner
+// of the input file used when generating it.  This code is not
+// standalone and requires a support library to be linked with it.  This
+// support library is itself covered by the above license.
+/* eslint-disable prefer-const,@typescript-eslint/restrict-plus-operands */
+/**
+ * Read a 64 bit varint as two JS numbers.
+ *
+ * Returns tuple:
+ * [0]: low bits
+ * [1]: high bits
+ *
+ * Copyright 2008 Google Inc.  All rights reserved.
+ *
+ * See https://github.com/protocolbuffers/protobuf/blob/8a71927d74a4ce34efe2d8769fda198f52d20d12/js/experimental/runtime/kernel/buffer_decoder.js#L175
+ */
+function varint64read() {
+  let lowBits = 0;
+  let highBits = 0;
+  for (let shift = 0; shift < 28; shift += 7) {
+    let b = this.buf[this.pos++];
+    lowBits |= (b & 0x7f) << shift;
+    if ((b & 0x80) == 0) {
+      this.assertBounds();
+      return [lowBits, highBits];
+    }
+  }
+  let middleByte = this.buf[this.pos++];
+  // last four bits of the first 32 bit number
+  lowBits |= (middleByte & 0x0f) << 28;
+  // 3 upper bits are part of the next 32 bit number
+  highBits = (middleByte & 0x70) >> 4;
+  if ((middleByte & 0x80) == 0) {
+    this.assertBounds();
+    return [lowBits, highBits];
+  }
+  for (let shift = 3; shift <= 31; shift += 7) {
+    let b = this.buf[this.pos++];
+    highBits |= (b & 0x7f) << shift;
+    if ((b & 0x80) == 0) {
+      this.assertBounds();
+      return [lowBits, highBits];
+    }
+  }
+  throw new Error("invalid varint");
+}
+/**
+ * Write a 64 bit varint, given as two JS numbers, to the given bytes array.
+ *
+ * Copyright 2008 Google Inc.  All rights reserved.
+ *
+ * See https://github.com/protocolbuffers/protobuf/blob/8a71927d74a4ce34efe2d8769fda198f52d20d12/js/experimental/runtime/kernel/writer.js#L344
+ */
+function varint64write(lo, hi, bytes) {
+  for (let i = 0; i < 28; i = i + 7) {
+    const shift = lo >>> i;
+    const hasNext = !(shift >>> 7 == 0 && hi == 0);
+    const byte = (hasNext ? shift | 0x80 : shift) & 0xff;
+    bytes.push(byte);
+    if (!hasNext) {
+      return;
+    }
+  }
+  const splitBits = lo >>> 28 & 0x0f | (hi & 0x07) << 4;
+  const hasMoreBits = !(hi >> 3 == 0);
+  bytes.push((hasMoreBits ? splitBits | 0x80 : splitBits) & 0xff);
+  if (!hasMoreBits) {
+    return;
+  }
+  for (let i = 3; i < 31; i = i + 7) {
+    const shift = hi >>> i;
+    const hasNext = !(shift >>> 7 == 0);
+    const byte = (hasNext ? shift | 0x80 : shift) & 0xff;
+    bytes.push(byte);
+    if (!hasNext) {
+      return;
+    }
+  }
+  bytes.push(hi >>> 31 & 0x01);
+}
+// constants for binary math
+const TWO_PWR_32_DBL = 0x100000000;
+/**
+ * Parse decimal string of 64 bit integer value as two JS numbers.
+ *
+ * Copyright 2008 Google Inc.  All rights reserved.
+ *
+ * See https://github.com/protocolbuffers/protobuf-javascript/blob/a428c58273abad07c66071d9753bc4d1289de426/experimental/runtime/int64.js#L10
+ */
+function int64FromString(dec) {
+  // Check for minus sign.
+  const minus = dec[0] === "-";
+  if (minus) {
+    dec = dec.slice(1);
+  }
+  // Work 6 decimal digits at a time, acting like we're converting base 1e6
+  // digits to binary. This is safe to do with floating point math because
+  // Number.isSafeInteger(ALL_32_BITS * 1e6) == true.
+  const base = 1e6;
+  let lowBits = 0;
+  let highBits = 0;
+  function add1e6digit(begin, end) {
+    // Note: Number('') is 0.
+    const digit1e6 = Number(dec.slice(begin, end));
+    highBits *= base;
+    lowBits = lowBits * base + digit1e6;
+    // Carry bits from lowBits to
+    if (lowBits >= TWO_PWR_32_DBL) {
+      highBits = highBits + (lowBits / TWO_PWR_32_DBL | 0);
+      lowBits = lowBits % TWO_PWR_32_DBL;
+    }
+  }
+  add1e6digit(-24, -18);
+  add1e6digit(-18, -12);
+  add1e6digit(-12, -6);
+  add1e6digit(-6);
+  return minus ? negate(lowBits, highBits) : newBits(lowBits, highBits);
+}
+/**
+ * Losslessly converts a 64-bit signed integer in 32:32 split representation
+ * into a decimal string.
+ *
+ * Copyright 2008 Google Inc.  All rights reserved.
+ *
+ * See https://github.com/protocolbuffers/protobuf-javascript/blob/a428c58273abad07c66071d9753bc4d1289de426/experimental/runtime/int64.js#L10
+ */
+function int64ToString(lo, hi) {
+  let bits = newBits(lo, hi);
+  // If we're treating the input as a signed value and the high bit is set, do
+  // a manual two's complement conversion before the decimal conversion.
+  const negative = bits.hi & 0x80000000;
+  if (negative) {
+    bits = negate(bits.lo, bits.hi);
+  }
+  const result = uInt64ToString(bits.lo, bits.hi);
+  return negative ? "-" + result : result;
+}
+/**
+ * Losslessly converts a 64-bit unsigned integer in 32:32 split representation
+ * into a decimal string.
+ *
+ * Copyright 2008 Google Inc.  All rights reserved.
+ *
+ * See https://github.com/protocolbuffers/protobuf-javascript/blob/a428c58273abad07c66071d9753bc4d1289de426/experimental/runtime/int64.js#L10
+ */
+function uInt64ToString(lo, hi) {
+  ({
+    lo,
+    hi
+  } = toUnsigned(lo, hi));
+  // Skip the expensive conversion if the number is small enough to use the
+  // built-in conversions.
+  // Number.MAX_SAFE_INTEGER = 0x001FFFFF FFFFFFFF, thus any number with
+  // highBits <= 0x1FFFFF can be safely expressed with a double and retain
+  // integer precision.
+  // Proven by: Number.isSafeInteger(0x1FFFFF * 2**32 + 0xFFFFFFFF) == true.
+  if (hi <= 0x1fffff) {
+    return String(TWO_PWR_32_DBL * hi + lo);
+  }
+  // What this code is doing is essentially converting the input number from
+  // base-2 to base-1e7, which allows us to represent the 64-bit range with
+  // only 3 (very large) digits. Those digits are then trivial to convert to
+  // a base-10 string.
+  // The magic numbers used here are -
+  // 2^24 = 16777216 = (1,6777216) in base-1e7.
+  // 2^48 = 281474976710656 = (2,8147497,6710656) in base-1e7.
+  // Split 32:32 representation into 16:24:24 representation so our
+  // intermediate digits don't overflow.
+  const low = lo & 0xffffff;
+  const mid = (lo >>> 24 | hi << 8) & 0xffffff;
+  const high = hi >> 16 & 0xffff;
+  // Assemble our three base-1e7 digits, ignoring carries. The maximum
+  // value in a digit at this step is representable as a 48-bit integer, which
+  // can be stored in a 64-bit floating point number.
+  let digitA = low + mid * 6777216 + high * 6710656;
+  let digitB = mid + high * 8147497;
+  let digitC = high * 2;
+  // Apply carries from A to B and from B to C.
+  const base = 10000000;
+  if (digitA >= base) {
+    digitB += Math.floor(digitA / base);
+    digitA %= base;
+  }
+  if (digitB >= base) {
+    digitC += Math.floor(digitB / base);
+    digitB %= base;
+  }
+  // If digitC is 0, then we should have returned in the trivial code path
+  // at the top for non-safe integers. Given this, we can assume both digitB
+  // and digitA need leading zeros.
+  return digitC.toString() + decimalFrom1e7WithLeadingZeros(digitB) + decimalFrom1e7WithLeadingZeros(digitA);
+}
+function toUnsigned(lo, hi) {
+  return {
+    lo: lo >>> 0,
+    hi: hi >>> 0
+  };
+}
+function newBits(lo, hi) {
+  return {
+    lo: lo | 0,
+    hi: hi | 0
+  };
+}
+/**
+ * Returns two's compliment negation of input.
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators#Signed_32-bit_integers
+ */
+function negate(lowBits, highBits) {
+  highBits = ~highBits;
+  if (lowBits) {
+    lowBits = ~lowBits + 1;
+  } else {
+    // If lowBits is 0, then bitwise-not is 0xFFFFFFFF,
+    // adding 1 to that, results in 0x100000000, which leaves
+    // the low bits 0x0 and simply adds one to the high bits.
+    highBits += 1;
+  }
+  return newBits(lowBits, highBits);
+}
+/**
+ * Returns decimal representation of digit1e7 with leading zeros.
+ */
+const decimalFrom1e7WithLeadingZeros = digit1e7 => {
+  const partial = String(digit1e7);
+  return "0000000".slice(partial.length) + partial;
+};
+/**
+ * Write a 32 bit varint, signed or unsigned. Same as `varint64write(0, value, bytes)`
+ *
+ * Copyright 2008 Google Inc.  All rights reserved.
+ *
+ * See https://github.com/protocolbuffers/protobuf/blob/1b18833f4f2a2f681f4e4a25cdf3b0a43115ec26/js/binary/encoder.js#L144
+ */
+function varint32write(value, bytes) {
+  if (value >= 0) {
+    // write value as varint 32
+    while (value > 0x7f) {
+      bytes.push(value & 0x7f | 0x80);
+      value = value >>> 7;
+    }
+    bytes.push(value);
+  } else {
+    for (let i = 0; i < 9; i++) {
+      bytes.push(value & 127 | 128);
+      value = value >> 7;
+    }
+    bytes.push(1);
+  }
+}
+/**
+ * Read an unsigned 32 bit varint.
+ *
+ * See https://github.com/protocolbuffers/protobuf/blob/8a71927d74a4ce34efe2d8769fda198f52d20d12/js/experimental/runtime/kernel/buffer_decoder.js#L220
+ */
+function varint32read() {
+  let b = this.buf[this.pos++];
+  let result = b & 0x7f;
+  if ((b & 0x80) == 0) {
+    this.assertBounds();
+    return result;
+  }
+  b = this.buf[this.pos++];
+  result |= (b & 0x7f) << 7;
+  if ((b & 0x80) == 0) {
+    this.assertBounds();
+    return result;
+  }
+  b = this.buf[this.pos++];
+  result |= (b & 0x7f) << 14;
+  if ((b & 0x80) == 0) {
+    this.assertBounds();
+    return result;
+  }
+  b = this.buf[this.pos++];
+  result |= (b & 0x7f) << 21;
+  if ((b & 0x80) == 0) {
+    this.assertBounds();
+    return result;
+  }
+  // Extract only last 4 bits
+  b = this.buf[this.pos++];
+  result |= (b & 0x0f) << 28;
+  for (let readBytes = 5; (b & 0x80) !== 0 && readBytes < 10; readBytes++) b = this.buf[this.pos++];
+  if ((b & 0x80) != 0) throw new Error("invalid varint");
+  this.assertBounds();
+  // Result can have 32 bits, convert it to unsigned
+  return result >>> 0;
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Int64Support for the current environment.
+ */
+const protoInt64 = /*@__PURE__*/makeInt64Support();
+function makeInt64Support() {
+  const dv = new DataView(new ArrayBuffer(8));
+  // note that Safari 14 implements BigInt, but not the DataView methods
+  const ok = typeof BigInt === "function" && typeof dv.getBigInt64 === "function" && typeof dv.getBigUint64 === "function" && typeof dv.setBigInt64 === "function" && typeof dv.setBigUint64 === "function" && (typeof process != "object" || typeof process.env != "object" || process.env.BUF_BIGINT_DISABLE !== "1");
+  if (ok) {
+    const MIN = BigInt("-9223372036854775808"),
+      MAX = BigInt("9223372036854775807"),
+      UMIN = BigInt("0"),
+      UMAX = BigInt("18446744073709551615");
+    return {
+      zero: BigInt(0),
+      supported: true,
+      parse(value) {
+        const bi = typeof value == "bigint" ? value : BigInt(value);
+        if (bi > MAX || bi < MIN) {
+          throw new Error(`invalid int64: ${value}`);
+        }
+        return bi;
+      },
+      uParse(value) {
+        const bi = typeof value == "bigint" ? value : BigInt(value);
+        if (bi > UMAX || bi < UMIN) {
+          throw new Error(`invalid uint64: ${value}`);
+        }
+        return bi;
+      },
+      enc(value) {
+        dv.setBigInt64(0, this.parse(value), true);
+        return {
+          lo: dv.getInt32(0, true),
+          hi: dv.getInt32(4, true)
+        };
+      },
+      uEnc(value) {
+        dv.setBigInt64(0, this.uParse(value), true);
+        return {
+          lo: dv.getInt32(0, true),
+          hi: dv.getInt32(4, true)
+        };
+      },
+      dec(lo, hi) {
+        dv.setInt32(0, lo, true);
+        dv.setInt32(4, hi, true);
+        return dv.getBigInt64(0, true);
+      },
+      uDec(lo, hi) {
+        dv.setInt32(0, lo, true);
+        dv.setInt32(4, hi, true);
+        return dv.getBigUint64(0, true);
+      }
+    };
+  }
+  return {
+    zero: "0",
+    supported: false,
+    parse(value) {
+      if (typeof value != "string") {
+        value = value.toString();
+      }
+      assertInt64String(value);
+      return value;
+    },
+    uParse(value) {
+      if (typeof value != "string") {
+        value = value.toString();
+      }
+      assertUInt64String(value);
+      return value;
+    },
+    enc(value) {
+      if (typeof value != "string") {
+        value = value.toString();
+      }
+      assertInt64String(value);
+      return int64FromString(value);
+    },
+    uEnc(value) {
+      if (typeof value != "string") {
+        value = value.toString();
+      }
+      assertUInt64String(value);
+      return int64FromString(value);
+    },
+    dec(lo, hi) {
+      return int64ToString(lo, hi);
+    },
+    uDec(lo, hi) {
+      return uInt64ToString(lo, hi);
+    }
+  };
+}
+function assertInt64String(value) {
+  if (!/^-?[0-9]+$/.test(value)) {
+    throw new Error("invalid int64: " + value);
+  }
+}
+function assertUInt64String(value) {
+  if (!/^[0-9]+$/.test(value)) {
+    throw new Error("invalid uint64: " + value);
+  }
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Returns the zero value for the given scalar type.
+ */
+function scalarZeroValue(type, longAsString) {
+  switch (type) {
+    case ScalarType.STRING:
+      return "";
+    case ScalarType.BOOL:
+      return false;
+    default:
+      // Handles INT32, UINT32, SINT32, FIXED32, SFIXED32.
+      // We do not use individual cases to save a few bytes code size.
+      return 0;
+    case ScalarType.DOUBLE:
+    case ScalarType.FLOAT:
+      return 0.0;
+    case ScalarType.INT64:
+    case ScalarType.UINT64:
+    case ScalarType.SFIXED64:
+    case ScalarType.FIXED64:
+    case ScalarType.SINT64:
+      return longAsString ? "0" : protoInt64.zero;
+    case ScalarType.BYTES:
+      return new Uint8Array(0);
+  }
+}
+/**
+ * Returns true for a zero-value. For example, an integer has the zero-value `0`,
+ * a boolean is `false`, a string is `""`, and bytes is an empty Uint8Array.
+ *
+ * In proto3, zero-values are not written to the wire, unless the field is
+ * optional or repeated.
+ */
+function isScalarZeroValue(type, value) {
+  switch (type) {
+    case ScalarType.BOOL:
+      return value === false;
+    case ScalarType.STRING:
+      return value === "";
+    case ScalarType.BYTES:
+      return value instanceof Uint8Array && !value.byteLength;
+    default:
+      return value == 0;
+    // Loose comparison matches 0n, 0 and "0"
+  }
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+class FieldError extends Error {
+  constructor(fieldOrOneof, message, name = "FieldValueInvalidError") {
+    super(message);
+    this.name = name;
+    this.field = () => fieldOrOneof;
+  }
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// bootstrap-inject google.protobuf.FeatureSet.FieldPresence.IMPLICIT: const $name: FeatureSet_FieldPresence.$localName = $number;
+const IMPLICIT$2 = 2;
+const unsafeLocal = Symbol.for("reflect unsafe local");
+/**
+ * Return the selected field of a oneof group.
+ *
+ * @private
+ */
+function unsafeOneofCase(target,
+// eslint-disable-line @typescript-eslint/no-explicit-any -- `any` is the best choice for dynamic access
+oneof) {
+  const c = target[oneof.localName].case;
+  if (c === undefined) {
+    return c;
+  }
+  return oneof.fields.find(f => f.localName === c);
+}
+/**
+ * Returns true if the field is set.
+ *
+ * @private
+ */
+function unsafeIsSet(target,
+// eslint-disable-line @typescript-eslint/no-explicit-any -- `any` is the best choice for dynamic access
+field) {
+  const name = field.localName;
+  if (field.oneof) {
+    return target[field.oneof.localName].case === name; // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+  }
+  if (field.presence != IMPLICIT$2) {
+    // Fields with explicit presence have properties on the prototype chain
+    // for default / zero values (except for proto3).
+    return target[name] !== undefined && Object.prototype.hasOwnProperty.call(target, name);
+  }
+  // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+  switch (field.fieldKind) {
+    case "list":
+      return target[name].length > 0;
+    case "map":
+      return Object.keys(target[name]).length > 0;
+    // eslint-disable-line @typescript-eslint/no-unsafe-argument
+    case "scalar":
+      return !isScalarZeroValue(field.scalar, target[name]);
+    case "enum":
+      return target[name] !== field.enum.values[0].number;
+  }
+  throw new Error("message field with implicit presence");
+}
+/**
+ * Returns true if the field is set, but only for singular fields with explicit
+ * presence (proto2).
+ *
+ * @private
+ */
+function unsafeIsSetExplicit(target, localName) {
+  return Object.prototype.hasOwnProperty.call(target, localName) && target[localName] !== undefined;
+}
+/**
+ * Return a field value, respecting oneof groups.
+ *
+ * @private
+ */
+function unsafeGet(target, field) {
+  if (field.oneof) {
+    const oneof = target[field.oneof.localName];
+    if (oneof.case === field.localName) {
+      return oneof.value;
+    }
+    return undefined;
+  }
+  return target[field.localName];
+}
+/**
+ * Set a field value, respecting oneof groups.
+ *
+ * @private
+ */
+function unsafeSet(target, field, value) {
+  if (field.oneof) {
+    target[field.oneof.localName] = {
+      case: field.localName,
+      value: value
+    };
+  } else {
+    target[field.localName] = value;
+  }
+}
+/**
+ * Resets the field, so that unsafeIsSet() will return false.
+ *
+ * @private
+ */
+function unsafeClear(target,
+// eslint-disable-line @typescript-eslint/no-explicit-any -- `any` is the best choice for dynamic access
+field) {
+  const name = field.localName;
+  if (field.oneof) {
+    const oneofLocalName = field.oneof.localName;
+    if (target[oneofLocalName].case === name) {
+      target[oneofLocalName] = {
+        case: undefined
+      };
+    }
+  } else if (field.presence != IMPLICIT$2) {
+    // Fields with explicit presence have properties on the prototype chain
+    // for default / zero values (except for proto3). By deleting their own
+    // property, the field is reset.
+    delete target[name];
+  } else {
+    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+    switch (field.fieldKind) {
+      case "map":
+        target[name] = {};
+        break;
+      case "list":
+        target[name] = [];
+        break;
+      case "enum":
+        target[name] = field.enum.values[0].number;
+        break;
+      case "scalar":
+        target[name] = scalarZeroValue(field.scalar, field.longAsString);
+        break;
+    }
+  }
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+function isObject(arg) {
+  return arg !== null && typeof arg == "object" && !Array.isArray(arg);
+}
+function isReflectList(arg, field) {
+  var _a, _b, _c, _d;
+  if (isObject(arg) && unsafeLocal in arg && "add" in arg && "field" in arg && typeof arg.field == "function") {
+    if (field !== undefined) {
+      const a = field,
+        b = arg.field();
+      return a.listKind == b.listKind && a.scalar === b.scalar && ((_a = a.message) === null || _a === void 0 ? void 0 : _a.typeName) === ((_b = b.message) === null || _b === void 0 ? void 0 : _b.typeName) && ((_c = a.enum) === null || _c === void 0 ? void 0 : _c.typeName) === ((_d = b.enum) === null || _d === void 0 ? void 0 : _d.typeName);
+    }
+    return true;
+  }
+  return false;
+}
+function isReflectMap(arg, field) {
+  var _a, _b, _c, _d;
+  if (isObject(arg) && unsafeLocal in arg && "has" in arg && "field" in arg && typeof arg.field == "function") {
+    if (field !== undefined) {
+      const a = field,
+        b = arg.field();
+      return a.mapKey === b.mapKey && a.mapKind == b.mapKind && a.scalar === b.scalar && ((_a = a.message) === null || _a === void 0 ? void 0 : _a.typeName) === ((_b = b.message) === null || _b === void 0 ? void 0 : _b.typeName) && ((_c = a.enum) === null || _c === void 0 ? void 0 : _c.typeName) === ((_d = b.enum) === null || _d === void 0 ? void 0 : _d.typeName);
+    }
+    return true;
+  }
+  return false;
+}
+function isReflectMessage(arg, messageDesc) {
+  return isObject(arg) && unsafeLocal in arg && "desc" in arg && isObject(arg.desc) && arg.desc.kind === "message" && (messageDesc === undefined || arg.desc.typeName == messageDesc.typeName);
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+function isWrapper(arg) {
+  return isWrapperTypeName(arg.$typeName);
+}
+function isWrapperDesc(messageDesc) {
+  const f = messageDesc.fields[0];
+  return isWrapperTypeName(messageDesc.typeName) && f !== undefined && f.fieldKind == "scalar" && f.name == "value" && f.number == 1;
+}
+function isWrapperTypeName(name) {
+  return name.startsWith("google.protobuf.") && ["DoubleValue", "FloatValue", "Int64Value", "UInt64Value", "Int32Value", "UInt32Value", "BoolValue", "StringValue", "BytesValue"].includes(name.substring(16));
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// bootstrap-inject google.protobuf.Edition.EDITION_PROTO3: const $name: Edition.$localName = $number;
+const EDITION_PROTO3$1 = 999;
+// bootstrap-inject google.protobuf.Edition.EDITION_PROTO2: const $name: Edition.$localName = $number;
+const EDITION_PROTO2$1 = 998;
+// bootstrap-inject google.protobuf.FeatureSet.FieldPresence.IMPLICIT: const $name: FeatureSet_FieldPresence.$localName = $number;
+const IMPLICIT$1 = 2;
+/**
+ * Create a new message instance.
+ *
+ * The second argument is an optional initializer object, where all fields are
+ * optional.
+ */
+function create(schema, init) {
+  if (isMessage(init, schema)) {
+    return init;
+  }
+  const message = createZeroMessage(schema);
+  if (init !== undefined) {
+    initMessage(schema, message, init);
+  }
+  return message;
+}
+/**
+ * Sets field values from a MessageInitShape on a zero message.
+ */
+function initMessage(messageDesc, message, init) {
+  for (const member of messageDesc.members) {
+    let value = init[member.localName];
+    if (value == null) {
+      // intentionally ignore undefined and null
+      continue;
+    }
+    let field;
+    if (member.kind == "oneof") {
+      const oneofField = unsafeOneofCase(init, member);
+      if (!oneofField) {
+        continue;
+      }
+      field = oneofField;
+      value = unsafeGet(init, oneofField);
+    } else {
+      field = member;
+    }
+    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- no need to convert enum
+    switch (field.fieldKind) {
+      case "message":
+        value = toMessage(field, value);
+        break;
+      case "scalar":
+        value = initScalar(field, value);
+        break;
+      case "list":
+        value = initList(field, value);
+        break;
+      case "map":
+        value = initMap(field, value);
+        break;
+    }
+    unsafeSet(message, field, value);
+  }
+  return message;
+}
+function initScalar(field, value) {
+  if (field.scalar == ScalarType.BYTES) {
+    return toU8Arr(value);
+  }
+  return value;
+}
+function initMap(field, value) {
+  if (isObject(value)) {
+    if (field.scalar == ScalarType.BYTES) {
+      return convertObjectValues(value, toU8Arr);
+    }
+    if (field.mapKind == "message") {
+      return convertObjectValues(value, val => toMessage(field, val));
+    }
+  }
+  return value;
+}
+function initList(field, value) {
+  if (Array.isArray(value)) {
+    if (field.scalar == ScalarType.BYTES) {
+      return value.map(toU8Arr);
+    }
+    if (field.listKind == "message") {
+      return value.map(item => toMessage(field, item));
+    }
+  }
+  return value;
+}
+function toMessage(field, value) {
+  if (field.fieldKind == "message" && !field.oneof && isWrapperDesc(field.message)) {
+    // Types from google/protobuf/wrappers.proto are unwrapped when used in
+    // a singular field that is not part of a oneof group.
+    return initScalar(field.message.fields[0], value);
+  }
+  if (isObject(value)) {
+    if (field.message.typeName == "google.protobuf.Struct" && field.parent.typeName !== "google.protobuf.Value") {
+      // google.protobuf.Struct is represented with JsonObject when used in a
+      // field, except when used in google.protobuf.Value.
+      return value;
+    }
+    if (!isMessage(value, field.message)) {
+      return create(field.message, value);
+    }
+  }
+  return value;
+}
+// converts any ArrayLike<number> to Uint8Array if necessary.
+function toU8Arr(value) {
+  return Array.isArray(value) ? new Uint8Array(value) : value;
+}
+function convertObjectValues(obj, fn) {
+  const ret = {};
+  for (const entry of Object.entries(obj)) {
+    ret[entry[0]] = fn(entry[1]);
+  }
+  return ret;
+}
+const tokenZeroMessageField = Symbol();
+const messagePrototypes = new WeakMap();
+/**
+ * Create a zero message.
+ */
+function createZeroMessage(desc) {
+  let msg;
+  if (!needsPrototypeChain(desc)) {
+    msg = {
+      $typeName: desc.typeName
+    };
+    for (const member of desc.members) {
+      if (member.kind == "oneof" || member.presence == IMPLICIT$1) {
+        msg[member.localName] = createZeroField(member);
+      }
+    }
+  } else {
+    // Support default values and track presence via the prototype chain
+    const cached = messagePrototypes.get(desc);
+    let prototype;
+    let members;
+    if (cached) {
+      ({
+        prototype,
+        members
+      } = cached);
+    } else {
+      prototype = {};
+      members = new Set();
+      for (const member of desc.members) {
+        if (member.kind == "oneof") {
+          // we can only put immutable values on the prototype,
+          // oneof ADTs are mutable
+          continue;
+        }
+        if (member.fieldKind != "scalar" && member.fieldKind != "enum") {
+          // only scalar and enum values are immutable, map, list, and message
+          // are not
+          continue;
+        }
+        if (member.presence == IMPLICIT$1) {
+          // implicit presence tracks field presence by zero values - e.g. 0, false, "", are unset, 1, true, "x" are set.
+          // message, map, list fields are mutable, and also have IMPLICIT presence.
+          continue;
+        }
+        members.add(member);
+        prototype[member.localName] = createZeroField(member);
+      }
+      messagePrototypes.set(desc, {
+        prototype,
+        members
+      });
+    }
+    msg = Object.create(prototype);
+    msg.$typeName = desc.typeName;
+    for (const member of desc.members) {
+      if (members.has(member)) {
+        continue;
+      }
+      if (member.kind == "field") {
+        if (member.fieldKind == "message") {
+          continue;
+        }
+        if (member.fieldKind == "scalar" || member.fieldKind == "enum") {
+          if (member.presence != IMPLICIT$1) {
+            continue;
+          }
+        }
+      }
+      msg[member.localName] = createZeroField(member);
+    }
+  }
+  return msg;
+}
+/**
+ * Do we need the prototype chain to track field presence?
+ */
+function needsPrototypeChain(desc) {
+  switch (desc.file.edition) {
+    case EDITION_PROTO3$1:
+      // proto3 always uses implicit presence, we never need the prototype chain.
+      return false;
+    case EDITION_PROTO2$1:
+      // proto2 never uses implicit presence, we always need the prototype chain.
+      return true;
+    default:
+      // If a message uses scalar or enum fields with explicit presence, we need
+      // the prototype chain to track presence. This rule does not apply to fields
+      // in a oneof group - they use a different mechanism to track presence.
+      return desc.fields.some(f => f.presence != IMPLICIT$1 && f.fieldKind != "message" && !f.oneof);
+  }
+}
+/**
+ * Returns a zero value for oneof groups, and for every field kind except
+ * messages. Scalar and enum fields can have default values.
+ */
+function createZeroField(field) {
+  if (field.kind == "oneof") {
+    return {
+      case: undefined
+    };
+  }
+  if (field.fieldKind == "list") {
+    return [];
+  }
+  if (field.fieldKind == "map") {
+    return {}; // Object.create(null) would be desirable here, but is unsupported by react https://react.dev/reference/react/use-server#serializable-parameters-and-return-values
+  }
+  if (field.fieldKind == "message") {
+    return tokenZeroMessageField;
+  }
+  const defaultValue = field.getDefaultValue();
+  if (defaultValue !== undefined) {
+    return field.fieldKind == "scalar" && field.longAsString ? defaultValue.toString() : defaultValue;
+  }
+  return field.fieldKind == "scalar" ? scalarZeroValue(field.scalar, field.longAsString) : field.enum.values[0].number;
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+const symbol = Symbol.for("@bufbuild/protobuf/text-encoding");
+function getTextEncoding() {
+  if (globalThis[symbol] == undefined) {
+    const te = new globalThis.TextEncoder();
+    const td = new globalThis.TextDecoder();
+    globalThis[symbol] = {
+      encodeUtf8(text) {
+        return te.encode(text);
+      },
+      decodeUtf8(bytes) {
+        return td.decode(bytes);
+      },
+      checkUtf8(text) {
+        try {
+          encodeURIComponent(text);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+    };
+  }
+  return globalThis[symbol];
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/* eslint-disable prefer-const,no-case-declarations,@typescript-eslint/restrict-plus-operands */
+/**
+ * Protobuf binary format wire types.
+ *
+ * A wire type provides just enough information to find the length of the
+ * following value.
+ *
+ * See https://developers.google.com/protocol-buffers/docs/encoding#structure
+ */
+var WireType;
+(function (WireType) {
+  /**
+   * Used for int32, int64, uint32, uint64, sint32, sint64, bool, enum
+   */
+  WireType[WireType["Varint"] = 0] = "Varint";
+  /**
+   * Used for fixed64, sfixed64, double.
+   * Always 8 bytes with little-endian byte order.
+   */
+  WireType[WireType["Bit64"] = 1] = "Bit64";
+  /**
+   * Used for string, bytes, embedded messages, packed repeated fields
+   *
+   * Only repeated numeric types (types which use the varint, 32-bit,
+   * or 64-bit wire types) can be packed. In proto3, such fields are
+   * packed by default.
+   */
+  WireType[WireType["LengthDelimited"] = 2] = "LengthDelimited";
+  /**
+   * Start of a tag-delimited aggregate, such as a proto2 group, or a message
+   * in editions with message_encoding = DELIMITED.
+   */
+  WireType[WireType["StartGroup"] = 3] = "StartGroup";
+  /**
+   * End of a tag-delimited aggregate.
+   */
+  WireType[WireType["EndGroup"] = 4] = "EndGroup";
+  /**
+   * Used for fixed32, sfixed32, float.
+   * Always 4 bytes with little-endian byte order.
+   */
+  WireType[WireType["Bit32"] = 5] = "Bit32";
+})(WireType || (WireType = {}));
+/**
+ * Maximum value for a 32-bit floating point value (Protobuf FLOAT).
+ */
+const FLOAT32_MAX = 3.4028234663852886e38;
+/**
+ * Minimum value for a 32-bit floating point value (Protobuf FLOAT).
+ */
+const FLOAT32_MIN = -3.4028234663852886e38;
+/**
+ * Maximum value for an unsigned 32-bit integer (Protobuf UINT32, FIXED32).
+ */
+const UINT32_MAX = 0xffffffff;
+/**
+ * Maximum value for a signed 32-bit integer (Protobuf INT32, SFIXED32, SINT32).
+ */
+const INT32_MAX = 0x7fffffff;
+/**
+ * Minimum value for a signed 32-bit integer (Protobuf INT32, SFIXED32, SINT32).
+ */
+const INT32_MIN = -0x80000000;
+class BinaryWriter {
+  constructor(encodeUtf8 = getTextEncoding().encodeUtf8) {
+    this.encodeUtf8 = encodeUtf8;
+    /**
+     * Previous fork states.
+     */
+    this.stack = [];
+    this.chunks = [];
+    this.buf = [];
+  }
+  /**
+   * Return all bytes written and reset this writer.
+   */
+  finish() {
+    if (this.buf.length) {
+      this.chunks.push(new Uint8Array(this.buf)); // flush the buffer
+      this.buf = [];
+    }
+    let len = 0;
+    for (let i = 0; i < this.chunks.length; i++) len += this.chunks[i].length;
+    let bytes = new Uint8Array(len);
+    let offset = 0;
+    for (let i = 0; i < this.chunks.length; i++) {
+      bytes.set(this.chunks[i], offset);
+      offset += this.chunks[i].length;
+    }
+    this.chunks = [];
+    return bytes;
+  }
+  /**
+   * Start a new fork for length-delimited data like a message
+   * or a packed repeated field.
+   *
+   * Must be joined later with `join()`.
+   */
+  fork() {
+    this.stack.push({
+      chunks: this.chunks,
+      buf: this.buf
+    });
+    this.chunks = [];
+    this.buf = [];
+    return this;
+  }
+  /**
+   * Join the last fork. Write its length and bytes, then
+   * return to the previous state.
+   */
+  join() {
+    // get chunk of fork
+    let chunk = this.finish();
+    // restore previous state
+    let prev = this.stack.pop();
+    if (!prev) throw new Error("invalid state, fork stack empty");
+    this.chunks = prev.chunks;
+    this.buf = prev.buf;
+    // write length of chunk as varint
+    this.uint32(chunk.byteLength);
+    return this.raw(chunk);
+  }
+  /**
+   * Writes a tag (field number and wire type).
+   *
+   * Equivalent to `uint32( (fieldNo << 3 | type) >>> 0 )`.
+   *
+   * Generated code should compute the tag ahead of time and call `uint32()`.
+   */
+  tag(fieldNo, type) {
+    return this.uint32((fieldNo << 3 | type) >>> 0);
+  }
+  /**
+   * Write a chunk of raw bytes.
+   */
+  raw(chunk) {
+    if (this.buf.length) {
+      this.chunks.push(new Uint8Array(this.buf));
+      this.buf = [];
+    }
+    this.chunks.push(chunk);
+    return this;
+  }
+  /**
+   * Write a `uint32` value, an unsigned 32 bit varint.
+   */
+  uint32(value) {
+    assertUInt32(value);
+    // write value as varint 32, inlined for speed
+    while (value > 0x7f) {
+      this.buf.push(value & 0x7f | 0x80);
+      value = value >>> 7;
+    }
+    this.buf.push(value);
+    return this;
+  }
+  /**
+   * Write a `int32` value, a signed 32 bit varint.
+   */
+  int32(value) {
+    assertInt32(value);
+    varint32write(value, this.buf);
+    return this;
+  }
+  /**
+   * Write a `bool` value, a variant.
+   */
+  bool(value) {
+    this.buf.push(value ? 1 : 0);
+    return this;
+  }
+  /**
+   * Write a `bytes` value, length-delimited arbitrary data.
+   */
+  bytes(value) {
+    this.uint32(value.byteLength); // write length of chunk as varint
+    return this.raw(value);
+  }
+  /**
+   * Write a `string` value, length-delimited data converted to UTF-8 text.
+   */
+  string(value) {
+    let chunk = this.encodeUtf8(value);
+    this.uint32(chunk.byteLength); // write length of chunk as varint
+    return this.raw(chunk);
+  }
+  /**
+   * Write a `float` value, 32-bit floating point number.
+   */
+  float(value) {
+    assertFloat32(value);
+    let chunk = new Uint8Array(4);
+    new DataView(chunk.buffer).setFloat32(0, value, true);
+    return this.raw(chunk);
+  }
+  /**
+   * Write a `double` value, a 64-bit floating point number.
+   */
+  double(value) {
+    let chunk = new Uint8Array(8);
+    new DataView(chunk.buffer).setFloat64(0, value, true);
+    return this.raw(chunk);
+  }
+  /**
+   * Write a `fixed32` value, an unsigned, fixed-length 32-bit integer.
+   */
+  fixed32(value) {
+    assertUInt32(value);
+    let chunk = new Uint8Array(4);
+    new DataView(chunk.buffer).setUint32(0, value, true);
+    return this.raw(chunk);
+  }
+  /**
+   * Write a `sfixed32` value, a signed, fixed-length 32-bit integer.
+   */
+  sfixed32(value) {
+    assertInt32(value);
+    let chunk = new Uint8Array(4);
+    new DataView(chunk.buffer).setInt32(0, value, true);
+    return this.raw(chunk);
+  }
+  /**
+   * Write a `sint32` value, a signed, zigzag-encoded 32-bit varint.
+   */
+  sint32(value) {
+    assertInt32(value);
+    // zigzag encode
+    value = (value << 1 ^ value >> 31) >>> 0;
+    varint32write(value, this.buf);
+    return this;
+  }
+  /**
+   * Write a `fixed64` value, a signed, fixed-length 64-bit integer.
+   */
+  sfixed64(value) {
+    let chunk = new Uint8Array(8),
+      view = new DataView(chunk.buffer),
+      tc = protoInt64.enc(value);
+    view.setInt32(0, tc.lo, true);
+    view.setInt32(4, tc.hi, true);
+    return this.raw(chunk);
+  }
+  /**
+   * Write a `fixed64` value, an unsigned, fixed-length 64 bit integer.
+   */
+  fixed64(value) {
+    let chunk = new Uint8Array(8),
+      view = new DataView(chunk.buffer),
+      tc = protoInt64.uEnc(value);
+    view.setInt32(0, tc.lo, true);
+    view.setInt32(4, tc.hi, true);
+    return this.raw(chunk);
+  }
+  /**
+   * Write a `int64` value, a signed 64-bit varint.
+   */
+  int64(value) {
+    let tc = protoInt64.enc(value);
+    varint64write(tc.lo, tc.hi, this.buf);
+    return this;
+  }
+  /**
+   * Write a `sint64` value, a signed, zig-zag-encoded 64-bit varint.
+   */
+  sint64(value) {
+    let tc = protoInt64.enc(value),
+      // zigzag encode
+      sign = tc.hi >> 31,
+      lo = tc.lo << 1 ^ sign,
+      hi = (tc.hi << 1 | tc.lo >>> 31) ^ sign;
+    varint64write(lo, hi, this.buf);
+    return this;
+  }
+  /**
+   * Write a `uint64` value, an unsigned 64-bit varint.
+   */
+  uint64(value) {
+    let tc = protoInt64.uEnc(value);
+    varint64write(tc.lo, tc.hi, this.buf);
+    return this;
+  }
+}
+class BinaryReader {
+  constructor(buf, decodeUtf8 = getTextEncoding().decodeUtf8) {
+    this.decodeUtf8 = decodeUtf8;
+    this.varint64 = varint64read; // dirty cast for `this`
+    /**
+     * Read a `uint32` field, an unsigned 32 bit varint.
+     */
+    this.uint32 = varint32read;
+    this.buf = buf;
+    this.len = buf.length;
+    this.pos = 0;
+    this.view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+  }
+  /**
+   * Reads a tag - field number and wire type.
+   */
+  tag() {
+    let tag = this.uint32(),
+      fieldNo = tag >>> 3,
+      wireType = tag & 7;
+    if (fieldNo <= 0 || wireType < 0 || wireType > 5) throw new Error("illegal tag: field no " + fieldNo + " wire type " + wireType);
+    return [fieldNo, wireType];
+  }
+  /**
+   * Skip one element and return the skipped data.
+   *
+   * When skipping StartGroup, provide the tags field number to check for
+   * matching field number in the EndGroup tag.
+   */
+  skip(wireType, fieldNo) {
+    let start = this.pos;
+    switch (wireType) {
+      case WireType.Varint:
+        while (this.buf[this.pos++] & 0x80) {
+          // ignore
+        }
+        break;
+      // eslint-disable-next-line
+      // @ts-expect-error TS7029: Fallthrough case in switch
+      case WireType.Bit64:
+        this.pos += 4;
+      // eslint-disable-next-line no-fallthrough
+      case WireType.Bit32:
+        this.pos += 4;
+        break;
+      case WireType.LengthDelimited:
+        let len = this.uint32();
+        this.pos += len;
+        break;
+      case WireType.StartGroup:
+        for (;;) {
+          const [fn, wt] = this.tag();
+          if (wt === WireType.EndGroup) {
+            if (fieldNo !== undefined && fn !== fieldNo) {
+              throw new Error("invalid end group tag");
+            }
+            break;
+          }
+          this.skip(wt, fn);
+        }
+        break;
+      default:
+        throw new Error("cant skip wire type " + wireType);
+    }
+    this.assertBounds();
+    return this.buf.subarray(start, this.pos);
+  }
+  /**
+   * Throws error if position in byte array is out of range.
+   */
+  assertBounds() {
+    if (this.pos > this.len) throw new RangeError("premature EOF");
+  }
+  /**
+   * Read a `int32` field, a signed 32 bit varint.
+   */
+  int32() {
+    return this.uint32() | 0;
+  }
+  /**
+   * Read a `sint32` field, a signed, zigzag-encoded 32-bit varint.
+   */
+  sint32() {
+    let zze = this.uint32();
+    // decode zigzag
+    return zze >>> 1 ^ -(zze & 1);
+  }
+  /**
+   * Read a `int64` field, a signed 64-bit varint.
+   */
+  int64() {
+    return protoInt64.dec(...this.varint64());
+  }
+  /**
+   * Read a `uint64` field, an unsigned 64-bit varint.
+   */
+  uint64() {
+    return protoInt64.uDec(...this.varint64());
+  }
+  /**
+   * Read a `sint64` field, a signed, zig-zag-encoded 64-bit varint.
+   */
+  sint64() {
+    let [lo, hi] = this.varint64();
+    // decode zig zag
+    let s = -(lo & 1);
+    lo = (lo >>> 1 | (hi & 1) << 31) ^ s;
+    hi = hi >>> 1 ^ s;
+    return protoInt64.dec(lo, hi);
+  }
+  /**
+   * Read a `bool` field, a variant.
+   */
+  bool() {
+    let [lo, hi] = this.varint64();
+    return lo !== 0 || hi !== 0;
+  }
+  /**
+   * Read a `fixed32` field, an unsigned, fixed-length 32-bit integer.
+   */
+  fixed32() {
+    return this.view.getUint32((this.pos += 4) - 4, true);
+  }
+  /**
+   * Read a `sfixed32` field, a signed, fixed-length 32-bit integer.
+   */
+  sfixed32() {
+    return this.view.getInt32((this.pos += 4) - 4, true);
+  }
+  /**
+   * Read a `fixed64` field, an unsigned, fixed-length 64 bit integer.
+   */
+  fixed64() {
+    return protoInt64.uDec(this.sfixed32(), this.sfixed32());
+  }
+  /**
+   * Read a `fixed64` field, a signed, fixed-length 64-bit integer.
+   */
+  sfixed64() {
+    return protoInt64.dec(this.sfixed32(), this.sfixed32());
+  }
+  /**
+   * Read a `float` field, 32-bit floating point number.
+   */
+  float() {
+    return this.view.getFloat32((this.pos += 4) - 4, true);
+  }
+  /**
+   * Read a `double` field, a 64-bit floating point number.
+   */
+  double() {
+    return this.view.getFloat64((this.pos += 8) - 8, true);
+  }
+  /**
+   * Read a `bytes` field, length-delimited arbitrary data.
+   */
+  bytes() {
+    let len = this.uint32(),
+      start = this.pos;
+    this.pos += len;
+    this.assertBounds();
+    return this.buf.subarray(start, start + len);
+  }
+  /**
+   * Read a `string` field, length-delimited data converted to UTF-8 text.
+   */
+  string() {
+    return this.decodeUtf8(this.bytes());
+  }
+}
+/**
+ * Assert a valid signed protobuf 32-bit integer as a number or string.
+ */
+function assertInt32(arg) {
+  if (typeof arg == "string") {
+    arg = Number(arg);
+  } else if (typeof arg != "number") {
+    throw new Error("invalid int32: " + typeof arg);
+  }
+  if (!Number.isInteger(arg) || arg > INT32_MAX || arg < INT32_MIN) throw new Error("invalid int32: " + arg);
+}
+/**
+ * Assert a valid unsigned protobuf 32-bit integer as a number or string.
+ */
+function assertUInt32(arg) {
+  if (typeof arg == "string") {
+    arg = Number(arg);
+  } else if (typeof arg != "number") {
+    throw new Error("invalid uint32: " + typeof arg);
+  }
+  if (!Number.isInteger(arg) || arg > UINT32_MAX || arg < 0) throw new Error("invalid uint32: " + arg);
+}
+/**
+ * Assert a valid protobuf float value as a number or string.
+ */
+function assertFloat32(arg) {
+  if (typeof arg == "string") {
+    const o = arg;
+    arg = Number(arg);
+    if (isNaN(arg) && o !== "NaN") {
+      throw new Error("invalid float32: " + o);
+    }
+  } else if (typeof arg != "number") {
+    throw new Error("invalid float32: " + typeof arg);
+  }
+  if (Number.isFinite(arg) && (arg > FLOAT32_MAX || arg < FLOAT32_MIN)) throw new Error("invalid float32: " + arg);
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Check whether the given field value is valid for the reflect API.
+ */
+function checkField(field, value) {
+  const check = field.fieldKind == "list" ? isReflectList(value, field) : field.fieldKind == "map" ? isReflectMap(value, field) : checkSingular(field, value);
+  if (check === true) {
+    return undefined;
+  }
+  let reason;
+  switch (field.fieldKind) {
+    case "list":
+      reason = `expected ${formatReflectList(field)}, got ${formatVal(value)}`;
+      break;
+    case "map":
+      reason = `expected ${formatReflectMap(field)}, got ${formatVal(value)}`;
+      break;
+    default:
+      {
+        reason = reasonSingular(field, value, check);
+      }
+  }
+  return new FieldError(field, reason);
+}
+/**
+ * Check whether the given list item is valid for the reflect API.
+ */
+function checkListItem(field, index, value) {
+  const check = checkSingular(field, value);
+  if (check !== true) {
+    return new FieldError(field, `list item #${index + 1}: ${reasonSingular(field, value, check)}`);
+  }
+  return undefined;
+}
+/**
+ * Check whether the given map key and value are valid for the reflect API.
+ */
+function checkMapEntry(field, key, value) {
+  const checkKey = checkScalarValue(key, field.mapKey);
+  if (checkKey !== true) {
+    return new FieldError(field, `invalid map key: ${reasonSingular({
+      scalar: field.mapKey
+    }, key, checkKey)}`);
+  }
+  const checkVal = checkSingular(field, value);
+  if (checkVal !== true) {
+    return new FieldError(field, `map entry ${formatVal(key)}: ${reasonSingular(field, value, checkVal)}`);
+  }
+  return undefined;
+}
+function checkSingular(field, value) {
+  if (field.scalar !== undefined) {
+    return checkScalarValue(value, field.scalar);
+  }
+  if (field.enum !== undefined) {
+    if (field.enum.open) {
+      return Number.isInteger(value);
+    }
+    return field.enum.values.some(v => v.number === value);
+  }
+  return isReflectMessage(value, field.message);
+}
+function checkScalarValue(value, scalar) {
+  switch (scalar) {
+    case ScalarType.DOUBLE:
+      return typeof value == "number";
+    case ScalarType.FLOAT:
+      if (typeof value != "number") {
+        return false;
+      }
+      if (Number.isNaN(value) || !Number.isFinite(value)) {
+        return true;
+      }
+      if (value > FLOAT32_MAX || value < FLOAT32_MIN) {
+        return `${value.toFixed()} out of range`;
+      }
+      return true;
+    case ScalarType.INT32:
+    case ScalarType.SFIXED32:
+    case ScalarType.SINT32:
+      // signed
+      if (typeof value !== "number" || !Number.isInteger(value)) {
+        return false;
+      }
+      if (value > INT32_MAX || value < INT32_MIN) {
+        return `${value.toFixed()} out of range`;
+      }
+      return true;
+    case ScalarType.FIXED32:
+    case ScalarType.UINT32:
+      // unsigned
+      if (typeof value !== "number" || !Number.isInteger(value)) {
+        return false;
+      }
+      if (value > UINT32_MAX || value < 0) {
+        return `${value.toFixed()} out of range`;
+      }
+      return true;
+    case ScalarType.BOOL:
+      return typeof value == "boolean";
+    case ScalarType.STRING:
+      if (typeof value != "string") {
+        return false;
+      }
+      return getTextEncoding().checkUtf8(value) || "invalid UTF8";
+    case ScalarType.BYTES:
+      return value instanceof Uint8Array;
+    case ScalarType.INT64:
+    case ScalarType.SFIXED64:
+    case ScalarType.SINT64:
+      // signed
+      if (typeof value != "string" && typeof value !== "bigint" && typeof value !== "number") {
+        return false;
+      }
+      try {
+        protoInt64.parse(value);
+      } catch (e) {
+        return `${value} out of range`;
+      }
+      return true;
+    case ScalarType.FIXED64:
+    case ScalarType.UINT64:
+      // unsigned
+      if (typeof value != "string" && typeof value !== "bigint" && typeof value !== "number") {
+        return false;
+      }
+      try {
+        protoInt64.uParse(value);
+      } catch (e) {
+        return `${value} out of range`;
+      }
+      return true;
+  }
+}
+function reasonSingular(field, val, details) {
+  details = typeof details == "string" ? `: ${details}` : `, got ${formatVal(val)}`;
+  if (field.scalar !== undefined) {
+    return `expected ${scalarTypeDescription(field.scalar)}` + details;
+  } else if (field.enum !== undefined) {
+    return `expected ${field.enum.toString()}` + details;
+  }
+  return `expected ${formatReflectMessage(field.message)}` + details;
+}
+function formatVal(val) {
+  switch (typeof val) {
+    case "object":
+      if (val === null) {
+        return "null";
+      }
+      if (val instanceof Uint8Array) {
+        return `Uint8Array(${val.length})`;
+      }
+      if (Array.isArray(val)) {
+        return `Array(${val.length})`;
+      }
+      if (isReflectList(val)) {
+        return formatReflectList(val.field());
+      }
+      if (isReflectMap(val)) {
+        return formatReflectMap(val.field());
+      }
+      if (isReflectMessage(val)) {
+        return formatReflectMessage(val.desc);
+      }
+      if (isMessage(val)) {
+        return `message ${val.$typeName}`;
+      }
+      return "object";
+    case "string":
+      return val.length > 30 ? "string" : `"${val.split('"').join('\\"')}"`;
+    case "boolean":
+      return String(val);
+    case "number":
+      return String(val);
+    case "bigint":
+      return String(val) + "n";
+    default:
+      // "symbol" | "undefined" | "object" | "function"
+      return typeof val;
+  }
+}
+function formatReflectMessage(desc) {
+  return `ReflectMessage (${desc.typeName})`;
+}
+function formatReflectList(field) {
+  switch (field.listKind) {
+    case "message":
+      return `ReflectList (${field.message.toString()})`;
+    case "enum":
+      return `ReflectList (${field.enum.toString()})`;
+    case "scalar":
+      return `ReflectList (${ScalarType[field.scalar]})`;
+  }
+}
+function formatReflectMap(field) {
+  switch (field.mapKind) {
+    case "message":
+      return `ReflectMap (${ScalarType[field.mapKey]}, ${field.message.toString()})`;
+    case "enum":
+      return `ReflectMap (${ScalarType[field.mapKey]}, ${field.enum.toString()})`;
+    case "scalar":
+      return `ReflectMap (${ScalarType[field.mapKey]}, ${ScalarType[field.scalar]})`;
+  }
+}
+function scalarTypeDescription(scalar) {
+  switch (scalar) {
+    case ScalarType.STRING:
+      return "string";
+    case ScalarType.BOOL:
+      return "boolean";
+    case ScalarType.INT64:
+    case ScalarType.SINT64:
+    case ScalarType.SFIXED64:
+      return "bigint (int64)";
+    case ScalarType.UINT64:
+    case ScalarType.FIXED64:
+      return "bigint (uint64)";
+    case ScalarType.BYTES:
+      return "Uint8Array";
+    case ScalarType.DOUBLE:
+      return "number (float64)";
+    case ScalarType.FLOAT:
+      return "number (float32)";
+    case ScalarType.FIXED32:
+    case ScalarType.UINT32:
+      return "number (uint32)";
+    case ScalarType.INT32:
+    case ScalarType.SFIXED32:
+    case ScalarType.SINT32:
+      return "number (int32)";
+  }
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Create a ReflectMessage.
+ */
+function reflect(messageDesc, message,
+/**
+ * By default, field values are validated when setting them. For example,
+ * a value for an uint32 field must be a ECMAScript Number >= 0.
+ *
+ * When field values are trusted, performance can be improved by disabling
+ * checks.
+ */
+check = true) {
+  return new ReflectMessageImpl(messageDesc, message, check);
+}
+class ReflectMessageImpl {
+  get sortedFields() {
+    var _a;
+    return (_a = this._sortedFields) !== null && _a !== void 0 ? _a : this._sortedFields = this.desc.fields.concat().sort((a, b) => a.number - b.number);
+  }
+  constructor(messageDesc, message, check = true) {
+    this.lists = new Map();
+    this.maps = new Map();
+    this.check = check;
+    this.desc = messageDesc;
+    this.message = this[unsafeLocal] = message !== null && message !== void 0 ? message : create(messageDesc);
+    this.fields = messageDesc.fields;
+    this.oneofs = messageDesc.oneofs;
+    this.members = messageDesc.members;
+  }
+  findNumber(number) {
+    if (!this._fieldsByNumber) {
+      this._fieldsByNumber = new Map(this.desc.fields.map(f => [f.number, f]));
+    }
+    return this._fieldsByNumber.get(number);
+  }
+  oneofCase(oneof) {
+    assertOwn(this.message, oneof);
+    return unsafeOneofCase(this.message, oneof);
+  }
+  isSet(field) {
+    assertOwn(this.message, field);
+    return unsafeIsSet(this.message, field);
+  }
+  clear(field) {
+    assertOwn(this.message, field);
+    unsafeClear(this.message, field);
+  }
+  get(field) {
+    assertOwn(this.message, field);
+    const value = unsafeGet(this.message, field);
+    switch (field.fieldKind) {
+      case "list":
+        // eslint-disable-next-line no-case-declarations
+        let list = this.lists.get(field);
+        if (!list || list[unsafeLocal] !== value) {
+          this.lists.set(field, list = new ReflectListImpl(field, value, this.check));
+        }
+        return list;
+      case "map":
+        // eslint-disable-next-line no-case-declarations
+        let map = this.maps.get(field);
+        if (!map || map[unsafeLocal] !== value) {
+          this.maps.set(field, map = new ReflectMapImpl(field, value, this.check));
+        }
+        return map;
+      case "message":
+        return messageToReflect(field, value, this.check);
+      case "scalar":
+        return value === undefined ? scalarZeroValue(field.scalar, false) : longToReflect(field, value);
+      case "enum":
+        return value !== null && value !== void 0 ? value : field.enum.values[0].number;
+    }
+  }
+  set(field, value) {
+    assertOwn(this.message, field);
+    if (this.check) {
+      const err = checkField(field, value);
+      if (err) {
+        throw err;
+      }
+    }
+    let local;
+    if (field.fieldKind == "message") {
+      local = messageToLocal(field, value);
+    } else if (isReflectMap(value) || isReflectList(value)) {
+      local = value[unsafeLocal];
+    } else {
+      local = longToLocal(field, value);
+    }
+    unsafeSet(this.message, field, local);
+  }
+  getUnknown() {
+    return this.message.$unknown;
+  }
+  setUnknown(value) {
+    this.message.$unknown = value;
+  }
+}
+function assertOwn(owner, member) {
+  if (member.parent.typeName !== owner.$typeName) {
+    throw new FieldError(member, `cannot use ${member.toString()} with message ${owner.$typeName}`, "ForeignFieldError");
+  }
+}
+class ReflectListImpl {
+  field() {
+    return this._field;
+  }
+  get size() {
+    return this._arr.length;
+  }
+  constructor(field, unsafeInput, check) {
+    this._field = field;
+    this._arr = this[unsafeLocal] = unsafeInput;
+    this.check = check;
+  }
+  get(index) {
+    const item = this._arr[index];
+    return item === undefined ? undefined : listItemToReflect(this._field, item, this.check);
+  }
+  set(index, item) {
+    if (index < 0 || index >= this._arr.length) {
+      throw new FieldError(this._field, `list item #${index + 1}: out of range`);
+    }
+    if (this.check) {
+      const err = checkListItem(this._field, index, item);
+      if (err) {
+        throw err;
+      }
+    }
+    this._arr[index] = listItemToLocal(this._field, item);
+  }
+  add(item) {
+    if (this.check) {
+      const err = checkListItem(this._field, this._arr.length, item);
+      if (err) {
+        throw err;
+      }
+    }
+    this._arr.push(listItemToLocal(this._field, item));
+    return undefined;
+  }
+  clear() {
+    this._arr.splice(0, this._arr.length);
+  }
+  [Symbol.iterator]() {
+    return this.values();
+  }
+  keys() {
+    return this._arr.keys();
+  }
+  *values() {
+    for (const item of this._arr) {
+      yield listItemToReflect(this._field, item, this.check);
+    }
+  }
+  *entries() {
+    for (let i = 0; i < this._arr.length; i++) {
+      yield [i, listItemToReflect(this._field, this._arr[i], this.check)];
+    }
+  }
+}
+class ReflectMapImpl {
+  constructor(field, unsafeInput, check = true) {
+    this.obj = this[unsafeLocal] = unsafeInput !== null && unsafeInput !== void 0 ? unsafeInput : {};
+    this.check = check;
+    this._field = field;
+  }
+  field() {
+    return this._field;
+  }
+  set(key, value) {
+    if (this.check) {
+      const err = checkMapEntry(this._field, key, value);
+      if (err) {
+        throw err;
+      }
+    }
+    this.obj[mapKeyToLocal(key)] = mapValueToLocal(this._field, value);
+    return this;
+  }
+  delete(key) {
+    const k = mapKeyToLocal(key);
+    const has = Object.prototype.hasOwnProperty.call(this.obj, k);
+    if (has) {
+      delete this.obj[k];
+    }
+    return has;
+  }
+  clear() {
+    for (const key of Object.keys(this.obj)) {
+      delete this.obj[key];
+    }
+  }
+  get(key) {
+    let val = this.obj[mapKeyToLocal(key)];
+    if (val !== undefined) {
+      val = mapValueToReflect(this._field, val, this.check);
+    }
+    return val;
+  }
+  has(key) {
+    return Object.prototype.hasOwnProperty.call(this.obj, mapKeyToLocal(key));
+  }
+  *keys() {
+    for (const objKey of Object.keys(this.obj)) {
+      yield mapKeyToReflect(objKey, this._field.mapKey);
+    }
+  }
+  *entries() {
+    for (const objEntry of Object.entries(this.obj)) {
+      yield [mapKeyToReflect(objEntry[0], this._field.mapKey), mapValueToReflect(this._field, objEntry[1], this.check)];
+    }
+  }
+  [Symbol.iterator]() {
+    return this.entries();
+  }
+  get size() {
+    return Object.keys(this.obj).length;
+  }
+  *values() {
+    for (const val of Object.values(this.obj)) {
+      yield mapValueToReflect(this._field, val, this.check);
+    }
+  }
+  forEach(callbackfn, thisArg) {
+    for (const mapEntry of this.entries()) {
+      callbackfn.call(thisArg, mapEntry[1], mapEntry[0], this);
+    }
+  }
+}
+function messageToLocal(field, value) {
+  if (!isReflectMessage(value)) {
+    return value;
+  }
+  if (isWrapper(value.message) && !field.oneof && field.fieldKind == "message") {
+    // Types from google/protobuf/wrappers.proto are unwrapped when used in
+    // a singular field that is not part of a oneof group.
+    return value.message.value;
+  }
+  if (value.desc.typeName == "google.protobuf.Struct" && field.parent.typeName != "google.protobuf.Value") {
+    // google.protobuf.Struct is represented with JsonObject when used in a
+    // field, except when used in google.protobuf.Value.
+    return wktStructToLocal(value.message);
+  }
+  return value.message;
+}
+function messageToReflect(field, value, check) {
+  if (value !== undefined) {
+    if (isWrapperDesc(field.message) && !field.oneof && field.fieldKind == "message") {
+      // Types from google/protobuf/wrappers.proto are unwrapped when used in
+      // a singular field that is not part of a oneof group.
+      value = {
+        $typeName: field.message.typeName,
+        value: longToReflect(field.message.fields[0], value)
+      };
+    } else if (field.message.typeName == "google.protobuf.Struct" && field.parent.typeName != "google.protobuf.Value" && isObject(value)) {
+      // google.protobuf.Struct is represented with JsonObject when used in a
+      // field, except when used in google.protobuf.Value.
+      value = wktStructToReflect(value);
+    }
+  }
+  return new ReflectMessageImpl(field.message, value, check);
+}
+function listItemToLocal(field, value) {
+  if (field.listKind == "message") {
+    return messageToLocal(field, value);
+  }
+  return longToLocal(field, value);
+}
+function listItemToReflect(field, value, check) {
+  if (field.listKind == "message") {
+    return messageToReflect(field, value, check);
+  }
+  return longToReflect(field, value);
+}
+function mapValueToLocal(field, value) {
+  if (field.mapKind == "message") {
+    return messageToLocal(field, value);
+  }
+  return longToLocal(field, value);
+}
+function mapValueToReflect(field, value, check) {
+  if (field.mapKind == "message") {
+    return messageToReflect(field, value, check);
+  }
+  return value;
+}
+function mapKeyToLocal(key) {
+  return typeof key == "string" || typeof key == "number" ? key : String(key);
+}
+/**
+ * Converts a map key (any scalar value except float, double, or bytes) from its
+ * representation in a message (string or number, the only possible object key
+ * types) to the closest possible type in ECMAScript.
+ */
+function mapKeyToReflect(key, type) {
+  switch (type) {
+    case ScalarType.STRING:
+      return key;
+    case ScalarType.INT32:
+    case ScalarType.FIXED32:
+    case ScalarType.UINT32:
+    case ScalarType.SFIXED32:
+    case ScalarType.SINT32:
+      {
+        const n = Number.parseInt(key);
+        if (Number.isFinite(n)) {
+          return n;
+        }
+        break;
+      }
+    case ScalarType.BOOL:
+      switch (key) {
+        case "true":
+          return true;
+        case "false":
+          return false;
+      }
+      break;
+    case ScalarType.UINT64:
+    case ScalarType.FIXED64:
+      try {
+        return protoInt64.uParse(key);
+      } catch (_a) {
+        //
+      }
+      break;
+    default:
+      // INT64, SFIXED64, SINT64
+      try {
+        return protoInt64.parse(key);
+      } catch (_b) {
+        //
+      }
+      break;
+  }
+  return key;
+}
+function longToReflect(field, value) {
+  // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+  switch (field.scalar) {
+    case ScalarType.INT64:
+    case ScalarType.SFIXED64:
+    case ScalarType.SINT64:
+      if ("longAsString" in field && field.longAsString && typeof value == "string") {
+        value = protoInt64.parse(value);
+      }
+      break;
+    case ScalarType.FIXED64:
+    case ScalarType.UINT64:
+      if ("longAsString" in field && field.longAsString && typeof value == "string") {
+        value = protoInt64.uParse(value);
+      }
+      break;
+  }
+  return value;
+}
+function longToLocal(field, value) {
+  // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+  switch (field.scalar) {
+    case ScalarType.INT64:
+    case ScalarType.SFIXED64:
+    case ScalarType.SINT64:
+      if ("longAsString" in field && field.longAsString) {
+        value = String(value);
+      } else if (typeof value == "string" || typeof value == "number") {
+        value = protoInt64.parse(value);
+      }
+      break;
+    case ScalarType.FIXED64:
+    case ScalarType.UINT64:
+      if ("longAsString" in field && field.longAsString) {
+        value = String(value);
+      } else if (typeof value == "string" || typeof value == "number") {
+        value = protoInt64.uParse(value);
+      }
+      break;
+  }
+  return value;
+}
+function wktStructToReflect(json) {
+  const struct = {
+    $typeName: "google.protobuf.Struct",
+    fields: {}
+  };
+  if (isObject(json)) {
+    for (const [k, v] of Object.entries(json)) {
+      struct.fields[k] = wktValueToReflect(v);
+    }
+  }
+  return struct;
+}
+function wktStructToLocal(val) {
+  const json = {};
+  for (const [k, v] of Object.entries(val.fields)) {
+    json[k] = wktValueToLocal(v);
+  }
+  return json;
+}
+function wktValueToLocal(val) {
+  switch (val.kind.case) {
+    case "structValue":
+      return wktStructToLocal(val.kind.value);
+    case "listValue":
+      return val.kind.value.values.map(wktValueToLocal);
+    case "nullValue":
+    case undefined:
+      return null;
+    default:
+      return val.kind.value;
+  }
+}
+function wktValueToReflect(json) {
+  const value = {
+    $typeName: "google.protobuf.Value",
+    kind: {
+      case: undefined
+    }
+  };
+  // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- invalid input is unselected kind
+  switch (typeof json) {
+    case "number":
+      value.kind = {
+        case: "numberValue",
+        value: json
+      };
+      break;
+    case "string":
+      value.kind = {
+        case: "stringValue",
+        value: json
+      };
+      break;
+    case "boolean":
+      value.kind = {
+        case: "boolValue",
+        value: json
+      };
+      break;
+    case "object":
+      if (json === null) {
+        const nullValue = 0;
+        value.kind = {
+          case: "nullValue",
+          value: nullValue
+        };
+      } else if (Array.isArray(json)) {
+        const listValue = {
+          $typeName: "google.protobuf.ListValue",
+          values: []
+        };
+        if (Array.isArray(json)) {
+          for (const e of json) {
+            listValue.values.push(wktValueToReflect(e));
+          }
+        }
+        value.kind = {
+          case: "listValue",
+          value: listValue
+        };
+      } else {
+        value.kind = {
+          case: "structValue",
+          value: wktStructToReflect(json)
+        };
+      }
+      break;
+  }
+  return value;
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/**
+ * Parse an enum value from the Protobuf text format.
+ *
+ * @private
+ */
+function parseTextFormatEnumValue(descEnum, value) {
+  const enumValue = descEnum.values.find(v => v.name === value);
+  if (!enumValue) {
+    throw new Error(`cannot parse ${descEnum} default value: ${value}`);
+  }
+  return enumValue.number;
+}
+/**
+ * Parse a scalar value from the Protobuf text format.
+ *
+ * @private
+ */
+function parseTextFormatScalarValue(type, value) {
+  switch (type) {
+    case ScalarType.STRING:
+      return value;
+    case ScalarType.BYTES:
+      {
+        const u = unescapeBytesDefaultValue(value);
+        if (u === false) {
+          throw new Error(`cannot parse ${ScalarType[type]} default value: ${value}`);
+        }
+        return u;
+      }
+    case ScalarType.INT64:
+    case ScalarType.SFIXED64:
+    case ScalarType.SINT64:
+      return protoInt64.parse(value);
+    case ScalarType.UINT64:
+    case ScalarType.FIXED64:
+      return protoInt64.uParse(value);
+    case ScalarType.DOUBLE:
+    case ScalarType.FLOAT:
+      switch (value) {
+        case "inf":
+          return Number.POSITIVE_INFINITY;
+        case "-inf":
+          return Number.NEGATIVE_INFINITY;
+        case "nan":
+          return Number.NaN;
+        default:
+          return parseFloat(value);
+      }
+    case ScalarType.BOOL:
+      return value === "true";
+    case ScalarType.INT32:
+    case ScalarType.UINT32:
+    case ScalarType.SINT32:
+    case ScalarType.FIXED32:
+    case ScalarType.SFIXED32:
+      return parseInt(value, 10);
+  }
+}
+/**
+ * Parses a text-encoded default value (proto2) of a BYTES field.
+ */
+function unescapeBytesDefaultValue(str) {
+  const b = [];
+  const input = {
+    tail: str,
+    c: "",
+    next() {
+      if (this.tail.length == 0) {
+        return false;
+      }
+      this.c = this.tail[0];
+      this.tail = this.tail.substring(1);
+      return true;
+    },
+    take(n) {
+      if (this.tail.length >= n) {
+        const r = this.tail.substring(0, n);
+        this.tail = this.tail.substring(n);
+        return r;
+      }
+      return false;
+    }
+  };
+  while (input.next()) {
+    switch (input.c) {
+      case "\\":
+        if (input.next()) {
+          switch (input.c) {
+            case "\\":
+              b.push(input.c.charCodeAt(0));
+              break;
+            case "b":
+              b.push(0x08);
+              break;
+            case "f":
+              b.push(0x0c);
+              break;
+            case "n":
+              b.push(0x0a);
+              break;
+            case "r":
+              b.push(0x0d);
+              break;
+            case "t":
+              b.push(0x09);
+              break;
+            case "v":
+              b.push(0x0b);
+              break;
+            case "0":
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+              {
+                const s = input.c;
+                const t = input.take(2);
+                if (t === false) {
+                  return false;
+                }
+                const n = parseInt(s + t, 8);
+                if (isNaN(n)) {
+                  return false;
+                }
+                b.push(n);
+                break;
+              }
+            case "x":
+              {
+                const s = input.c;
+                const t = input.take(2);
+                if (t === false) {
+                  return false;
+                }
+                const n = parseInt(s + t, 16);
+                if (isNaN(n)) {
+                  return false;
+                }
+                b.push(n);
+                break;
+              }
+            case "u":
+              {
+                const s = input.c;
+                const t = input.take(4);
+                if (t === false) {
+                  return false;
+                }
+                const n = parseInt(s + t, 16);
+                if (isNaN(n)) {
+                  return false;
+                }
+                const chunk = new Uint8Array(4);
+                const view = new DataView(chunk.buffer);
+                view.setInt32(0, n, true);
+                b.push(chunk[0], chunk[1], chunk[2], chunk[3]);
+                break;
+              }
+            case "U":
+              {
+                const s = input.c;
+                const t = input.take(8);
+                if (t === false) {
+                  return false;
+                }
+                const tc = protoInt64.uEnc(s + t);
+                const chunk = new Uint8Array(8);
+                const view = new DataView(chunk.buffer);
+                view.setInt32(0, tc.lo, true);
+                view.setInt32(4, tc.hi, true);
+                b.push(chunk[0], chunk[1], chunk[2], chunk[3], chunk[4], chunk[5], chunk[6], chunk[7]);
+                break;
+              }
+          }
+        }
+        break;
+      default:
+        b.push(input.c.charCodeAt(0));
+    }
+  }
+  return new Uint8Array(b);
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Iterate over all types - enumerations, extensions, services, messages -
+ * and enumerations, extensions and messages nested in messages.
+ */
+function* nestedTypes(desc) {
+  switch (desc.kind) {
+    case "file":
+      for (const message of desc.messages) {
+        yield message;
+        yield* nestedTypes(message);
+      }
+      yield* desc.enums;
+      yield* desc.services;
+      yield* desc.extensions;
+      break;
+    case "message":
+      for (const message of desc.nestedMessages) {
+        yield message;
+        yield* nestedTypes(message);
+      }
+      yield* desc.nestedEnums;
+      yield* desc.nestedExtensions;
+      break;
+  }
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Converts snake_case to protoCamelCase according to the convention
+ * used by protoc to convert a field name to a JSON name.
+ */
+function protoCamelCase(snakeCase) {
+  let capNext = false;
+  const b = [];
+  for (let i = 0; i < snakeCase.length; i++) {
+    let c = snakeCase.charAt(i);
+    switch (c) {
+      case "_":
+        capNext = true;
+        break;
+      case "0":
+      case "1":
+      case "2":
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "7":
+      case "8":
+      case "9":
+        b.push(c);
+        capNext = false;
+        break;
+      default:
+        if (capNext) {
+          capNext = false;
+          c = c.toUpperCase();
+        }
+        b.push(c);
+        break;
+    }
+  }
+  return b.join("");
+}
+/**
+ * Names that cannot be used for object properties because they are reserved
+ * by built-in JavaScript properties.
+ */
+const reservedObjectProperties = new Set([
+// names reserved by JavaScript
+"constructor", "toString", "toJSON", "valueOf"]);
+/**
+ * Escapes names that are reserved for ECMAScript built-in object properties.
+ *
+ * Also see safeIdentifier() from @bufbuild/protoplugin.
+ */
+function safeObjectProperty(name) {
+  return reservedObjectProperties.has(name) ? name + "$" : name;
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+function createFileRegistry(...args) {
+  const registry = createBaseRegistry();
+  if (!args.length) {
+    return registry;
+  }
+  if ("$typeName" in args[0] && args[0].$typeName == "google.protobuf.FileDescriptorSet") {
+    for (const file of args[0].file) {
+      addFile(file, registry);
+    }
+    return registry;
+  }
+  if ("$typeName" in args[0]) {
+    const input = args[0];
+    const resolve = args[1];
+    const seen = new Set();
+    // eslint-disable-next-line no-inner-declarations
+    function recurseDeps(file) {
+      const deps = [];
+      for (const protoFileName of file.dependency) {
+        if (registry.getFile(protoFileName) != undefined) {
+          continue;
+        }
+        if (seen.has(protoFileName)) {
+          continue;
+        }
+        const dep = resolve(protoFileName);
+        if (!dep) {
+          throw new Error(`Unable to resolve ${protoFileName}, imported by ${file.name}`);
+        }
+        if ("kind" in dep) {
+          registry.addFile(dep, false, true);
+        } else {
+          seen.add(dep.name);
+          deps.push(dep);
+        }
+      }
+      return deps.concat(...deps.map(recurseDeps));
+    }
+    for (const file of [input, ...recurseDeps(input)].reverse()) {
+      addFile(file, registry);
+    }
+  } else {
+    for (const fileReg of args) {
+      for (const file of fileReg.files) {
+        registry.addFile(file);
+      }
+    }
+  }
+  return registry;
+}
+/**
+ * @private
+ */
+function createBaseRegistry() {
+  const types = new Map();
+  const extendees = new Map();
+  const files = new Map();
+  return {
+    kind: "registry",
+    types,
+    extendees,
+    [Symbol.iterator]() {
+      return types.values();
+    },
+    get files() {
+      return files.values();
+    },
+    addFile(file, skipTypes, withDeps) {
+      files.set(file.proto.name, file);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (!skipTypes) {
+        for (const type of nestedTypes(file)) {
+          this.add(type);
+        }
+      }
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (withDeps) {
+        for (const f of file.dependencies) {
+          this.addFile(f, skipTypes, withDeps);
+        }
+      }
+    },
+    add(desc) {
+      if (desc.kind == "extension") {
+        let numberToExt = extendees.get(desc.extendee.typeName);
+        if (!numberToExt) {
+          extendees.set(desc.extendee.typeName, numberToExt = new Map());
+        }
+        numberToExt.set(desc.number, desc);
+      }
+      types.set(desc.typeName, desc);
+    },
+    get(typeName) {
+      return types.get(typeName);
+    },
+    getFile(fileName) {
+      return files.get(fileName);
+    },
+    getMessage(typeName) {
+      const t = types.get(typeName);
+      return (t === null || t === void 0 ? void 0 : t.kind) == "message" ? t : undefined;
+    },
+    getEnum(typeName) {
+      const t = types.get(typeName);
+      return (t === null || t === void 0 ? void 0 : t.kind) == "enum" ? t : undefined;
+    },
+    getExtension(typeName) {
+      const t = types.get(typeName);
+      return (t === null || t === void 0 ? void 0 : t.kind) == "extension" ? t : undefined;
+    },
+    getExtensionFor(extendee, no) {
+      var _a;
+      return (_a = extendees.get(extendee.typeName)) === null || _a === void 0 ? void 0 : _a.get(no);
+    },
+    getService(typeName) {
+      const t = types.get(typeName);
+      return (t === null || t === void 0 ? void 0 : t.kind) == "service" ? t : undefined;
+    }
+  };
+}
+// bootstrap-inject google.protobuf.Edition.EDITION_PROTO2: const $name: Edition.$localName = $number;
+const EDITION_PROTO2 = 998;
+// bootstrap-inject google.protobuf.Edition.EDITION_PROTO3: const $name: Edition.$localName = $number;
+const EDITION_PROTO3 = 999;
+// bootstrap-inject google.protobuf.FieldDescriptorProto.Type.TYPE_STRING: const $name: FieldDescriptorProto_Type.$localName = $number;
+const TYPE_STRING = 9;
+// bootstrap-inject google.protobuf.FieldDescriptorProto.Type.TYPE_GROUP: const $name: FieldDescriptorProto_Type.$localName = $number;
+const TYPE_GROUP = 10;
+// bootstrap-inject google.protobuf.FieldDescriptorProto.Type.TYPE_MESSAGE: const $name: FieldDescriptorProto_Type.$localName = $number;
+const TYPE_MESSAGE = 11;
+// bootstrap-inject google.protobuf.FieldDescriptorProto.Type.TYPE_BYTES: const $name: FieldDescriptorProto_Type.$localName = $number;
+const TYPE_BYTES = 12;
+// bootstrap-inject google.protobuf.FieldDescriptorProto.Type.TYPE_ENUM: const $name: FieldDescriptorProto_Type.$localName = $number;
+const TYPE_ENUM = 14;
+// bootstrap-inject google.protobuf.FieldDescriptorProto.Label.LABEL_REPEATED: const $name: FieldDescriptorProto_Label.$localName = $number;
+const LABEL_REPEATED = 3;
+// bootstrap-inject google.protobuf.FieldDescriptorProto.Label.LABEL_REQUIRED: const $name: FieldDescriptorProto_Label.$localName = $number;
+const LABEL_REQUIRED = 2;
+// bootstrap-inject google.protobuf.FieldOptions.JSType.JS_STRING: const $name: FieldOptions_JSType.$localName = $number;
+const JS_STRING = 1;
+// bootstrap-inject google.protobuf.MethodOptions.IdempotencyLevel.IDEMPOTENCY_UNKNOWN: const $name: MethodOptions_IdempotencyLevel.$localName = $number;
+const IDEMPOTENCY_UNKNOWN = 0;
+// bootstrap-inject google.protobuf.FeatureSet.FieldPresence.EXPLICIT: const $name: FeatureSet_FieldPresence.$localName = $number;
+const EXPLICIT = 1;
+// bootstrap-inject google.protobuf.FeatureSet.FieldPresence.IMPLICIT: const $name: FeatureSet_FieldPresence.$localName = $number;
+const IMPLICIT = 2;
+// bootstrap-inject google.protobuf.FeatureSet.FieldPresence.LEGACY_REQUIRED: const $name: FeatureSet_FieldPresence.$localName = $number;
+const LEGACY_REQUIRED = 3;
+// bootstrap-inject google.protobuf.FeatureSet.RepeatedFieldEncoding.PACKED: const $name: FeatureSet_RepeatedFieldEncoding.$localName = $number;
+const PACKED = 1;
+// bootstrap-inject google.protobuf.FeatureSet.MessageEncoding.DELIMITED: const $name: FeatureSet_MessageEncoding.$localName = $number;
+const DELIMITED = 2;
+// bootstrap-inject google.protobuf.FeatureSet.EnumType.OPEN: const $name: FeatureSet_EnumType.$localName = $number;
+const OPEN = 1;
+const featureDefaults = {
+  // EDITION_PROTO2
+  998: {
+    fieldPresence: 1,
+    // EXPLICIT,
+    enumType: 2,
+    // CLOSED,
+    repeatedFieldEncoding: 2,
+    // EXPANDED,
+    utf8Validation: 3,
+    // NONE,
+    messageEncoding: 1,
+    // LENGTH_PREFIXED,
+    jsonFormat: 2 // LEGACY_BEST_EFFORT,
+  },
+  // EDITION_PROTO3
+  999: {
+    fieldPresence: 2,
+    // IMPLICIT,
+    enumType: 1,
+    // OPEN,
+    repeatedFieldEncoding: 1,
+    // PACKED,
+    utf8Validation: 2,
+    // VERIFY,
+    messageEncoding: 1,
+    // LENGTH_PREFIXED,
+    jsonFormat: 1 // ALLOW,
+  },
+  // EDITION_2023
+  1000: {
+    fieldPresence: 1,
+    // EXPLICIT,
+    enumType: 1,
+    // OPEN,
+    repeatedFieldEncoding: 1,
+    // PACKED,
+    utf8Validation: 2,
+    // VERIFY,
+    messageEncoding: 1,
+    // LENGTH_PREFIXED,
+    jsonFormat: 1 // ALLOW,
+  }
+};
+/**
+ * Create a descriptor for a file, add it to the registry.
+ */
+function addFile(proto, reg) {
+  var _a, _b;
+  const file = {
+    kind: "file",
+    proto,
+    deprecated: (_b = (_a = proto.options) === null || _a === void 0 ? void 0 : _a.deprecated) !== null && _b !== void 0 ? _b : false,
+    edition: getFileEdition(proto),
+    name: proto.name.replace(/\.proto$/, ""),
+    dependencies: findFileDependencies(proto, reg),
+    enums: [],
+    messages: [],
+    extensions: [],
+    services: [],
+    toString() {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- we asserted above
+      return `file ${proto.name}`;
+    }
+  };
+  const mapEntriesStore = new Map();
+  const mapEntries = {
+    get(typeName) {
+      return mapEntriesStore.get(typeName);
+    },
+    add(desc) {
+      var _a;
+      assert(((_a = desc.proto.options) === null || _a === void 0 ? void 0 : _a.mapEntry) === true);
+      mapEntriesStore.set(desc.typeName, desc);
+    }
+  };
+  for (const enumProto of proto.enumType) {
+    addEnum(enumProto, file, undefined, reg);
+  }
+  for (const messageProto of proto.messageType) {
+    addMessage(messageProto, file, undefined, reg, mapEntries);
+  }
+  for (const serviceProto of proto.service) {
+    addService(serviceProto, file, reg);
+  }
+  addExtensions(file, reg);
+  for (const mapEntry of mapEntriesStore.values()) {
+    // to create a map field, we need access to the map entry's fields
+    addFields(mapEntry, reg, mapEntries);
+  }
+  for (const message of file.messages) {
+    addFields(message, reg, mapEntries);
+    addExtensions(message, reg);
+  }
+  reg.addFile(file, true);
+}
+/**
+ * Create descriptors for extensions, and add them to the message / file,
+ * and to our cart.
+ * Recurses into nested types.
+ */
+function addExtensions(desc, reg) {
+  switch (desc.kind) {
+    case "file":
+      for (const proto of desc.proto.extension) {
+        const ext = newField(proto, desc, reg);
+        desc.extensions.push(ext);
+        reg.add(ext);
+      }
+      break;
+    case "message":
+      for (const proto of desc.proto.extension) {
+        const ext = newField(proto, desc, reg);
+        desc.nestedExtensions.push(ext);
+        reg.add(ext);
+      }
+      for (const message of desc.nestedMessages) {
+        addExtensions(message, reg);
+      }
+      break;
+  }
+}
+/**
+ * Create descriptors for fields and oneof groups, and add them to the message.
+ * Recurses into nested types.
+ */
+function addFields(message, reg, mapEntries) {
+  const allOneofs = message.proto.oneofDecl.map(proto => newOneof(proto, message));
+  const oneofsSeen = new Set();
+  for (const proto of message.proto.field) {
+    const oneof = findOneof(proto, allOneofs);
+    const field = newField(proto, message, reg, oneof, mapEntries);
+    message.fields.push(field);
+    message.field[field.localName] = field;
+    if (oneof === undefined) {
+      message.members.push(field);
+    } else {
+      oneof.fields.push(field);
+      if (!oneofsSeen.has(oneof)) {
+        oneofsSeen.add(oneof);
+        message.members.push(oneof);
+      }
+    }
+  }
+  for (const oneof of allOneofs.filter(o => oneofsSeen.has(o))) {
+    message.oneofs.push(oneof);
+  }
+  for (const child of message.nestedMessages) {
+    addFields(child, reg, mapEntries);
+  }
+}
+/**
+ * Create a descriptor for an enumeration, and add it our cart and to the
+ * parent type, if any.
+ */
+function addEnum(proto, file, parent, reg) {
+  var _a, _b, _c;
+  const sharedPrefix = findEnumSharedPrefix(proto.name, proto.value);
+  const desc = {
+    kind: "enum",
+    proto,
+    deprecated: (_b = (_a = proto.options) === null || _a === void 0 ? void 0 : _a.deprecated) !== null && _b !== void 0 ? _b : false,
+    file,
+    parent,
+    open: true,
+    name: proto.name,
+    typeName: makeTypeName(proto, parent, file),
+    value: {},
+    values: [],
+    sharedPrefix,
+    toString() {
+      return `enum ${this.typeName}`;
+    }
+  };
+  desc.open = isEnumOpen(desc);
+  reg.add(desc);
+  proto.value.forEach(proto => {
+    var _a, _b;
+    const name = proto.name;
+    desc.values.push(desc.value[proto.number] = {
+      kind: "enum_value",
+      proto,
+      deprecated: (_b = (_a = proto.options) === null || _a === void 0 ? void 0 : _a.deprecated) !== null && _b !== void 0 ? _b : false,
+      parent: desc,
+      name,
+      localName: safeObjectProperty(sharedPrefix == undefined ? name : name.substring(sharedPrefix.length)),
+      number: proto.number,
+      toString() {
+        return `enum value ${desc.typeName}.${name}`;
+      }
+    });
+  });
+  ((_c = parent === null || parent === void 0 ? void 0 : parent.nestedEnums) !== null && _c !== void 0 ? _c : file.enums).push(desc);
+}
+/**
+ * Create a descriptor for a message, including nested types, and add it to our
+ * cart. Note that this does not create descriptors fields.
+ */
+function addMessage(proto, file, parent, reg, mapEntries) {
+  var _a, _b, _c, _d;
+  const desc = {
+    kind: "message",
+    proto,
+    deprecated: (_b = (_a = proto.options) === null || _a === void 0 ? void 0 : _a.deprecated) !== null && _b !== void 0 ? _b : false,
+    file,
+    parent,
+    name: proto.name,
+    typeName: makeTypeName(proto, parent, file),
+    fields: [],
+    field: {},
+    oneofs: [],
+    members: [],
+    nestedEnums: [],
+    nestedMessages: [],
+    nestedExtensions: [],
+    toString() {
+      return `message ${this.typeName}`;
+    }
+  };
+  if (((_c = proto.options) === null || _c === void 0 ? void 0 : _c.mapEntry) === true) {
+    mapEntries.add(desc);
+  } else {
+    ((_d = parent === null || parent === void 0 ? void 0 : parent.nestedMessages) !== null && _d !== void 0 ? _d : file.messages).push(desc);
+    reg.add(desc);
+  }
+  for (const enumProto of proto.enumType) {
+    addEnum(enumProto, file, desc, reg);
+  }
+  for (const messageProto of proto.nestedType) {
+    addMessage(messageProto, file, desc, reg, mapEntries);
+  }
+}
+/**
+ * Create a descriptor for a service, including methods, and add it to our
+ * cart.
+ */
+function addService(proto, file, reg) {
+  var _a, _b;
+  const desc = {
+    kind: "service",
+    proto,
+    deprecated: (_b = (_a = proto.options) === null || _a === void 0 ? void 0 : _a.deprecated) !== null && _b !== void 0 ? _b : false,
+    file,
+    name: proto.name,
+    typeName: makeTypeName(proto, undefined, file),
+    methods: [],
+    method: {},
+    toString() {
+      return `service ${this.typeName}`;
+    }
+  };
+  file.services.push(desc);
+  reg.add(desc);
+  for (const methodProto of proto.method) {
+    const method = newMethod(methodProto, desc, reg);
+    desc.methods.push(method);
+    desc.method[method.localName] = method;
+  }
+}
+/**
+ * Create a descriptor for a method.
+ */
+function newMethod(proto, parent, reg) {
+  var _a, _b, _c, _d;
+  let methodKind;
+  if (proto.clientStreaming && proto.serverStreaming) {
+    methodKind = "bidi_streaming";
+  } else if (proto.clientStreaming) {
+    methodKind = "client_streaming";
+  } else if (proto.serverStreaming) {
+    methodKind = "server_streaming";
+  } else {
+    methodKind = "unary";
+  }
+  const input = reg.getMessage(trimLeadingDot(proto.inputType));
+  const output = reg.getMessage(trimLeadingDot(proto.outputType));
+  assert(input, `invalid MethodDescriptorProto: input_type ${proto.inputType} not found`);
+  assert(output, `invalid MethodDescriptorProto: output_type ${proto.inputType} not found`);
+  const name = proto.name;
+  return {
+    kind: "rpc",
+    proto,
+    deprecated: (_b = (_a = proto.options) === null || _a === void 0 ? void 0 : _a.deprecated) !== null && _b !== void 0 ? _b : false,
+    parent,
+    name,
+    localName: safeObjectProperty(name.length ? safeObjectProperty(name[0].toLowerCase() + name.substring(1)) : name),
+    methodKind,
+    input,
+    output,
+    idempotency: (_d = (_c = proto.options) === null || _c === void 0 ? void 0 : _c.idempotencyLevel) !== null && _d !== void 0 ? _d : IDEMPOTENCY_UNKNOWN,
+    toString() {
+      return `rpc ${parent.typeName}.${name}`;
+    }
+  };
+}
+/**
+ * Create a descriptor for a oneof group.
+ */
+function newOneof(proto, parent) {
+  return {
+    kind: "oneof",
+    proto,
+    deprecated: false,
+    parent,
+    fields: [],
+    name: proto.name,
+    localName: safeObjectProperty(protoCamelCase(proto.name)),
+    toString() {
+      return `oneof ${parent.typeName}.${this.name}`;
+    }
+  };
+}
+function newField(proto, parentOrFile, reg, oneof, mapEntries) {
+  var _a, _b, _c;
+  const isExtension = mapEntries === undefined;
+  const field = {
+    kind: "field",
+    proto,
+    deprecated: (_b = (_a = proto.options) === null || _a === void 0 ? void 0 : _a.deprecated) !== null && _b !== void 0 ? _b : false,
+    name: proto.name,
+    number: proto.number,
+    scalar: undefined,
+    message: undefined,
+    enum: undefined,
+    presence: getFieldPresence(proto, oneof, isExtension, parentOrFile),
+    listKind: undefined,
+    mapKind: undefined,
+    mapKey: undefined,
+    delimitedEncoding: undefined,
+    packed: undefined,
+    longAsString: false,
+    getDefaultValue: undefined
+  };
+  if (isExtension) {
+    // extension field
+    const file = parentOrFile.kind == "file" ? parentOrFile : parentOrFile.file;
+    const parent = parentOrFile.kind == "file" ? undefined : parentOrFile;
+    const typeName = makeTypeName(proto, parent, file);
+    field.kind = "extension";
+    field.file = file;
+    field.parent = parent;
+    field.oneof = undefined;
+    field.typeName = typeName;
+    field.jsonName = `[${typeName}]`; // option json_name is not allowed on extension fields
+    field.toString = () => `extension ${typeName}`;
+    const extendee = reg.getMessage(trimLeadingDot(proto.extendee));
+    assert(extendee, `invalid FieldDescriptorProto: extendee ${proto.extendee} not found`);
+    field.extendee = extendee;
+  } else {
+    // regular field
+    const parent = parentOrFile;
+    assert(parent.kind == "message");
+    field.parent = parent;
+    field.oneof = oneof;
+    field.localName = oneof ? protoCamelCase(proto.name) : safeObjectProperty(protoCamelCase(proto.name));
+    field.jsonName = proto.jsonName;
+    field.toString = () => `field ${parent.typeName}.${proto.name}`;
+  }
+  const label = proto.label;
+  const type = proto.type;
+  const jstype = (_c = proto.options) === null || _c === void 0 ? void 0 : _c.jstype;
+  if (label === LABEL_REPEATED) {
+    // list or map field
+    const mapEntry = type == TYPE_MESSAGE ? mapEntries === null || mapEntries === void 0 ? void 0 : mapEntries.get(trimLeadingDot(proto.typeName)) : undefined;
+    if (mapEntry) {
+      // map field
+      field.fieldKind = "map";
+      const {
+        key,
+        value
+      } = findMapEntryFields(mapEntry);
+      field.mapKey = key.scalar;
+      field.mapKind = value.fieldKind;
+      field.message = value.message;
+      field.delimitedEncoding = false; // map fields are always LENGTH_PREFIXED
+      field.enum = value.enum;
+      field.scalar = value.scalar;
+      return field;
+    }
+    // list field
+    field.fieldKind = "list";
+    switch (type) {
+      case TYPE_MESSAGE:
+      case TYPE_GROUP:
+        field.listKind = "message";
+        field.message = reg.getMessage(trimLeadingDot(proto.typeName));
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        assert(field.message);
+        field.delimitedEncoding = isDelimitedEncoding(proto, parentOrFile);
+        break;
+      case TYPE_ENUM:
+        field.listKind = "enum";
+        field.enum = reg.getEnum(trimLeadingDot(proto.typeName));
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        assert(field.enum);
+        break;
+      default:
+        field.listKind = "scalar";
+        field.scalar = type;
+        field.longAsString = jstype == JS_STRING;
+        break;
+    }
+    field.packed = isPackedField(proto, parentOrFile);
+    return field;
+  }
+  // singular
+  switch (type) {
+    case TYPE_MESSAGE:
+    case TYPE_GROUP:
+      field.fieldKind = "message";
+      field.message = reg.getMessage(trimLeadingDot(proto.typeName));
+      assert(
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      field.message, `invalid FieldDescriptorProto: type_name ${proto.typeName} not found`);
+      field.delimitedEncoding = isDelimitedEncoding(proto, parentOrFile);
+      field.getDefaultValue = () => undefined;
+      break;
+    case TYPE_ENUM:
+      {
+        const enumeration = reg.getEnum(trimLeadingDot(proto.typeName));
+        assert(enumeration !== undefined, `invalid FieldDescriptorProto: type_name ${proto.typeName} not found`);
+        field.fieldKind = "enum";
+        field.enum = reg.getEnum(trimLeadingDot(proto.typeName));
+        field.getDefaultValue = () => {
+          return unsafeIsSetExplicit(proto, "defaultValue") ? parseTextFormatEnumValue(enumeration, proto.defaultValue) : undefined;
+        };
+        break;
+      }
+    default:
+      {
+        field.fieldKind = "scalar";
+        field.scalar = type;
+        field.longAsString = jstype == JS_STRING;
+        field.getDefaultValue = () => {
+          return unsafeIsSetExplicit(proto, "defaultValue") ? parseTextFormatScalarValue(type, proto.defaultValue) : undefined;
+        };
+        break;
+      }
+  }
+  return field;
+}
+/**
+ * Parse the "syntax" and "edition" fields, returning one of the supported
+ * editions.
+ */
+function getFileEdition(proto) {
+  switch (proto.syntax) {
+    case "":
+    case "proto2":
+      return EDITION_PROTO2;
+    case "proto3":
+      return EDITION_PROTO3;
+    case "editions":
+      if (proto.edition in featureDefaults) {
+        return proto.edition;
+      }
+      throw new Error(`${proto.name}: unsupported edition`);
+    default:
+      throw new Error(`${proto.name}: unsupported syntax "${proto.syntax}"`);
+  }
+}
+/**
+ * Resolve dependencies of FileDescriptorProto to DescFile.
+ */
+function findFileDependencies(proto, reg) {
+  return proto.dependency.map(wantName => {
+    const dep = reg.getFile(wantName);
+    if (!dep) {
+      throw new Error(`Cannot find ${wantName}, imported by ${proto.name}`);
+    }
+    return dep;
+  });
+}
+/**
+ * Finds a prefix shared by enum values, for example `my_enum_` for
+ * `enum MyEnum {MY_ENUM_A=0; MY_ENUM_B=1;}`.
+ */
+function findEnumSharedPrefix(enumName, values) {
+  const prefix = camelToSnakeCase(enumName) + "_";
+  for (const value of values) {
+    if (!value.name.toLowerCase().startsWith(prefix)) {
+      return undefined;
+    }
+    const shortName = value.name.substring(prefix.length);
+    if (shortName.length == 0) {
+      return undefined;
+    }
+    if (/^\d/.test(shortName)) {
+      // identifiers must not start with numbers
+      return undefined;
+    }
+  }
+  return prefix;
+}
+/**
+ * Converts lowerCamelCase or UpperCamelCase into lower_snake_case.
+ * This is used to find shared prefixes in an enum.
+ */
+function camelToSnakeCase(camel) {
+  return (camel.substring(0, 1) + camel.substring(1).replace(/[A-Z]/g, c => "_" + c)).toLowerCase();
+}
+/**
+ * Create a fully qualified name for a protobuf type or extension field.
+ *
+ * The fully qualified name for messages, enumerations, and services is
+ * constructed by concatenating the package name (if present), parent
+ * message names (for nested types), and the type name. We omit the leading
+ * dot added by protobuf compilers. Examples:
+ * - mypackage.MyMessage
+ * - mypackage.MyMessage.NestedMessage
+ *
+ * The fully qualified name for extension fields is constructed by
+ * concatenating the package name (if present), parent message names (for
+ * extensions declared within a message), and the field name. Examples:
+ * - mypackage.extfield
+ * - mypackage.MyMessage.extfield
+ */
+function makeTypeName(proto, parent, file) {
+  let typeName;
+  if (parent) {
+    typeName = `${parent.typeName}.${proto.name}`;
+  } else if (file.proto.package.length > 0) {
+    typeName = `${file.proto.package}.${proto.name}`;
+  } else {
+    typeName = `${proto.name}`;
+  }
+  return typeName;
+}
+/**
+ * Remove the leading dot from a fully qualified type name.
+ */
+function trimLeadingDot(typeName) {
+  return typeName.startsWith(".") ? typeName.substring(1) : typeName;
+}
+/**
+ * Did the user put the field in a oneof group?
+ * Synthetic oneofs for proto3 optionals are ignored.
+ */
+function findOneof(proto, allOneofs) {
+  if (!unsafeIsSetExplicit(proto, "oneofIndex")) {
+    return undefined;
+  }
+  if (proto.proto3Optional) {
+    return undefined;
+  }
+  const oneof = allOneofs[proto.oneofIndex];
+  assert(
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  oneof, `invalid FieldDescriptorProto: oneof #${proto.oneofIndex} for field #${proto.number} not found`);
+  return oneof;
+}
+/**
+ * Presence of the field.
+ * See https://protobuf.dev/programming-guides/field_presence/
+ */
+function getFieldPresence(proto, oneof, isExtension, parent) {
+  if (proto.label == LABEL_REQUIRED) {
+    // proto2 required is LEGACY_REQUIRED
+    return LEGACY_REQUIRED;
+  }
+  if (proto.label == LABEL_REPEATED) {
+    // repeated fields (including maps) do not track presence
+    return IMPLICIT;
+  }
+  if (!!oneof || proto.proto3Optional) {
+    // oneof is always explicit
+    return EXPLICIT;
+  }
+  if (proto.type == TYPE_MESSAGE) {
+    // singular message field cannot be implicit
+    return EXPLICIT;
+  }
+  if (isExtension) {
+    // extensions always track presence
+    return EXPLICIT;
+  }
+  return resolveFeature("fieldPresence", {
+    proto,
+    parent
+  });
+}
+/**
+ * Pack this repeated field?
+ */
+function isPackedField(proto, parent) {
+  if (proto.label != LABEL_REPEATED) {
+    return false;
+  }
+  // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+  switch (proto.type) {
+    case TYPE_STRING:
+    case TYPE_BYTES:
+    case TYPE_GROUP:
+    case TYPE_MESSAGE:
+      // length-delimited types cannot be packed
+      return false;
+  }
+  const o = proto.options;
+  if (o && unsafeIsSetExplicit(o, "packed")) {
+    // prefer the field option over edition features
+    return o.packed;
+  }
+  return PACKED == resolveFeature("repeatedFieldEncoding", {
+    proto,
+    parent
+  });
+}
+/**
+ * Find the key and value fields of a synthetic map entry message.
+ */
+function findMapEntryFields(mapEntry) {
+  const key = mapEntry.fields.find(f => f.number === 1);
+  const value = mapEntry.fields.find(f => f.number === 2);
+  assert(key && key.fieldKind == "scalar" && key.scalar != ScalarType.BYTES && key.scalar != ScalarType.FLOAT && key.scalar != ScalarType.DOUBLE && value && value.fieldKind != "list" && value.fieldKind != "map");
+  return {
+    key,
+    value
+  };
+}
+/**
+ * Enumerations can be open or closed.
+ * See https://protobuf.dev/programming-guides/enum/
+ */
+function isEnumOpen(desc) {
+  var _a;
+  return OPEN == resolveFeature("enumType", {
+    proto: desc.proto,
+    parent: (_a = desc.parent) !== null && _a !== void 0 ? _a : desc.file
+  });
+}
+/**
+ * Encode the message delimited (a.k.a. proto2 group encoding), or
+ * length-prefixed?
+ */
+function isDelimitedEncoding(proto, parent) {
+  if (proto.type == TYPE_GROUP) {
+    return true;
+  }
+  return DELIMITED == resolveFeature("messageEncoding", {
+    proto,
+    parent
+  });
+}
+function resolveFeature(name, ref) {
+  var _a, _b;
+  const featureSet = (_a = ref.proto.options) === null || _a === void 0 ? void 0 : _a.features;
+  if (featureSet) {
+    const val = featureSet[name];
+    if (val != 0) {
+      return val;
+    }
+  }
+  if ("kind" in ref) {
+    if (ref.kind == "message") {
+      return resolveFeature(name, (_b = ref.parent) !== null && _b !== void 0 ? _b : ref.file);
+    }
+    const editionDefaults = featureDefaults[ref.edition];
+    if (!editionDefaults) {
+      throw new Error(`feature default for edition ${ref.edition} not found`);
+    }
+    return editionDefaults[name];
+  }
+  return resolveFeature(name, ref.parent);
+}
+/**
+ * Assert that condition is truthy or throw error (with message)
+ */
+function assert(condition, msg) {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- we want the implicit conversion to boolean
+  if (!condition) {
+    throw new Error(msg);
+  }
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// Default options for parsing binary data.
+const readDefaults = {
+  readUnknownFields: true
+};
+function makeReadOptions(options) {
+  return options ? Object.assign(Object.assign({}, readDefaults), options) : readDefaults;
+}
+/**
+ * Parse serialized binary data.
+ */
+function fromBinary(schema, bytes, options) {
+  const msg = reflect(schema, undefined, false);
+  readMessage(msg, new BinaryReader(bytes), makeReadOptions(options), false, bytes.byteLength);
+  return msg.message;
+}
+/**
+ * If `delimited` is false, read the length given in `lengthOrDelimitedFieldNo`.
+ *
+ * If `delimited` is true, read until an EndGroup tag. `lengthOrDelimitedFieldNo`
+ * is the expected field number.
+ *
+ * @private
+ */
+function readMessage(message, reader, options, delimited, lengthOrDelimitedFieldNo) {
+  var _a;
+  const end = delimited ? reader.len : reader.pos + lengthOrDelimitedFieldNo;
+  let fieldNo, wireType;
+  const unknownFields = (_a = message.getUnknown()) !== null && _a !== void 0 ? _a : [];
+  while (reader.pos < end) {
+    [fieldNo, wireType] = reader.tag();
+    if (delimited && wireType == WireType.EndGroup) {
+      break;
+    }
+    const field = message.findNumber(fieldNo);
+    if (!field) {
+      const data = reader.skip(wireType, fieldNo);
+      if (options.readUnknownFields) {
+        unknownFields.push({
+          no: fieldNo,
+          wireType,
+          data
+        });
+      }
+      continue;
+    }
+    readField(message, reader, field, wireType, options);
+  }
+  if (delimited) {
+    if (wireType != WireType.EndGroup || fieldNo !== lengthOrDelimitedFieldNo) {
+      throw new Error(`invalid end group tag`);
+    }
+  }
+  if (unknownFields.length > 0) {
+    message.setUnknown(unknownFields);
+  }
+}
+/**
+ * @private
+ */
+function readField(message, reader, field, wireType, options) {
+  switch (field.fieldKind) {
+    case "scalar":
+      message.set(field, readScalar(reader, field.scalar));
+      break;
+    case "enum":
+      message.set(field, readScalar(reader, ScalarType.INT32));
+      break;
+    case "message":
+      message.set(field, readMessageField(reader, options, field, message.get(field)));
+      break;
+    case "list":
+      readListField(reader, wireType, message.get(field), options);
+      break;
+    case "map":
+      readMapEntry(reader, message.get(field), options);
+      break;
+  }
+}
+// Read a map field, expecting key field = 1, value field = 2
+function readMapEntry(reader, map, options) {
+  const field = map.field();
+  let key, val;
+  const end = reader.pos + reader.uint32();
+  while (reader.pos < end) {
+    const [fieldNo] = reader.tag();
+    switch (fieldNo) {
+      case 1:
+        key = readScalar(reader, field.mapKey);
+        break;
+      case 2:
+        switch (field.mapKind) {
+          case "scalar":
+            val = readScalar(reader, field.scalar);
+            break;
+          case "enum":
+            val = reader.int32();
+            break;
+          case "message":
+            val = readMessageField(reader, options, field);
+            break;
+        }
+        break;
+    }
+  }
+  if (key === undefined) {
+    key = scalarZeroValue(field.mapKey, false);
+  }
+  if (val === undefined) {
+    switch (field.mapKind) {
+      case "scalar":
+        val = scalarZeroValue(field.scalar, false);
+        break;
+      case "enum":
+        val = field.enum.values[0].number;
+        break;
+      case "message":
+        val = reflect(field.message, undefined, false);
+        break;
+    }
+  }
+  map.set(key, val);
+}
+function readListField(reader, wireType, list, options) {
+  var _a;
+  const field = list.field();
+  if (field.listKind === "message") {
+    list.add(readMessageField(reader, options, field));
+    return;
+  }
+  const scalarType = (_a = field.scalar) !== null && _a !== void 0 ? _a : ScalarType.INT32;
+  const packed = wireType == WireType.LengthDelimited && scalarType != ScalarType.STRING && scalarType != ScalarType.BYTES;
+  if (!packed) {
+    list.add(readScalar(reader, scalarType));
+    return;
+  }
+  const e = reader.uint32() + reader.pos;
+  while (reader.pos < e) {
+    list.add(readScalar(reader, scalarType));
+  }
+}
+function readMessageField(reader, options, field, mergeMessage) {
+  const delimited = field.delimitedEncoding;
+  const message = mergeMessage !== null && mergeMessage !== void 0 ? mergeMessage : reflect(field.message, undefined, false);
+  readMessage(message, reader, options, delimited, delimited ? field.number : reader.uint32());
+  return message;
+}
+function readScalar(reader, type) {
+  switch (type) {
+    case ScalarType.STRING:
+      return reader.string();
+    case ScalarType.BOOL:
+      return reader.bool();
+    case ScalarType.DOUBLE:
+      return reader.double();
+    case ScalarType.FLOAT:
+      return reader.float();
+    case ScalarType.INT32:
+      return reader.int32();
+    case ScalarType.INT64:
+      return reader.int64();
+    case ScalarType.UINT64:
+      return reader.uint64();
+    case ScalarType.FIXED64:
+      return reader.fixed64();
+    case ScalarType.BYTES:
+      return reader.bytes();
+    case ScalarType.FIXED32:
+      return reader.fixed32();
+    case ScalarType.SFIXED32:
+      return reader.sfixed32();
+    case ScalarType.SFIXED64:
+      return reader.sfixed64();
+    case ScalarType.SINT64:
+      return reader.sint64();
+    case ScalarType.UINT32:
+      return reader.uint32();
+    case ScalarType.SINT32:
+      return reader.sint32();
+  }
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unnecessary-condition, prefer-const */
+/**
+ * Decodes a base64 string to a byte array.
+ *
+ * - ignores white-space, including line breaks and tabs
+ * - allows inner padding (can decode concatenated base64 strings)
+ * - does not require padding
+ * - understands base64url encoding:
+ *   "-" instead of "+",
+ *   "_" instead of "/",
+ *   no padding
+ */
+function base64Decode(base64Str) {
+  const table = getDecodeTable();
+  // estimate byte size, not accounting for inner padding and whitespace
+  let es = base64Str.length * 3 / 4;
+  if (base64Str[base64Str.length - 2] == "=") es -= 2;else if (base64Str[base64Str.length - 1] == "=") es -= 1;
+  let bytes = new Uint8Array(es),
+    bytePos = 0,
+    // position in byte array
+    groupPos = 0,
+    // position in base64 group
+    b,
+    // current byte
+    p = 0; // previous byte
+  for (let i = 0; i < base64Str.length; i++) {
+    b = table[base64Str.charCodeAt(i)];
+    if (b === undefined) {
+      switch (base64Str[i]) {
+        // @ts-expect-error TS7029: Fallthrough case in switch
+        case "=":
+          groupPos = 0;
+        // reset state when padding found
+        // eslint-disable-next-line no-fallthrough
+        case "\n":
+        case "\r":
+        case "\t":
+        case " ":
+          continue;
+        // skip white-space, and padding
+        default:
+          throw Error("invalid base64 string");
+      }
+    }
+    switch (groupPos) {
+      case 0:
+        p = b;
+        groupPos = 1;
+        break;
+      case 1:
+        bytes[bytePos++] = p << 2 | (b & 48) >> 4;
+        p = b;
+        groupPos = 2;
+        break;
+      case 2:
+        bytes[bytePos++] = (p & 15) << 4 | (b & 60) >> 2;
+        p = b;
+        groupPos = 3;
+        break;
+      case 3:
+        bytes[bytePos++] = (p & 3) << 6 | b;
+        groupPos = 0;
+        break;
+    }
+  }
+  if (groupPos == 1) throw Error("invalid base64 string");
+  return bytes.subarray(0, bytePos);
+}
+// lookup table from base64 character to byte
+let encodeTableStd;
+let encodeTableUrl;
+// lookup table from base64 character *code* to byte because lookup by number is fast
+let decodeTable;
+function getEncodeTable(encoding) {
+  if (!encodeTableStd) {
+    encodeTableStd = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split("");
+    encodeTableUrl = encodeTableStd.slice(0, -2).concat("-", "_");
+  }
+  return encoding == "url" ? encodeTableUrl : encodeTableStd;
+}
+function getDecodeTable() {
+  if (!decodeTable) {
+    decodeTable = [];
+    const encodeTable = getEncodeTable("std");
+    for (let i = 0; i < encodeTable.length; i++) decodeTable[encodeTable[i].charCodeAt(0)] = i;
+    // support base64url variants
+    decodeTable["-".charCodeAt(0)] = encodeTable.indexOf("+");
+    decodeTable["_".charCodeAt(0)] = encodeTable.indexOf("/");
+  }
+  return decodeTable;
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * @private
+ */
+function restoreJsonNames(message) {
+  for (const f of message.field) {
+    if (!unsafeIsSetExplicit(f, "jsonName")) {
+      f.jsonName = protoCamelCase(f.name);
+    }
+  }
+  message.nestedType.forEach(restoreJsonNames);
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Hydrate a file descriptor for google/protobuf/descriptor.proto from a plain
+ * object.
+ *
+ * See createFileDescriptorProtoBoot() for details.
+ *
+ * @private
+ */
+function boot(boot) {
+  const root = bootFileDescriptorProto(boot);
+  root.messageType.forEach(restoreJsonNames);
+  const reg = createFileRegistry(root, () => undefined);
+  // non-null assertion because we just created the registry from the file we look up
+  return reg.getFile(root.name);
+}
+/**
+ * Creates the message google.protobuf.FileDescriptorProto from an object literal.
+ *
+ * See createFileDescriptorProtoBoot() for details.
+ *
+ * @private
+ */
+function bootFileDescriptorProto(init) {
+  const proto = Object.create({
+    syntax: "",
+    edition: 0
+  });
+  return Object.assign(proto, Object.assign(Object.assign({
+    $typeName: "google.protobuf.FileDescriptorProto",
+    dependency: [],
+    publicDependency: [],
+    weakDependency: [],
+    service: [],
+    extension: []
+  }, init), {
+    messageType: init.messageType.map(bootDescriptorProto),
+    enumType: init.enumType.map(bootEnumDescriptorProto)
+  }));
+}
+function bootDescriptorProto(init) {
+  var _a, _b, _c, _d, _e, _f, _g, _h;
+  return {
+    $typeName: "google.protobuf.DescriptorProto",
+    name: init.name,
+    field: (_b = (_a = init.field) === null || _a === void 0 ? void 0 : _a.map(bootFieldDescriptorProto)) !== null && _b !== void 0 ? _b : [],
+    extension: [],
+    nestedType: (_d = (_c = init.nestedType) === null || _c === void 0 ? void 0 : _c.map(bootDescriptorProto)) !== null && _d !== void 0 ? _d : [],
+    enumType: (_f = (_e = init.enumType) === null || _e === void 0 ? void 0 : _e.map(bootEnumDescriptorProto)) !== null && _f !== void 0 ? _f : [],
+    extensionRange: (_h = (_g = init.extensionRange) === null || _g === void 0 ? void 0 : _g.map(e => Object.assign({
+      $typeName: "google.protobuf.DescriptorProto.ExtensionRange"
+    }, e))) !== null && _h !== void 0 ? _h : [],
+    oneofDecl: [],
+    reservedRange: [],
+    reservedName: []
+  };
+}
+function bootFieldDescriptorProto(init) {
+  const proto = Object.create({
+    label: 1,
+    typeName: "",
+    extendee: "",
+    defaultValue: "",
+    oneofIndex: 0,
+    jsonName: "",
+    proto3Optional: false
+  });
+  return Object.assign(proto, Object.assign(Object.assign({
+    $typeName: "google.protobuf.FieldDescriptorProto"
+  }, init), {
+    options: init.options ? bootFieldOptions(init.options) : undefined
+  }));
+}
+function bootFieldOptions(init) {
+  var _a, _b, _c;
+  const proto = Object.create({
+    ctype: 0,
+    packed: false,
+    jstype: 0,
+    lazy: false,
+    unverifiedLazy: false,
+    deprecated: false,
+    weak: false,
+    debugRedact: false,
+    retention: 0
+  });
+  return Object.assign(proto, Object.assign(Object.assign({
+    $typeName: "google.protobuf.FieldOptions"
+  }, init), {
+    targets: (_a = init.targets) !== null && _a !== void 0 ? _a : [],
+    editionDefaults: (_c = (_b = init.editionDefaults) === null || _b === void 0 ? void 0 : _b.map(e => Object.assign({
+      $typeName: "google.protobuf.FieldOptions.EditionDefault"
+    }, e))) !== null && _c !== void 0 ? _c : [],
+    uninterpretedOption: []
+  }));
+}
+function bootEnumDescriptorProto(init) {
+  return {
+    $typeName: "google.protobuf.EnumDescriptorProto",
+    name: init.name,
+    reservedName: [],
+    reservedRange: [],
+    value: init.value.map(e => Object.assign({
+      $typeName: "google.protobuf.EnumValueDescriptorProto"
+    }, e))
+  };
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Hydrate a message descriptor.
+ *
+ * @private
+ */
+function messageDesc(file, path, ...paths) {
+  return paths.reduce((acc, cur) => acc.nestedMessages[cur], file.messages[path]);
+}
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Describes the file google/protobuf/descriptor.proto.
+ */
+const file_google_protobuf_descriptor = /*@__PURE__*/boot({
+  "name": "google/protobuf/descriptor.proto",
+  "package": "google.protobuf",
+  "messageType": [{
+    "name": "FileDescriptorSet",
+    "field": [{
+      "name": "file",
+      "number": 1,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.FileDescriptorProto"
+    }]
+  }, {
+    "name": "FileDescriptorProto",
+    "field": [{
+      "name": "name",
+      "number": 1,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "package",
+      "number": 2,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "dependency",
+      "number": 3,
+      "type": 9,
+      "label": 3
+    }, {
+      "name": "public_dependency",
+      "number": 10,
+      "type": 5,
+      "label": 3
+    }, {
+      "name": "weak_dependency",
+      "number": 11,
+      "type": 5,
+      "label": 3
+    }, {
+      "name": "message_type",
+      "number": 4,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.DescriptorProto"
+    }, {
+      "name": "enum_type",
+      "number": 5,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.EnumDescriptorProto"
+    }, {
+      "name": "service",
+      "number": 6,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.ServiceDescriptorProto"
+    }, {
+      "name": "extension",
+      "number": 7,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.FieldDescriptorProto"
+    }, {
+      "name": "options",
+      "number": 8,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FileOptions"
+    }, {
+      "name": "source_code_info",
+      "number": 9,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.SourceCodeInfo"
+    }, {
+      "name": "syntax",
+      "number": 12,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "edition",
+      "number": 14,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.Edition"
+    }]
+  }, {
+    "name": "DescriptorProto",
+    "field": [{
+      "name": "name",
+      "number": 1,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "field",
+      "number": 2,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.FieldDescriptorProto"
+    }, {
+      "name": "extension",
+      "number": 6,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.FieldDescriptorProto"
+    }, {
+      "name": "nested_type",
+      "number": 3,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.DescriptorProto"
+    }, {
+      "name": "enum_type",
+      "number": 4,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.EnumDescriptorProto"
+    }, {
+      "name": "extension_range",
+      "number": 5,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.DescriptorProto.ExtensionRange"
+    }, {
+      "name": "oneof_decl",
+      "number": 8,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.OneofDescriptorProto"
+    }, {
+      "name": "options",
+      "number": 7,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.MessageOptions"
+    }, {
+      "name": "reserved_range",
+      "number": 9,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.DescriptorProto.ReservedRange"
+    }, {
+      "name": "reserved_name",
+      "number": 10,
+      "type": 9,
+      "label": 3
+    }],
+    "nestedType": [{
+      "name": "ExtensionRange",
+      "field": [{
+        "name": "start",
+        "number": 1,
+        "type": 5,
+        "label": 1
+      }, {
+        "name": "end",
+        "number": 2,
+        "type": 5,
+        "label": 1
+      }, {
+        "name": "options",
+        "number": 3,
+        "type": 11,
+        "label": 1,
+        "typeName": ".google.protobuf.ExtensionRangeOptions"
+      }]
+    }, {
+      "name": "ReservedRange",
+      "field": [{
+        "name": "start",
+        "number": 1,
+        "type": 5,
+        "label": 1
+      }, {
+        "name": "end",
+        "number": 2,
+        "type": 5,
+        "label": 1
+      }]
+    }]
+  }, {
+    "name": "ExtensionRangeOptions",
+    "field": [{
+      "name": "uninterpreted_option",
+      "number": 999,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption"
+    }, {
+      "name": "declaration",
+      "number": 2,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.ExtensionRangeOptions.Declaration",
+      "options": {
+        "retention": 2
+      }
+    }, {
+      "name": "features",
+      "number": 50,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet"
+    }, {
+      "name": "verification",
+      "number": 3,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.ExtensionRangeOptions.VerificationState",
+      "defaultValue": "UNVERIFIED",
+      "options": {
+        "retention": 2
+      }
+    }],
+    "nestedType": [{
+      "name": "Declaration",
+      "field": [{
+        "name": "number",
+        "number": 1,
+        "type": 5,
+        "label": 1
+      }, {
+        "name": "full_name",
+        "number": 2,
+        "type": 9,
+        "label": 1
+      }, {
+        "name": "type",
+        "number": 3,
+        "type": 9,
+        "label": 1
+      }, {
+        "name": "reserved",
+        "number": 5,
+        "type": 8,
+        "label": 1
+      }, {
+        "name": "repeated",
+        "number": 6,
+        "type": 8,
+        "label": 1
+      }]
+    }],
+    "enumType": [{
+      "name": "VerificationState",
+      "value": [{
+        "name": "DECLARATION",
+        "number": 0
+      }, {
+        "name": "UNVERIFIED",
+        "number": 1
+      }]
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 536870912
+    }]
+  }, {
+    "name": "FieldDescriptorProto",
+    "field": [{
+      "name": "name",
+      "number": 1,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "number",
+      "number": 3,
+      "type": 5,
+      "label": 1
+    }, {
+      "name": "label",
+      "number": 4,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FieldDescriptorProto.Label"
+    }, {
+      "name": "type",
+      "number": 5,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FieldDescriptorProto.Type"
+    }, {
+      "name": "type_name",
+      "number": 6,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "extendee",
+      "number": 2,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "default_value",
+      "number": 7,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "oneof_index",
+      "number": 9,
+      "type": 5,
+      "label": 1
+    }, {
+      "name": "json_name",
+      "number": 10,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "options",
+      "number": 8,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FieldOptions"
+    }, {
+      "name": "proto3_optional",
+      "number": 17,
+      "type": 8,
+      "label": 1
+    }],
+    "enumType": [{
+      "name": "Type",
+      "value": [{
+        "name": "TYPE_DOUBLE",
+        "number": 1
+      }, {
+        "name": "TYPE_FLOAT",
+        "number": 2
+      }, {
+        "name": "TYPE_INT64",
+        "number": 3
+      }, {
+        "name": "TYPE_UINT64",
+        "number": 4
+      }, {
+        "name": "TYPE_INT32",
+        "number": 5
+      }, {
+        "name": "TYPE_FIXED64",
+        "number": 6
+      }, {
+        "name": "TYPE_FIXED32",
+        "number": 7
+      }, {
+        "name": "TYPE_BOOL",
+        "number": 8
+      }, {
+        "name": "TYPE_STRING",
+        "number": 9
+      }, {
+        "name": "TYPE_GROUP",
+        "number": 10
+      }, {
+        "name": "TYPE_MESSAGE",
+        "number": 11
+      }, {
+        "name": "TYPE_BYTES",
+        "number": 12
+      }, {
+        "name": "TYPE_UINT32",
+        "number": 13
+      }, {
+        "name": "TYPE_ENUM",
+        "number": 14
+      }, {
+        "name": "TYPE_SFIXED32",
+        "number": 15
+      }, {
+        "name": "TYPE_SFIXED64",
+        "number": 16
+      }, {
+        "name": "TYPE_SINT32",
+        "number": 17
+      }, {
+        "name": "TYPE_SINT64",
+        "number": 18
+      }]
+    }, {
+      "name": "Label",
+      "value": [{
+        "name": "LABEL_OPTIONAL",
+        "number": 1
+      }, {
+        "name": "LABEL_REPEATED",
+        "number": 3
+      }, {
+        "name": "LABEL_REQUIRED",
+        "number": 2
+      }]
+    }]
+  }, {
+    "name": "OneofDescriptorProto",
+    "field": [{
+      "name": "name",
+      "number": 1,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "options",
+      "number": 2,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.OneofOptions"
+    }]
+  }, {
+    "name": "EnumDescriptorProto",
+    "field": [{
+      "name": "name",
+      "number": 1,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "value",
+      "number": 2,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.EnumValueDescriptorProto"
+    }, {
+      "name": "options",
+      "number": 3,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.EnumOptions"
+    }, {
+      "name": "reserved_range",
+      "number": 4,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.EnumDescriptorProto.EnumReservedRange"
+    }, {
+      "name": "reserved_name",
+      "number": 5,
+      "type": 9,
+      "label": 3
+    }],
+    "nestedType": [{
+      "name": "EnumReservedRange",
+      "field": [{
+        "name": "start",
+        "number": 1,
+        "type": 5,
+        "label": 1
+      }, {
+        "name": "end",
+        "number": 2,
+        "type": 5,
+        "label": 1
+      }]
+    }]
+  }, {
+    "name": "EnumValueDescriptorProto",
+    "field": [{
+      "name": "name",
+      "number": 1,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "number",
+      "number": 2,
+      "type": 5,
+      "label": 1
+    }, {
+      "name": "options",
+      "number": 3,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.EnumValueOptions"
+    }]
+  }, {
+    "name": "ServiceDescriptorProto",
+    "field": [{
+      "name": "name",
+      "number": 1,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "method",
+      "number": 2,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.MethodDescriptorProto"
+    }, {
+      "name": "options",
+      "number": 3,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.ServiceOptions"
+    }]
+  }, {
+    "name": "MethodDescriptorProto",
+    "field": [{
+      "name": "name",
+      "number": 1,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "input_type",
+      "number": 2,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "output_type",
+      "number": 3,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "options",
+      "number": 4,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.MethodOptions"
+    }, {
+      "name": "client_streaming",
+      "number": 5,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "server_streaming",
+      "number": 6,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }]
+  }, {
+    "name": "FileOptions",
+    "field": [{
+      "name": "java_package",
+      "number": 1,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "java_outer_classname",
+      "number": 8,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "java_multiple_files",
+      "number": 10,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "java_generate_equals_and_hash",
+      "number": 20,
+      "type": 8,
+      "label": 1,
+      "options": {
+        "deprecated": true
+      }
+    }, {
+      "name": "java_string_check_utf8",
+      "number": 27,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "optimize_for",
+      "number": 9,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FileOptions.OptimizeMode",
+      "defaultValue": "SPEED"
+    }, {
+      "name": "go_package",
+      "number": 11,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "cc_generic_services",
+      "number": 16,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "java_generic_services",
+      "number": 17,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "py_generic_services",
+      "number": 18,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "deprecated",
+      "number": 23,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "cc_enable_arenas",
+      "number": 31,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "true"
+    }, {
+      "name": "objc_class_prefix",
+      "number": 36,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "csharp_namespace",
+      "number": 37,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "swift_prefix",
+      "number": 39,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "php_class_prefix",
+      "number": 40,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "php_namespace",
+      "number": 41,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "php_metadata_namespace",
+      "number": 44,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "ruby_package",
+      "number": 45,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "features",
+      "number": 50,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet"
+    }, {
+      "name": "uninterpreted_option",
+      "number": 999,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption"
+    }],
+    "enumType": [{
+      "name": "OptimizeMode",
+      "value": [{
+        "name": "SPEED",
+        "number": 1
+      }, {
+        "name": "CODE_SIZE",
+        "number": 2
+      }, {
+        "name": "LITE_RUNTIME",
+        "number": 3
+      }]
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 536870912
+    }]
+  }, {
+    "name": "MessageOptions",
+    "field": [{
+      "name": "message_set_wire_format",
+      "number": 1,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "no_standard_descriptor_accessor",
+      "number": 2,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "deprecated",
+      "number": 3,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "map_entry",
+      "number": 7,
+      "type": 8,
+      "label": 1
+    }, {
+      "name": "deprecated_legacy_json_field_conflicts",
+      "number": 11,
+      "type": 8,
+      "label": 1,
+      "options": {
+        "deprecated": true
+      }
+    }, {
+      "name": "features",
+      "number": 12,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet"
+    }, {
+      "name": "uninterpreted_option",
+      "number": 999,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption"
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 536870912
+    }]
+  }, {
+    "name": "FieldOptions",
+    "field": [{
+      "name": "ctype",
+      "number": 1,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FieldOptions.CType",
+      "defaultValue": "STRING"
+    }, {
+      "name": "packed",
+      "number": 2,
+      "type": 8,
+      "label": 1
+    }, {
+      "name": "jstype",
+      "number": 6,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FieldOptions.JSType",
+      "defaultValue": "JS_NORMAL"
+    }, {
+      "name": "lazy",
+      "number": 5,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "unverified_lazy",
+      "number": 15,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "deprecated",
+      "number": 3,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "weak",
+      "number": 10,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "debug_redact",
+      "number": 16,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "retention",
+      "number": 17,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FieldOptions.OptionRetention"
+    }, {
+      "name": "targets",
+      "number": 19,
+      "type": 14,
+      "label": 3,
+      "typeName": ".google.protobuf.FieldOptions.OptionTargetType"
+    }, {
+      "name": "edition_defaults",
+      "number": 20,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.FieldOptions.EditionDefault"
+    }, {
+      "name": "features",
+      "number": 21,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet"
+    }, {
+      "name": "feature_support",
+      "number": 22,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FieldOptions.FeatureSupport"
+    }, {
+      "name": "uninterpreted_option",
+      "number": 999,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption"
+    }],
+    "nestedType": [{
+      "name": "EditionDefault",
+      "field": [{
+        "name": "edition",
+        "number": 3,
+        "type": 14,
+        "label": 1,
+        "typeName": ".google.protobuf.Edition"
+      }, {
+        "name": "value",
+        "number": 2,
+        "type": 9,
+        "label": 1
+      }]
+    }, {
+      "name": "FeatureSupport",
+      "field": [{
+        "name": "edition_introduced",
+        "number": 1,
+        "type": 14,
+        "label": 1,
+        "typeName": ".google.protobuf.Edition"
+      }, {
+        "name": "edition_deprecated",
+        "number": 2,
+        "type": 14,
+        "label": 1,
+        "typeName": ".google.protobuf.Edition"
+      }, {
+        "name": "deprecation_warning",
+        "number": 3,
+        "type": 9,
+        "label": 1
+      }, {
+        "name": "edition_removed",
+        "number": 4,
+        "type": 14,
+        "label": 1,
+        "typeName": ".google.protobuf.Edition"
+      }]
+    }],
+    "enumType": [{
+      "name": "CType",
+      "value": [{
+        "name": "STRING",
+        "number": 0
+      }, {
+        "name": "CORD",
+        "number": 1
+      }, {
+        "name": "STRING_PIECE",
+        "number": 2
+      }]
+    }, {
+      "name": "JSType",
+      "value": [{
+        "name": "JS_NORMAL",
+        "number": 0
+      }, {
+        "name": "JS_STRING",
+        "number": 1
+      }, {
+        "name": "JS_NUMBER",
+        "number": 2
+      }]
+    }, {
+      "name": "OptionRetention",
+      "value": [{
+        "name": "RETENTION_UNKNOWN",
+        "number": 0
+      }, {
+        "name": "RETENTION_RUNTIME",
+        "number": 1
+      }, {
+        "name": "RETENTION_SOURCE",
+        "number": 2
+      }]
+    }, {
+      "name": "OptionTargetType",
+      "value": [{
+        "name": "TARGET_TYPE_UNKNOWN",
+        "number": 0
+      }, {
+        "name": "TARGET_TYPE_FILE",
+        "number": 1
+      }, {
+        "name": "TARGET_TYPE_EXTENSION_RANGE",
+        "number": 2
+      }, {
+        "name": "TARGET_TYPE_MESSAGE",
+        "number": 3
+      }, {
+        "name": "TARGET_TYPE_FIELD",
+        "number": 4
+      }, {
+        "name": "TARGET_TYPE_ONEOF",
+        "number": 5
+      }, {
+        "name": "TARGET_TYPE_ENUM",
+        "number": 6
+      }, {
+        "name": "TARGET_TYPE_ENUM_ENTRY",
+        "number": 7
+      }, {
+        "name": "TARGET_TYPE_SERVICE",
+        "number": 8
+      }, {
+        "name": "TARGET_TYPE_METHOD",
+        "number": 9
+      }]
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 536870912
+    }]
+  }, {
+    "name": "OneofOptions",
+    "field": [{
+      "name": "features",
+      "number": 1,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet"
+    }, {
+      "name": "uninterpreted_option",
+      "number": 999,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption"
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 536870912
+    }]
+  }, {
+    "name": "EnumOptions",
+    "field": [{
+      "name": "allow_alias",
+      "number": 2,
+      "type": 8,
+      "label": 1
+    }, {
+      "name": "deprecated",
+      "number": 3,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "deprecated_legacy_json_field_conflicts",
+      "number": 6,
+      "type": 8,
+      "label": 1,
+      "options": {
+        "deprecated": true
+      }
+    }, {
+      "name": "features",
+      "number": 7,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet"
+    }, {
+      "name": "uninterpreted_option",
+      "number": 999,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption"
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 536870912
+    }]
+  }, {
+    "name": "EnumValueOptions",
+    "field": [{
+      "name": "deprecated",
+      "number": 1,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "features",
+      "number": 2,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet"
+    }, {
+      "name": "debug_redact",
+      "number": 3,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "feature_support",
+      "number": 4,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FieldOptions.FeatureSupport"
+    }, {
+      "name": "uninterpreted_option",
+      "number": 999,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption"
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 536870912
+    }]
+  }, {
+    "name": "ServiceOptions",
+    "field": [{
+      "name": "features",
+      "number": 34,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet"
+    }, {
+      "name": "deprecated",
+      "number": 33,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "uninterpreted_option",
+      "number": 999,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption"
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 536870912
+    }]
+  }, {
+    "name": "MethodOptions",
+    "field": [{
+      "name": "deprecated",
+      "number": 33,
+      "type": 8,
+      "label": 1,
+      "defaultValue": "false"
+    }, {
+      "name": "idempotency_level",
+      "number": 34,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.MethodOptions.IdempotencyLevel",
+      "defaultValue": "IDEMPOTENCY_UNKNOWN"
+    }, {
+      "name": "features",
+      "number": 35,
+      "type": 11,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet"
+    }, {
+      "name": "uninterpreted_option",
+      "number": 999,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption"
+    }],
+    "enumType": [{
+      "name": "IdempotencyLevel",
+      "value": [{
+        "name": "IDEMPOTENCY_UNKNOWN",
+        "number": 0
+      }, {
+        "name": "NO_SIDE_EFFECTS",
+        "number": 1
+      }, {
+        "name": "IDEMPOTENT",
+        "number": 2
+      }]
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 536870912
+    }]
+  }, {
+    "name": "UninterpretedOption",
+    "field": [{
+      "name": "name",
+      "number": 2,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.UninterpretedOption.NamePart"
+    }, {
+      "name": "identifier_value",
+      "number": 3,
+      "type": 9,
+      "label": 1
+    }, {
+      "name": "positive_int_value",
+      "number": 4,
+      "type": 4,
+      "label": 1
+    }, {
+      "name": "negative_int_value",
+      "number": 5,
+      "type": 3,
+      "label": 1
+    }, {
+      "name": "double_value",
+      "number": 6,
+      "type": 1,
+      "label": 1
+    }, {
+      "name": "string_value",
+      "number": 7,
+      "type": 12,
+      "label": 1
+    }, {
+      "name": "aggregate_value",
+      "number": 8,
+      "type": 9,
+      "label": 1
+    }],
+    "nestedType": [{
+      "name": "NamePart",
+      "field": [{
+        "name": "name_part",
+        "number": 1,
+        "type": 9,
+        "label": 2
+      }, {
+        "name": "is_extension",
+        "number": 2,
+        "type": 8,
+        "label": 2
+      }]
+    }]
+  }, {
+    "name": "FeatureSet",
+    "field": [{
+      "name": "field_presence",
+      "number": 1,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet.FieldPresence",
+      "options": {
+        "retention": 1,
+        "targets": [4, 1],
+        "editionDefaults": [{
+          "value": "EXPLICIT",
+          "edition": 900
+        }, {
+          "value": "IMPLICIT",
+          "edition": 999
+        }, {
+          "value": "EXPLICIT",
+          "edition": 1000
+        }]
+      }
+    }, {
+      "name": "enum_type",
+      "number": 2,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet.EnumType",
+      "options": {
+        "retention": 1,
+        "targets": [6, 1],
+        "editionDefaults": [{
+          "value": "CLOSED",
+          "edition": 900
+        }, {
+          "value": "OPEN",
+          "edition": 999
+        }]
+      }
+    }, {
+      "name": "repeated_field_encoding",
+      "number": 3,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet.RepeatedFieldEncoding",
+      "options": {
+        "retention": 1,
+        "targets": [4, 1],
+        "editionDefaults": [{
+          "value": "EXPANDED",
+          "edition": 900
+        }, {
+          "value": "PACKED",
+          "edition": 999
+        }]
+      }
+    }, {
+      "name": "utf8_validation",
+      "number": 4,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet.Utf8Validation",
+      "options": {
+        "retention": 1,
+        "targets": [4, 1],
+        "editionDefaults": [{
+          "value": "NONE",
+          "edition": 900
+        }, {
+          "value": "VERIFY",
+          "edition": 999
+        }]
+      }
+    }, {
+      "name": "message_encoding",
+      "number": 5,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet.MessageEncoding",
+      "options": {
+        "retention": 1,
+        "targets": [4, 1],
+        "editionDefaults": [{
+          "value": "LENGTH_PREFIXED",
+          "edition": 900
+        }]
+      }
+    }, {
+      "name": "json_format",
+      "number": 6,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.FeatureSet.JsonFormat",
+      "options": {
+        "retention": 1,
+        "targets": [3, 6, 1],
+        "editionDefaults": [{
+          "value": "LEGACY_BEST_EFFORT",
+          "edition": 900
+        }, {
+          "value": "ALLOW",
+          "edition": 999
+        }]
+      }
+    }],
+    "enumType": [{
+      "name": "FieldPresence",
+      "value": [{
+        "name": "FIELD_PRESENCE_UNKNOWN",
+        "number": 0
+      }, {
+        "name": "EXPLICIT",
+        "number": 1
+      }, {
+        "name": "IMPLICIT",
+        "number": 2
+      }, {
+        "name": "LEGACY_REQUIRED",
+        "number": 3
+      }]
+    }, {
+      "name": "EnumType",
+      "value": [{
+        "name": "ENUM_TYPE_UNKNOWN",
+        "number": 0
+      }, {
+        "name": "OPEN",
+        "number": 1
+      }, {
+        "name": "CLOSED",
+        "number": 2
+      }]
+    }, {
+      "name": "RepeatedFieldEncoding",
+      "value": [{
+        "name": "REPEATED_FIELD_ENCODING_UNKNOWN",
+        "number": 0
+      }, {
+        "name": "PACKED",
+        "number": 1
+      }, {
+        "name": "EXPANDED",
+        "number": 2
+      }]
+    }, {
+      "name": "Utf8Validation",
+      "value": [{
+        "name": "UTF8_VALIDATION_UNKNOWN",
+        "number": 0
+      }, {
+        "name": "VERIFY",
+        "number": 2
+      }, {
+        "name": "NONE",
+        "number": 3
+      }]
+    }, {
+      "name": "MessageEncoding",
+      "value": [{
+        "name": "MESSAGE_ENCODING_UNKNOWN",
+        "number": 0
+      }, {
+        "name": "LENGTH_PREFIXED",
+        "number": 1
+      }, {
+        "name": "DELIMITED",
+        "number": 2
+      }]
+    }, {
+      "name": "JsonFormat",
+      "value": [{
+        "name": "JSON_FORMAT_UNKNOWN",
+        "number": 0
+      }, {
+        "name": "ALLOW",
+        "number": 1
+      }, {
+        "name": "LEGACY_BEST_EFFORT",
+        "number": 2
+      }]
+    }],
+    "extensionRange": [{
+      "start": 1000,
+      "end": 9995
+    }, {
+      "start": 9995,
+      "end": 10000
+    }, {
+      "start": 10000,
+      "end": 10001
+    }]
+  }, {
+    "name": "FeatureSetDefaults",
+    "field": [{
+      "name": "defaults",
+      "number": 1,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault"
+    }, {
+      "name": "minimum_edition",
+      "number": 4,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.Edition"
+    }, {
+      "name": "maximum_edition",
+      "number": 5,
+      "type": 14,
+      "label": 1,
+      "typeName": ".google.protobuf.Edition"
+    }],
+    "nestedType": [{
+      "name": "FeatureSetEditionDefault",
+      "field": [{
+        "name": "edition",
+        "number": 3,
+        "type": 14,
+        "label": 1,
+        "typeName": ".google.protobuf.Edition"
+      }, {
+        "name": "overridable_features",
+        "number": 4,
+        "type": 11,
+        "label": 1,
+        "typeName": ".google.protobuf.FeatureSet"
+      }, {
+        "name": "fixed_features",
+        "number": 5,
+        "type": 11,
+        "label": 1,
+        "typeName": ".google.protobuf.FeatureSet"
+      }]
+    }]
+  }, {
+    "name": "SourceCodeInfo",
+    "field": [{
+      "name": "location",
+      "number": 1,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.SourceCodeInfo.Location"
+    }],
+    "nestedType": [{
+      "name": "Location",
+      "field": [{
+        "name": "path",
+        "number": 1,
+        "type": 5,
+        "label": 3,
+        "options": {
+          "packed": true
+        }
+      }, {
+        "name": "span",
+        "number": 2,
+        "type": 5,
+        "label": 3,
+        "options": {
+          "packed": true
+        }
+      }, {
+        "name": "leading_comments",
+        "number": 3,
+        "type": 9,
+        "label": 1
+      }, {
+        "name": "trailing_comments",
+        "number": 4,
+        "type": 9,
+        "label": 1
+      }, {
+        "name": "leading_detached_comments",
+        "number": 6,
+        "type": 9,
+        "label": 3
+      }]
+    }]
+  }, {
+    "name": "GeneratedCodeInfo",
+    "field": [{
+      "name": "annotation",
+      "number": 1,
+      "type": 11,
+      "label": 3,
+      "typeName": ".google.protobuf.GeneratedCodeInfo.Annotation"
+    }],
+    "nestedType": [{
+      "name": "Annotation",
+      "field": [{
+        "name": "path",
+        "number": 1,
+        "type": 5,
+        "label": 3,
+        "options": {
+          "packed": true
+        }
+      }, {
+        "name": "source_file",
+        "number": 2,
+        "type": 9,
+        "label": 1
+      }, {
+        "name": "begin",
+        "number": 3,
+        "type": 5,
+        "label": 1
+      }, {
+        "name": "end",
+        "number": 4,
+        "type": 5,
+        "label": 1
+      }, {
+        "name": "semantic",
+        "number": 5,
+        "type": 14,
+        "label": 1,
+        "typeName": ".google.protobuf.GeneratedCodeInfo.Annotation.Semantic"
+      }],
+      "enumType": [{
+        "name": "Semantic",
+        "value": [{
+          "name": "NONE",
+          "number": 0
+        }, {
+          "name": "SET",
+          "number": 1
+        }, {
+          "name": "ALIAS",
+          "number": 2
+        }]
+      }]
+    }]
+  }],
+  "enumType": [{
+    "name": "Edition",
+    "value": [{
+      "name": "EDITION_UNKNOWN",
+      "number": 0
+    }, {
+      "name": "EDITION_LEGACY",
+      "number": 900
+    }, {
+      "name": "EDITION_PROTO2",
+      "number": 998
+    }, {
+      "name": "EDITION_PROTO3",
+      "number": 999
+    }, {
+      "name": "EDITION_2023",
+      "number": 1000
+    }, {
+      "name": "EDITION_2024",
+      "number": 1001
+    }, {
+      "name": "EDITION_1_TEST_ONLY",
+      "number": 1
+    }, {
+      "name": "EDITION_2_TEST_ONLY",
+      "number": 2
+    }, {
+      "name": "EDITION_99997_TEST_ONLY",
+      "number": 99997
+    }, {
+      "name": "EDITION_99998_TEST_ONLY",
+      "number": 99998
+    }, {
+      "name": "EDITION_99999_TEST_ONLY",
+      "number": 99999
+    }, {
+      "name": "EDITION_MAX",
+      "number": 2147483647
+    }]
+  }]
+});
+/**
+ * Describes the message google.protobuf.FileDescriptorProto.
+ * Use `create(FileDescriptorProtoSchema)` to create a new message.
+ */
+const FileDescriptorProtoSchema = /*@__PURE__*/messageDesc(file_google_protobuf_descriptor, 1);
+/**
+ * The verification state of the extension range.
+ *
+ * @generated from enum google.protobuf.ExtensionRangeOptions.VerificationState
+ */
+var ExtensionRangeOptions_VerificationState;
+(function (ExtensionRangeOptions_VerificationState) {
+  /**
+   * All the extensions of the range must be declared.
+   *
+   * @generated from enum value: DECLARATION = 0;
+   */
+  ExtensionRangeOptions_VerificationState[ExtensionRangeOptions_VerificationState["DECLARATION"] = 0] = "DECLARATION";
+  /**
+   * @generated from enum value: UNVERIFIED = 1;
+   */
+  ExtensionRangeOptions_VerificationState[ExtensionRangeOptions_VerificationState["UNVERIFIED"] = 1] = "UNVERIFIED";
+})(ExtensionRangeOptions_VerificationState || (ExtensionRangeOptions_VerificationState = {}));
+/**
+ * @generated from enum google.protobuf.FieldDescriptorProto.Type
+ */
+var FieldDescriptorProto_Type;
+(function (FieldDescriptorProto_Type) {
+  /**
+   * 0 is reserved for errors.
+   * Order is weird for historical reasons.
+   *
+   * @generated from enum value: TYPE_DOUBLE = 1;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["DOUBLE"] = 1] = "DOUBLE";
+  /**
+   * @generated from enum value: TYPE_FLOAT = 2;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["FLOAT"] = 2] = "FLOAT";
+  /**
+   * Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT64 if
+   * negative values are likely.
+   *
+   * @generated from enum value: TYPE_INT64 = 3;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["INT64"] = 3] = "INT64";
+  /**
+   * @generated from enum value: TYPE_UINT64 = 4;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["UINT64"] = 4] = "UINT64";
+  /**
+   * Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT32 if
+   * negative values are likely.
+   *
+   * @generated from enum value: TYPE_INT32 = 5;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["INT32"] = 5] = "INT32";
+  /**
+   * @generated from enum value: TYPE_FIXED64 = 6;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["FIXED64"] = 6] = "FIXED64";
+  /**
+   * @generated from enum value: TYPE_FIXED32 = 7;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["FIXED32"] = 7] = "FIXED32";
+  /**
+   * @generated from enum value: TYPE_BOOL = 8;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["BOOL"] = 8] = "BOOL";
+  /**
+   * @generated from enum value: TYPE_STRING = 9;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["STRING"] = 9] = "STRING";
+  /**
+   * Tag-delimited aggregate.
+   * Group type is deprecated and not supported after google.protobuf. However, Proto3
+   * implementations should still be able to parse the group wire format and
+   * treat group fields as unknown fields.  In Editions, the group wire format
+   * can be enabled via the `message_encoding` feature.
+   *
+   * @generated from enum value: TYPE_GROUP = 10;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["GROUP"] = 10] = "GROUP";
+  /**
+   * Length-delimited aggregate.
+   *
+   * @generated from enum value: TYPE_MESSAGE = 11;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["MESSAGE"] = 11] = "MESSAGE";
+  /**
+   * New in version 2.
+   *
+   * @generated from enum value: TYPE_BYTES = 12;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["BYTES"] = 12] = "BYTES";
+  /**
+   * @generated from enum value: TYPE_UINT32 = 13;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["UINT32"] = 13] = "UINT32";
+  /**
+   * @generated from enum value: TYPE_ENUM = 14;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["ENUM"] = 14] = "ENUM";
+  /**
+   * @generated from enum value: TYPE_SFIXED32 = 15;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["SFIXED32"] = 15] = "SFIXED32";
+  /**
+   * @generated from enum value: TYPE_SFIXED64 = 16;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["SFIXED64"] = 16] = "SFIXED64";
+  /**
+   * Uses ZigZag encoding.
+   *
+   * @generated from enum value: TYPE_SINT32 = 17;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["SINT32"] = 17] = "SINT32";
+  /**
+   * Uses ZigZag encoding.
+   *
+   * @generated from enum value: TYPE_SINT64 = 18;
+   */
+  FieldDescriptorProto_Type[FieldDescriptorProto_Type["SINT64"] = 18] = "SINT64";
+})(FieldDescriptorProto_Type || (FieldDescriptorProto_Type = {}));
+/**
+ * @generated from enum google.protobuf.FieldDescriptorProto.Label
+ */
+var FieldDescriptorProto_Label;
+(function (FieldDescriptorProto_Label) {
+  /**
+   * 0 is reserved for errors
+   *
+   * @generated from enum value: LABEL_OPTIONAL = 1;
+   */
+  FieldDescriptorProto_Label[FieldDescriptorProto_Label["OPTIONAL"] = 1] = "OPTIONAL";
+  /**
+   * @generated from enum value: LABEL_REPEATED = 3;
+   */
+  FieldDescriptorProto_Label[FieldDescriptorProto_Label["REPEATED"] = 3] = "REPEATED";
+  /**
+   * The required label is only allowed in google.protobuf.  In proto3 and Editions
+   * it's explicitly prohibited.  In Editions, the `field_presence` feature
+   * can be used to get this behavior.
+   *
+   * @generated from enum value: LABEL_REQUIRED = 2;
+   */
+  FieldDescriptorProto_Label[FieldDescriptorProto_Label["REQUIRED"] = 2] = "REQUIRED";
+})(FieldDescriptorProto_Label || (FieldDescriptorProto_Label = {}));
+/**
+ * Generated classes can be optimized for speed or code size.
+ *
+ * @generated from enum google.protobuf.FileOptions.OptimizeMode
+ */
+var FileOptions_OptimizeMode;
+(function (FileOptions_OptimizeMode) {
+  /**
+   * Generate complete code for parsing, serialization,
+   *
+   * @generated from enum value: SPEED = 1;
+   */
+  FileOptions_OptimizeMode[FileOptions_OptimizeMode["SPEED"] = 1] = "SPEED";
+  /**
+   * etc.
+   *
+   * Use ReflectionOps to implement these methods.
+   *
+   * @generated from enum value: CODE_SIZE = 2;
+   */
+  FileOptions_OptimizeMode[FileOptions_OptimizeMode["CODE_SIZE"] = 2] = "CODE_SIZE";
+  /**
+   * Generate code using MessageLite and the lite runtime.
+   *
+   * @generated from enum value: LITE_RUNTIME = 3;
+   */
+  FileOptions_OptimizeMode[FileOptions_OptimizeMode["LITE_RUNTIME"] = 3] = "LITE_RUNTIME";
+})(FileOptions_OptimizeMode || (FileOptions_OptimizeMode = {}));
+/**
+ * @generated from enum google.protobuf.FieldOptions.CType
+ */
+var FieldOptions_CType;
+(function (FieldOptions_CType) {
+  /**
+   * Default mode.
+   *
+   * @generated from enum value: STRING = 0;
+   */
+  FieldOptions_CType[FieldOptions_CType["STRING"] = 0] = "STRING";
+  /**
+   * The option [ctype=CORD] may be applied to a non-repeated field of type
+   * "bytes". It indicates that in C++, the data should be stored in a Cord
+   * instead of a string.  For very large strings, this may reduce memory
+   * fragmentation. It may also allow better performance when parsing from a
+   * Cord, or when parsing with aliasing enabled, as the parsed Cord may then
+   * alias the original buffer.
+   *
+   * @generated from enum value: CORD = 1;
+   */
+  FieldOptions_CType[FieldOptions_CType["CORD"] = 1] = "CORD";
+  /**
+   * @generated from enum value: STRING_PIECE = 2;
+   */
+  FieldOptions_CType[FieldOptions_CType["STRING_PIECE"] = 2] = "STRING_PIECE";
+})(FieldOptions_CType || (FieldOptions_CType = {}));
+/**
+ * @generated from enum google.protobuf.FieldOptions.JSType
+ */
+var FieldOptions_JSType;
+(function (FieldOptions_JSType) {
+  /**
+   * Use the default type.
+   *
+   * @generated from enum value: JS_NORMAL = 0;
+   */
+  FieldOptions_JSType[FieldOptions_JSType["JS_NORMAL"] = 0] = "JS_NORMAL";
+  /**
+   * Use JavaScript strings.
+   *
+   * @generated from enum value: JS_STRING = 1;
+   */
+  FieldOptions_JSType[FieldOptions_JSType["JS_STRING"] = 1] = "JS_STRING";
+  /**
+   * Use JavaScript numbers.
+   *
+   * @generated from enum value: JS_NUMBER = 2;
+   */
+  FieldOptions_JSType[FieldOptions_JSType["JS_NUMBER"] = 2] = "JS_NUMBER";
+})(FieldOptions_JSType || (FieldOptions_JSType = {}));
+/**
+ * If set to RETENTION_SOURCE, the option will be omitted from the binary.
+ * Note: as of January 2023, support for this is in progress and does not yet
+ * have an effect (b/264593489).
+ *
+ * @generated from enum google.protobuf.FieldOptions.OptionRetention
+ */
+var FieldOptions_OptionRetention;
+(function (FieldOptions_OptionRetention) {
+  /**
+   * @generated from enum value: RETENTION_UNKNOWN = 0;
+   */
+  FieldOptions_OptionRetention[FieldOptions_OptionRetention["RETENTION_UNKNOWN"] = 0] = "RETENTION_UNKNOWN";
+  /**
+   * @generated from enum value: RETENTION_RUNTIME = 1;
+   */
+  FieldOptions_OptionRetention[FieldOptions_OptionRetention["RETENTION_RUNTIME"] = 1] = "RETENTION_RUNTIME";
+  /**
+   * @generated from enum value: RETENTION_SOURCE = 2;
+   */
+  FieldOptions_OptionRetention[FieldOptions_OptionRetention["RETENTION_SOURCE"] = 2] = "RETENTION_SOURCE";
+})(FieldOptions_OptionRetention || (FieldOptions_OptionRetention = {}));
+/**
+ * This indicates the types of entities that the field may apply to when used
+ * as an option. If it is unset, then the field may be freely used as an
+ * option on any kind of entity. Note: as of January 2023, support for this is
+ * in progress and does not yet have an effect (b/264593489).
+ *
+ * @generated from enum google.protobuf.FieldOptions.OptionTargetType
+ */
+var FieldOptions_OptionTargetType;
+(function (FieldOptions_OptionTargetType) {
+  /**
+   * @generated from enum value: TARGET_TYPE_UNKNOWN = 0;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_UNKNOWN"] = 0] = "TARGET_TYPE_UNKNOWN";
+  /**
+   * @generated from enum value: TARGET_TYPE_FILE = 1;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_FILE"] = 1] = "TARGET_TYPE_FILE";
+  /**
+   * @generated from enum value: TARGET_TYPE_EXTENSION_RANGE = 2;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_EXTENSION_RANGE"] = 2] = "TARGET_TYPE_EXTENSION_RANGE";
+  /**
+   * @generated from enum value: TARGET_TYPE_MESSAGE = 3;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_MESSAGE"] = 3] = "TARGET_TYPE_MESSAGE";
+  /**
+   * @generated from enum value: TARGET_TYPE_FIELD = 4;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_FIELD"] = 4] = "TARGET_TYPE_FIELD";
+  /**
+   * @generated from enum value: TARGET_TYPE_ONEOF = 5;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_ONEOF"] = 5] = "TARGET_TYPE_ONEOF";
+  /**
+   * @generated from enum value: TARGET_TYPE_ENUM = 6;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_ENUM"] = 6] = "TARGET_TYPE_ENUM";
+  /**
+   * @generated from enum value: TARGET_TYPE_ENUM_ENTRY = 7;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_ENUM_ENTRY"] = 7] = "TARGET_TYPE_ENUM_ENTRY";
+  /**
+   * @generated from enum value: TARGET_TYPE_SERVICE = 8;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_SERVICE"] = 8] = "TARGET_TYPE_SERVICE";
+  /**
+   * @generated from enum value: TARGET_TYPE_METHOD = 9;
+   */
+  FieldOptions_OptionTargetType[FieldOptions_OptionTargetType["TARGET_TYPE_METHOD"] = 9] = "TARGET_TYPE_METHOD";
+})(FieldOptions_OptionTargetType || (FieldOptions_OptionTargetType = {}));
+/**
+ * Is this method side-effect-free (or safe in HTTP parlance), or idempotent,
+ * or neither? HTTP based RPC implementation may choose GET verb for safe
+ * methods, and PUT verb for idempotent methods instead of the default POST.
+ *
+ * @generated from enum google.protobuf.MethodOptions.IdempotencyLevel
+ */
+var MethodOptions_IdempotencyLevel;
+(function (MethodOptions_IdempotencyLevel) {
+  /**
+   * @generated from enum value: IDEMPOTENCY_UNKNOWN = 0;
+   */
+  MethodOptions_IdempotencyLevel[MethodOptions_IdempotencyLevel["IDEMPOTENCY_UNKNOWN"] = 0] = "IDEMPOTENCY_UNKNOWN";
+  /**
+   * implies idempotent
+   *
+   * @generated from enum value: NO_SIDE_EFFECTS = 1;
+   */
+  MethodOptions_IdempotencyLevel[MethodOptions_IdempotencyLevel["NO_SIDE_EFFECTS"] = 1] = "NO_SIDE_EFFECTS";
+  /**
+   * idempotent, but may have side effects
+   *
+   * @generated from enum value: IDEMPOTENT = 2;
+   */
+  MethodOptions_IdempotencyLevel[MethodOptions_IdempotencyLevel["IDEMPOTENT"] = 2] = "IDEMPOTENT";
+})(MethodOptions_IdempotencyLevel || (MethodOptions_IdempotencyLevel = {}));
+/**
+ * @generated from enum google.protobuf.FeatureSet.FieldPresence
+ */
+var FeatureSet_FieldPresence;
+(function (FeatureSet_FieldPresence) {
+  /**
+   * @generated from enum value: FIELD_PRESENCE_UNKNOWN = 0;
+   */
+  FeatureSet_FieldPresence[FeatureSet_FieldPresence["FIELD_PRESENCE_UNKNOWN"] = 0] = "FIELD_PRESENCE_UNKNOWN";
+  /**
+   * @generated from enum value: EXPLICIT = 1;
+   */
+  FeatureSet_FieldPresence[FeatureSet_FieldPresence["EXPLICIT"] = 1] = "EXPLICIT";
+  /**
+   * @generated from enum value: IMPLICIT = 2;
+   */
+  FeatureSet_FieldPresence[FeatureSet_FieldPresence["IMPLICIT"] = 2] = "IMPLICIT";
+  /**
+   * @generated from enum value: LEGACY_REQUIRED = 3;
+   */
+  FeatureSet_FieldPresence[FeatureSet_FieldPresence["LEGACY_REQUIRED"] = 3] = "LEGACY_REQUIRED";
+})(FeatureSet_FieldPresence || (FeatureSet_FieldPresence = {}));
+/**
+ * @generated from enum google.protobuf.FeatureSet.EnumType
+ */
+var FeatureSet_EnumType;
+(function (FeatureSet_EnumType) {
+  /**
+   * @generated from enum value: ENUM_TYPE_UNKNOWN = 0;
+   */
+  FeatureSet_EnumType[FeatureSet_EnumType["ENUM_TYPE_UNKNOWN"] = 0] = "ENUM_TYPE_UNKNOWN";
+  /**
+   * @generated from enum value: OPEN = 1;
+   */
+  FeatureSet_EnumType[FeatureSet_EnumType["OPEN"] = 1] = "OPEN";
+  /**
+   * @generated from enum value: CLOSED = 2;
+   */
+  FeatureSet_EnumType[FeatureSet_EnumType["CLOSED"] = 2] = "CLOSED";
+})(FeatureSet_EnumType || (FeatureSet_EnumType = {}));
+/**
+ * @generated from enum google.protobuf.FeatureSet.RepeatedFieldEncoding
+ */
+var FeatureSet_RepeatedFieldEncoding;
+(function (FeatureSet_RepeatedFieldEncoding) {
+  /**
+   * @generated from enum value: REPEATED_FIELD_ENCODING_UNKNOWN = 0;
+   */
+  FeatureSet_RepeatedFieldEncoding[FeatureSet_RepeatedFieldEncoding["REPEATED_FIELD_ENCODING_UNKNOWN"] = 0] = "REPEATED_FIELD_ENCODING_UNKNOWN";
+  /**
+   * @generated from enum value: PACKED = 1;
+   */
+  FeatureSet_RepeatedFieldEncoding[FeatureSet_RepeatedFieldEncoding["PACKED"] = 1] = "PACKED";
+  /**
+   * @generated from enum value: EXPANDED = 2;
+   */
+  FeatureSet_RepeatedFieldEncoding[FeatureSet_RepeatedFieldEncoding["EXPANDED"] = 2] = "EXPANDED";
+})(FeatureSet_RepeatedFieldEncoding || (FeatureSet_RepeatedFieldEncoding = {}));
+/**
+ * @generated from enum google.protobuf.FeatureSet.Utf8Validation
+ */
+var FeatureSet_Utf8Validation;
+(function (FeatureSet_Utf8Validation) {
+  /**
+   * @generated from enum value: UTF8_VALIDATION_UNKNOWN = 0;
+   */
+  FeatureSet_Utf8Validation[FeatureSet_Utf8Validation["UTF8_VALIDATION_UNKNOWN"] = 0] = "UTF8_VALIDATION_UNKNOWN";
+  /**
+   * @generated from enum value: VERIFY = 2;
+   */
+  FeatureSet_Utf8Validation[FeatureSet_Utf8Validation["VERIFY"] = 2] = "VERIFY";
+  /**
+   * @generated from enum value: NONE = 3;
+   */
+  FeatureSet_Utf8Validation[FeatureSet_Utf8Validation["NONE"] = 3] = "NONE";
+})(FeatureSet_Utf8Validation || (FeatureSet_Utf8Validation = {}));
+/**
+ * @generated from enum google.protobuf.FeatureSet.MessageEncoding
+ */
+var FeatureSet_MessageEncoding;
+(function (FeatureSet_MessageEncoding) {
+  /**
+   * @generated from enum value: MESSAGE_ENCODING_UNKNOWN = 0;
+   */
+  FeatureSet_MessageEncoding[FeatureSet_MessageEncoding["MESSAGE_ENCODING_UNKNOWN"] = 0] = "MESSAGE_ENCODING_UNKNOWN";
+  /**
+   * @generated from enum value: LENGTH_PREFIXED = 1;
+   */
+  FeatureSet_MessageEncoding[FeatureSet_MessageEncoding["LENGTH_PREFIXED"] = 1] = "LENGTH_PREFIXED";
+  /**
+   * @generated from enum value: DELIMITED = 2;
+   */
+  FeatureSet_MessageEncoding[FeatureSet_MessageEncoding["DELIMITED"] = 2] = "DELIMITED";
+})(FeatureSet_MessageEncoding || (FeatureSet_MessageEncoding = {}));
+/**
+ * @generated from enum google.protobuf.FeatureSet.JsonFormat
+ */
+var FeatureSet_JsonFormat;
+(function (FeatureSet_JsonFormat) {
+  /**
+   * @generated from enum value: JSON_FORMAT_UNKNOWN = 0;
+   */
+  FeatureSet_JsonFormat[FeatureSet_JsonFormat["JSON_FORMAT_UNKNOWN"] = 0] = "JSON_FORMAT_UNKNOWN";
+  /**
+   * @generated from enum value: ALLOW = 1;
+   */
+  FeatureSet_JsonFormat[FeatureSet_JsonFormat["ALLOW"] = 1] = "ALLOW";
+  /**
+   * @generated from enum value: LEGACY_BEST_EFFORT = 2;
+   */
+  FeatureSet_JsonFormat[FeatureSet_JsonFormat["LEGACY_BEST_EFFORT"] = 2] = "LEGACY_BEST_EFFORT";
+})(FeatureSet_JsonFormat || (FeatureSet_JsonFormat = {}));
+/**
+ * Represents the identified object's effect on the element in the original
+ * .proto file.
+ *
+ * @generated from enum google.protobuf.GeneratedCodeInfo.Annotation.Semantic
+ */
+var GeneratedCodeInfo_Annotation_Semantic;
+(function (GeneratedCodeInfo_Annotation_Semantic) {
+  /**
+   * There is no effect or the effect is indescribable.
+   *
+   * @generated from enum value: NONE = 0;
+   */
+  GeneratedCodeInfo_Annotation_Semantic[GeneratedCodeInfo_Annotation_Semantic["NONE"] = 0] = "NONE";
+  /**
+   * The element is set or otherwise mutated.
+   *
+   * @generated from enum value: SET = 1;
+   */
+  GeneratedCodeInfo_Annotation_Semantic[GeneratedCodeInfo_Annotation_Semantic["SET"] = 1] = "SET";
+  /**
+   * An alias to the element is returned.
+   *
+   * @generated from enum value: ALIAS = 2;
+   */
+  GeneratedCodeInfo_Annotation_Semantic[GeneratedCodeInfo_Annotation_Semantic["ALIAS"] = 2] = "ALIAS";
+})(GeneratedCodeInfo_Annotation_Semantic || (GeneratedCodeInfo_Annotation_Semantic = {}));
+/**
+ * The full set of known editions.
+ *
+ * @generated from enum google.protobuf.Edition
+ */
+var Edition;
+(function (Edition) {
+  /**
+   * A placeholder for an unknown edition value.
+   *
+   * @generated from enum value: EDITION_UNKNOWN = 0;
+   */
+  Edition[Edition["EDITION_UNKNOWN"] = 0] = "EDITION_UNKNOWN";
+  /**
+   * A placeholder edition for specifying default behaviors *before* a feature
+   * was first introduced.  This is effectively an "infinite past".
+   *
+   * @generated from enum value: EDITION_LEGACY = 900;
+   */
+  Edition[Edition["EDITION_LEGACY"] = 900] = "EDITION_LEGACY";
+  /**
+   * Legacy syntax "editions".  These pre-date editions, but behave much like
+   * distinct editions.  These can't be used to specify the edition of proto
+   * files, but feature definitions must supply proto2/proto3 defaults for
+   * backwards compatibility.
+   *
+   * @generated from enum value: EDITION_PROTO2 = 998;
+   */
+  Edition[Edition["EDITION_PROTO2"] = 998] = "EDITION_PROTO2";
+  /**
+   * @generated from enum value: EDITION_PROTO3 = 999;
+   */
+  Edition[Edition["EDITION_PROTO3"] = 999] = "EDITION_PROTO3";
+  /**
+   * Editions that have been released.  The specific values are arbitrary and
+   * should not be depended on, but they will always be time-ordered for easy
+   * comparison.
+   *
+   * @generated from enum value: EDITION_2023 = 1000;
+   */
+  Edition[Edition["EDITION_2023"] = 1000] = "EDITION_2023";
+  /**
+   * @generated from enum value: EDITION_2024 = 1001;
+   */
+  Edition[Edition["EDITION_2024"] = 1001] = "EDITION_2024";
+  /**
+   * Placeholder editions for testing feature resolution.  These should not be
+   * used or relyed on outside of tests.
+   *
+   * @generated from enum value: EDITION_1_TEST_ONLY = 1;
+   */
+  Edition[Edition["EDITION_1_TEST_ONLY"] = 1] = "EDITION_1_TEST_ONLY";
+  /**
+   * @generated from enum value: EDITION_2_TEST_ONLY = 2;
+   */
+  Edition[Edition["EDITION_2_TEST_ONLY"] = 2] = "EDITION_2_TEST_ONLY";
+  /**
+   * @generated from enum value: EDITION_99997_TEST_ONLY = 99997;
+   */
+  Edition[Edition["EDITION_99997_TEST_ONLY"] = 99997] = "EDITION_99997_TEST_ONLY";
+  /**
+   * @generated from enum value: EDITION_99998_TEST_ONLY = 99998;
+   */
+  Edition[Edition["EDITION_99998_TEST_ONLY"] = 99998] = "EDITION_99998_TEST_ONLY";
+  /**
+   * @generated from enum value: EDITION_99999_TEST_ONLY = 99999;
+   */
+  Edition[Edition["EDITION_99999_TEST_ONLY"] = 99999] = "EDITION_99999_TEST_ONLY";
+  /**
+   * Placeholder for specifying unbounded edition support.  This should only
+   * ever be used by plugins that can expect to never require any changes to
+   * support a new edition.
+   *
+   * @generated from enum value: EDITION_MAX = 2147483647;
+   */
+  Edition[Edition["EDITION_MAX"] = 2147483647] = "EDITION_MAX";
+})(Edition || (Edition = {}));
+
+// Copyright 2021-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+/**
+ * Hydrate a file descriptor.
+ *
+ * @private
+ */
+function fileDesc(b64, imports) {
+  var _a;
+  const root = fromBinary(FileDescriptorProtoSchema, base64Decode(b64));
+  root.messageType.forEach(restoreJsonNames);
+  root.dependency = (_a = imports === null || imports === void 0 ? void 0 : imports.map(f => f.proto.name)) !== null && _a !== void 0 ? _a : [];
+  const reg = createFileRegistry(root, protoFileName => imports === null || imports === void 0 ? void 0 : imports.find(f => f.proto.name === protoFileName));
+  // non-null assertion because we just created the registry from the file we look up
+  return reg.getFile(root.name);
+}
+
+export { BinaryWriter as B, ScalarType as S, WireType as W, fromBinary as a, create as c, fileDesc as f, messageDesc as m, reflect as r };

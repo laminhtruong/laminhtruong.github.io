@@ -1,0 +1,82 @@
+import { addBearerPrefix } from '../../../utils/token.js';
+import { requestController } from './abort-controller.js';
+import { allowedMethods, requestTimeoutInMs } from './configurations.js';
+import '../../../../index-B3KPQWEG.js';
+import '../../../error/client.js';
+
+const DEFAULT_CONTENT_TYPE = "application/json";
+const request = async (route, option = {}) => {
+  const [method, endpoint] = route.split(" ", 2);
+  // ? Request `method` validation
+  if (!allowedMethods.includes(method)) {
+    throw new Error("Request method not allowed");
+  }
+  const {
+    headers = {},
+    body,
+    key: requestKey,
+    ...restOpts
+  } = option;
+  // ? Request `header` initialization & validation
+  const requestHeaders = new Headers({
+    Accept: "application/json"
+  });
+  const {
+    contentType = DEFAULT_CONTENT_TYPE,
+    authorization
+  } = headers;
+  // ? Request `Authorization` setting
+  if (authorization) {
+    requestHeaders.set("Authorization", addBearerPrefix(authorization));
+  }
+  // ? Request `Content-Type` setting
+  requestHeaders.set("Content-Type", contentType);
+  const requestBody = body ? JSON.stringify(body) : undefined;
+  // ? Abort controller initialization
+  const abortController = new AbortController();
+  if (requestKey) {
+    requestController[requestKey] = abortController;
+  }
+  // ? Request Init
+  const requestInit = {
+    ...restOpts,
+    method: method.toUpperCase(),
+    headers: requestHeaders,
+    body: requestBody
+  };
+  // ? Request timeout handler
+  const timeoutId = setTimeout(() => {
+    abortController.abort();
+    if (requestKey) {
+      requestController[requestKey] = undefined;
+    }
+  }, requestTimeoutInMs);
+  // ? Execute
+  const response = await fetch(endpoint, requestInit);
+  // ? Cleanup
+  clearTimeout(timeoutId);
+  if (requestKey) {
+    requestController[requestKey] = undefined;
+  }
+  // ? Response `header` validation
+  const resContentType = response.headers.get("content-type");
+  if (!resContentType || !resContentType.includes("application/json")) {
+    throw new TypeError("Response content-type is unhandled");
+  }
+  const jsonResponse = await response.json();
+  // ? Response `body` validation & format
+  if (response.status >= 200 && response.status <= 299) {
+    return {
+      status: response.status,
+      error: undefined,
+      data: jsonResponse
+    };
+  }
+  return {
+    status: response.status,
+    error: jsonResponse,
+    data: undefined
+  };
+};
+
+export { request };
