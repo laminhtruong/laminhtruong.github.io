@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<script type="module">
+		import { WaypointProvider } from "https://cdn.jsdelivr.net/npm/@sky-mavis/waypoint/+esm";
+
+		const waypointProvider = WaypointProvider.create({
+			clientId: '0210f4d4-86db-4b2e-b7b4-fd3aeceb9b34',
+			chainId: 2021,
+			popupCloseDelay: 4000,
+		});
+
+		window.onAuthorizeClicked = async () => {
+			const { address } = await waypointProvider.connect()
+			console.log('address', address)
+			window.wallet_address = address;
+		}
+
+		window.onPersonalSignClicked = async () => {
+			const signature = await waypointProvider.request({
+				method: 'personal_sign',
+				params: [
+					'0x5369676e20796f7572206669727374206d657373616765207769746820526f6e696e20576179706f696e7421',
+					window.wallet_address,
+				]
+			})
+		}
+
+	</script>
+	<button id="authorize" onclick="onAuthorizeClicked()">Authorize</button>
+	<button id="personalSign" onclick="onPersonalSignClicked()">Personal Sign</button>
+</body>
+
+</html>
