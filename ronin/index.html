@@ -18,8 +18,8 @@
 		});
 
 		window.onAuthorizeClicked = async () => {
-			const { address } = await waypointProvider.connect()
-			console.log('address', address)
+			const { token, address } = await waypointProvider.connect()
+			console.log('address:', address, 'token:', token)
 			window.wallet_address = address;
 		}
 
