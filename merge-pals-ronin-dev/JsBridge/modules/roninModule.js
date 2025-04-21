@@ -16,7 +16,7 @@ class RoninModule {
 	async connectWallet(args) {
 		try {
 			const { token, address } = await this.waypointProvider.connect();
-			UnityModule.sendTaskCallback(args.taskId, true, { token, address });
+			UnityModule.sendTaskCallback(args.taskId, true, { token_id: token, wallet_address: address });
 		}
 		catch (error) {
 			UnityModule.sendTaskCallback(args.taskId, false, "{}");
