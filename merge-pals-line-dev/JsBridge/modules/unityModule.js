@@ -57,6 +57,7 @@ class UnityModule {
 		if (typeof Telegram !== 'undefined') platform = "telegram";
 		else if (typeof window.WorldAppMiniKit !== 'undefined') platform = "world_app";
 		else if (typeof liff !== 'undefined') platform = "line";
+		else if (typeof window.WaypointProvider !== 'undefined') platform = "ronin";
 
 		return this.getData(platform);
 	}
