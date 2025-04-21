@@ -10,6 +10,7 @@
 <body>
 	<script type="module">
 		import { WaypointProvider } from "https://cdn.jsdelivr.net/npm/@sky-mavis/waypoint/+esm";
+		import { requestWaypointConnector, ChainIds } from 'https://cdn.jsdelivr.net/npm/@sky-mavis/tanto-connect/+esm';
 
 		const waypointProvider = WaypointProvider.create({
 			clientId: '0210f4d4-86db-4b2e-b7b4-fd3aeceb9b34',
@@ -21,6 +22,24 @@
 			const { token, address } = await waypointProvider.connect()
 			console.log('address:', address, 'token:', token)
 			window.wallet_address = address;
+
+			const waypointProviderConfigs = {
+				clientId: "0210f4d4-86db-4b2e-b7b4-fd3aeceb9b34",
+				chainId: ChainIds.RoninMainnet,
+			};
+
+			const waypointConnectorConfigs = {};
+			const waypointConnector = requestWaypointConnector(
+				{
+					connectorConfigs: waypointConnectorConfigs,
+					providerConfigs: waypointProviderConfigs
+				}
+			);
+
+			const userAddresses = await connector.getAddresses();
+			const provider = await connector.getProvider();
+
+			console.log('userAddresses:', userAddresses, 'provider:', provider)
 		}
 
 		window.onPersonalSignClicked = async () => {
