@@ -44,7 +44,10 @@ class UnityModule {
 
 	isProduction() {
 		let host = window.location.host;
-		let isProduction = host.indexOf("client.mergepals.io") > -1 || host.indexOf("client-world-app.mergepals.io") > -1;
+		let isProduction = host.indexOf("client.mergepals.io") > -1 ||
+			host.indexOf("client-world-app.mergepals.io") > -1 ||
+			host.indexOf("client-line.mergepals.io") > -1;
+
 		return this.getData(isProduction);
 	}
 
@@ -54,6 +57,7 @@ class UnityModule {
 		if (typeof Telegram !== 'undefined') platform = "telegram";
 		else if (typeof window.WorldAppMiniKit !== 'undefined') platform = "world_app";
 		else if (typeof liff !== 'undefined') platform = "line";
+		else if (typeof window.WaypointProvider !== 'undefined') platform = "ronin";
 
 		return this.getData(platform);
 	}

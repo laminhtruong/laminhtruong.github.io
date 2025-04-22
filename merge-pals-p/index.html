@@ -4,26 +4,57 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:description"
+    content="Summon rare Pals, merge and send them on missions, and climb the leaderboard in this strategic idle Gacha game.">
+  <meta property="og:image" content="/og_image.png">
   <title>Merge Pals</title>
-  <link rel="stylesheet" href="styles.654196268.css">
+  <link rel="stylesheet" href="styles.120518635.css">
   <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/museo-sans-rounded">
   <script src="https://tganalytics.xyz/index.js" type="text/javascript"></script>
 </head>
 
 <body>
-  <div id="unity-container">
-    <canvas id="unity-canvas"></canvas>
-  </div>
-  <div id="unity-loading-container">
-    <!-- <div id="unity-loading-logo"></div> -->
-    <div id="unity-loading-bg">
-      <div id="unity-loading-fg"></div>
+  <div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas" class="unity-desktop"></canvas>
+    <div id="unity-loading-container">
+      <!-- <div id="unity-loading-logo"></div> -->
+      <div id="unity-loading-bg">
+        <div id="unity-loading-fg"></div>
+      </div>
+      <div id="unity-loading-text">Downloading game data</div>
+      <div id="unity-loading-version" ontouchstart="touchStart(event)">Version: 2.1.4</div>
     </div>
-    <div id="unity-loading-text">Downloading game data</div>
-    <div id="unity-loading-version" ontouchstart="touchStart(event)">Version: 2.1.4</div>
   </div>
-  <script src="debug.js?638780630166634925"></script>
-  <script type="module" src="JsBridge/main.js?638780630166634925"></script>
+  <script>
+    var container = document.querySelector("#unity-container");
+    var canvas = document.querySelector("#unity-canvas");
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      container.className = "unity-mobile";
+      canvas.className = "unity-mobile";
+    }
+    else {
+      function resizeCanvas() {
+        console.log("size change:" + window.innerWidth + "," + window.innerHeight);
+        container.style.height = window.innerHeight + "px";
+        canvas.style.height = container.style.height;
+
+        if (window.innerHeight < window.innerWidth) {
+          container.style.width = window.innerHeight * 9 / 16 + "px";
+          canvas.style.width = container.style.width
+        } else {
+          container.style.width = window.innerWidth + "px";
+          canvas.style.width = container.style.width;
+        }
+      }
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+    }
+  </script>
+  <script type="module" src="JsBridge/main.js?638809158740454812"></script>
+  <script src="debug.js?638809158740454812"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7YXRJ2WSVP"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -73,8 +104,8 @@
   </script>
   <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
   <script src="https://cdn.mirailabs.co/games/mergepals.io/statics/tonconnect-ui.min.js"></script>
-  <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
-  <script src="script.js?638780630166634925"></script>
+  <script src="https://unpkg.com/clipboard@2.0.11/dist/clipboard.min.js"></script>
+  <script src="script.js?638809158740454812"></script>
 </body>
 
 </html>
