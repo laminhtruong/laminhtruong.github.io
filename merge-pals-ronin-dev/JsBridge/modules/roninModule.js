@@ -7,6 +7,10 @@ class RoninModule {
 	}
 
 	async initSdk() {
+		if (typeof window.WaypointProvider === 'undefined') {
+			return;
+		}
+
 		this.waypointProvider = window.WaypointProvider.create({
 			clientId: '0210f4d4-86db-4b2e-b7b4-fd3aeceb9b34',
 			chainId: '2021',
