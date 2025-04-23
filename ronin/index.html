@@ -2,59 +2,101 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Saigon Ronin</title>
 </head>
 
 <body>
 	<script type="module">
+		import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.esm.js";
 		import { WaypointProvider } from "https://cdn.jsdelivr.net/npm/@sky-mavis/waypoint/+esm";
-		import { requestWaypointConnector, ChainIds } from 'https://cdn.jsdelivr.net/npm/@sky-mavis/tanto-connect/+esm';
+
+		const RECIPIENT_ADDRESS = "0x58F34cc05Fd94f09a7c74CFC5BDd967EA6DcfB03";
+		const SAMPLE_TX_HASH =
+			"0xc4eb8f2c0f4b9ffd304a24b81df3c0562e8d0b12e8adf712cd6e78e77c2601c0";
+		const SENT_AMOUNT = ethers.utils.parseEther("0.01"); // 0.01 RON
 
 		const waypointProvider = WaypointProvider.create({
-			clientId: '0210f4d4-86db-4b2e-b7b4-fd3aeceb9b34',
+			clientId: "0210f4d4-86db-4b2e-b7b4-fd3aeceb9b34",
 			chainId: 2021,
 			popupCloseDelay: 4000,
 		});
 
 		window.onAuthorizeClicked = async () => {
-			const { token, address } = await waypointProvider.connect()
-			console.log('address:', address, 'token:', token)
+			const { token, address } = await waypointProvider.connect();
+			console.log("address:", address, "token:", token);
 			window.wallet_address = address;
-
-			const waypointProviderConfigs = {
-				clientId: "0210f4d4-86db-4b2e-b7b4-fd3aeceb9b34",
-				chainId: ChainIds.RoninMainnet,
-			};
-
-			const waypointConnectorConfigs = {};
-			const waypointConnector = requestWaypointConnector(
-				{
-					connectorConfigs: waypointConnectorConfigs,
-					providerConfigs: waypointProviderConfigs
-				}
-			);
-
-			const userAddresses = await connector.getAddresses();
-			const provider = await connector.getProvider();
-
-			console.log('userAddresses:', userAddresses, 'provider:', provider)
-		}
+		};
 
 		window.onPersonalSignClicked = async () => {
 			const signature = await waypointProvider.request({
-				method: 'personal_sign',
+				method: "personal_sign",
 				params: [
-					'0x5369676e20796f7572206669727374206d657373616765207769746820526f6e696e20576179706f696e7421',
+					"0x5369676e20796f7572206669727374206d657373616765207769746820526f6e696e20576179706f696e7421",
 					window.wallet_address,
-				]
-			})
-		}
+				],
+			});
+		};
 
+		window.onSendRON = async () => {
+			// Tạo provider
+			const provider = new ethers.providers.Web3Provider(waypointProvider);
+			const signer = provider.getSigner();
+
+			console.log("onSendRON", await signer.getAddress());
+
+			// Tạo transaction send RON tới 1 address
+			const tx = await signer.sendTransaction({
+				to: RECIPIENT_ADDRESS,
+				value: SENT_AMOUNT,
+				maxFeePerGas: ethers.utils.parseUnits("21", "gwei"), // minimum fee = 21 gwei
+				maxPriorityFeePerGas: ethers.utils.parseUnits("20", "gwei"), // minimum tip = 20 gwei
+			});
+			const receipt = await tx.wait();
+
+			console.log("Transaction hash: ", receipt.transactionHash);
+		};
+
+		window.onVerifyRONSent = async () => {
+			const provider = new ethers.providers.Web3Provider(waypointProvider);
+			const txVerify = await provider.getTransaction(SAMPLE_TX_HASH);
+
+			if (!txVerify) {
+				console.log("Transaction not found");
+				return;
+			}
+
+			const { to, value } = txVerify;
+
+			if (to?.toLowerCase() !== RECIPIENT_ADDRESS.toLowerCase()) {
+				console.log("Transaction not sent to the correct address");
+				return;
+			}
+
+			if (value.lt(SENT_AMOUNT)) {
+				console.log("Transaction value is less than expected");
+				return;
+			}
+
+			// Wait for block confirmation
+			await txVerify.wait();
+
+			console.log("Transaction verified successfully");
+		};
 	</script>
+
 	<button id="authorize" onclick="onAuthorizeClicked()">Authorize</button>
-	<button id="personalSign" onclick="onPersonalSignClicked()">Personal Sign</button>
+
+	<button id="personalSign" onclick="onPersonalSignClicked()">
+		Personal Sign
+	</button>
+
+	<button id="sendRON" onclick="onSendRON()">Send 0.01 RON</button>
+
+	<button id="verifyRONSent" onclick="onVerifyRONSent()">
+		Verify 0.01 RON sent
+	</button>
 </body>
 
 </html>
