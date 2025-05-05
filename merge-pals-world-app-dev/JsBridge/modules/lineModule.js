@@ -3,7 +3,8 @@ import UnityModule from "./unityModule.js";
 class LineModule {
 	constructor() {
 		this.sdk = null;
-		this.walletAddress = null;
+		this.walletAddress = "";
+
 		this.initSdk();
 	}
 
@@ -14,54 +15,107 @@ class LineModule {
 
 		try {
 			await liff.init({ liffId: '2006898896-KvlkD1WM' });
-			if (!liff.isLoggedIn()) {
-				liff.login();
-			}
-
-			this.sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209' });
+			this.sdk = await DappPortalSDK.init({ clientId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209', chainId: '1001' });
 		} catch (error) {
 			console.error(error);
 		}
 	}
 
-	getReferralCode() {
+	getParam(param) {
 		let query = window.location.search.substring(1);
 		let params = query.split("&");
-		let code = "";
 
 		for (let i = 0; i < params.length; i++) {
 			let pair = params[i].split("=");
-			if (pair[0] == "referral_code") {
-				code = pair[1];
-				break;
+			if (pair[0] == param) {
+				return pair[1];
 			}
 		}
 
-		return UnityModule.getData(code);
+		return "";
+	}
+
+	getReferralCode() {
+		return UnityModule.getData(this.getParam("referral_code"));
+	}
+
+	getWalletAddress(args) {
+		return UnityModule.getData(this.walletAddress);
+	}
+
+	invite(args) {
+		if (liff.isApiAvailable("shareTargetPicker")) {
+			liff.shareTargetPicker([
+				{
+					type: "text",
+					text: args.text,
+				},
+			]);
+		}
 	}
 
 	async login(args) {
 		try {
-			let idToken = liff.getIDToken();
-			UnityModule.sendTaskCallback(args.taskId, true, idToken);
+			if (liff.isInClient()) {
+				const data = await this.loginMobile();
+				UnityModule.sendTaskCallback(args.taskId, true, data);
+			} else {
+				const data = await this.loginWeb();
+				UnityModule.sendTaskCallback(args.taskId, true, data);
+			}
 		}
 		catch (error) {
-			UnityModule.sendTaskCallback(args.taskId, false, error);
+			UnityModule.sendTaskCallback(args.taskId, false, {});
 		}
 	}
 
-	async getWalletAddress(args) {
-		try {
-			if (this.walletAddress == null) {
-				const walletProvider = this.sdk.getWalletProvider()
-				const accounts = await walletProvider.request({ method: 'kaia_requestAccounts' });
+	async loginMobile() {
 
-				if (accounts && accounts.length > 0) {
-					this.walletAddress = accounts[0];
-				}
+		if (!liff.isLoggedIn()) liff.login({ redirectUri: location.href });
+
+		const wallet_address = await this.requestAccounts();
+		return { wallet_address, token_id: liff.getIDToken(), referral_code: this.getReferralCode() };
+	}
+
+	async loginWeb() {
+		const walletProvider = this.sdk.getWalletProvider()
+		const wallet_address = await this.requestAccounts();
+		const signature = await walletProvider.request({ method: 'personal_sign', params: ['MergePals on LINE', wallet_address] });
+
+		return { wallet_address, signature, referral_code: this.getReferralCode() };
+	}
+
+	async requestAccounts() {
+		const walletProvider = this.sdk.getWalletProvider()
+		const accounts = await walletProvider.request({ method: 'kaia_requestAccounts' });
+
+		if (accounts && accounts.length > 0) {
+			this.walletAddress = accounts[0];
+		}
+
+		return this.walletAddress;
+	}
+
+	async connectWallet(args) {
+		if (this.walletAddress == "") {
+			try {
+				await this.requestAccounts();
+				UnityModule.sendTaskCallback(args.taskId, true, this.walletAddress);
 			}
-			UnityModule.sendTaskCallback(args.taskId, true, this.walletAddress);
+			catch (error) {
+				UnityModule.sendTaskCallback(args.taskId, false, "");
+			}
+		}
+	}
 
+	async disconnectWallet(args) {
+		try {
+			const walletProvider = this.sdk.getWalletProvider()
+			walletProvider.disconnectWallet();
+			walletProvider.walletType = null;
+
+			this.walletAddress = "";
+			UnityModule.sendTaskCallback(args.taskId, true, "");
 		}
 		catch (error) {
 			UnityModule.sendTaskCallback(args.taskId, false, error);
@@ -71,13 +125,32 @@ class LineModule {
 	async pay(args) {
 		try {
 			const paymentProvider = this.sdk.getPaymentProvider()
-			await paymentProvider.startPayment(paymentId);
+			await paymentProvider.startPayment(args.paymentId);
 
 			UnityModule.sendTaskCallback(args.taskId, true, "success");
 		}
 		catch (error) {
 			UnityModule.sendTaskCallback(args.taskId, false, error);
 		}
+	}
+
+	async showPaymentHistory() {
+		try {
+			const paymentProvider = this.sdk.getPaymentProvider()
+			await paymentProvider.openPaymentHistory()
+		}
+		catch (error) {
+			console.error(error)
+		}
+	}
+
+	isInClient() {
+		return UnityModule.getData(liff.isInClient());
+	}
+
+	getWalletType() {
+		const type = this.sdk.getWalletProvider().walletType;
+		return UnityModule.getData(type !== null ? type : "");
 	}
 }
 
