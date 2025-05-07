@@ -51,19 +51,6 @@ class UnityModule {
 		return this.getData(isProduction);
 	}
 
-	isIos() {
-		let ios = [
-			'iPad Simulator',
-			'iPhone Simulator',
-			'iPod Simulator',
-			'iPad',
-			'iPhone',
-			'iPod'
-		].includes(navigator.platform) || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
-
-		return this.getData(ios);
-	}
-
 	getPlatform() {
 		let platform = 'unknown';
 
