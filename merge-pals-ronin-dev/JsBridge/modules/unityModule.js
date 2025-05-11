@@ -9,6 +9,10 @@ class UnityModule {
 		return (typeof data === 'object' && data !== null) ? JSON.stringify(data) : typeof data !== 'undefined' ? data.toString() : '';
 	}
 
+	getError(message) {
+		return "{\"message\": \"" + message + "\"}";
+	}
+
 	sendTaskCallback(taskId, success, data) {
 		let params = {
 			id: taskId,

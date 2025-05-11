@@ -52,23 +52,27 @@ class RoninModule {
 		const orderId = jsonData.order_id;
 		const amountToBuy = ethers.utils.parseEther(jsonData.amount.toString());
 
-		const tx = await signer.sendTransaction({
-			to: jsonData.contract_address,
-			value: amountToBuy,
-			data: gameIAPContract.interface.encodeFunctionData("buy", [
-				orderId,
-				ethers.constants.AddressZero,
-				amountToBuy,
-			]),
-			maxFeePerGas: ethers.utils.parseUnits("21", "gwei"), // minimum fee = 21 gwei
-			maxPriorityFeePerGas: ethers.utils.parseUnits("20", "gwei"), // minimum tip = 20 gwei
-		});
+		try {
+			const tx = await signer.sendTransaction({
+				to: jsonData.contract_address,
+				value: amountToBuy,
+				data: gameIAPContract.interface.encodeFunctionData("buy", [
+					orderId,
+					ethers.constants.AddressZero,
+					amountToBuy,
+				]),
+				maxFeePerGas: ethers.utils.parseUnits("21", "gwei"), // minimum fee = 21 gwei
+				maxPriorityFeePerGas: ethers.utils.parseUnits("20", "gwei"), // minimum tip = 20 gwei
+			});
 
-		const receipt = await tx.wait();
-		if (receipt.status === 1) {
-			UnityModule.sendTaskCallback(args.taskId, true, receipt.transactionHash);
-		} else {
-			UnityModule.sendTaskCallback(args.taskId, false, "Transaction failed");
+			const receipt = await tx.wait();
+			if (receipt.status === 1) {
+				UnityModule.sendTaskCallback(args.taskId, true, receipt.transactionHash);
+			} else {
+				UnityModule.sendTaskCallback(args.taskId, false, UnityModule.getError("Transaction failed"));
+			}
+		} catch (error) {
+			UnityModule.sendTaskCallback(args.taskId, false, UnityModule.getError(error.details));
 		}
 	}
 }
