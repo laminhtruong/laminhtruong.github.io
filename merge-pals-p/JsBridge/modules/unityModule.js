@@ -50,7 +50,8 @@ class UnityModule {
 		let host = window.location.host;
 		let isProduction = host.indexOf("client.mergepals.io") > -1 ||
 			host.indexOf("client-world-app.mergepals.io") > -1 ||
-			host.indexOf("client-line.mergepals.io") > -1;
+			host.indexOf("client-line.mergepals.io") > -1 ||
+			host.indexOf("client-ronin.mergepals.io") > -1;
 
 		return this.getData(isProduction);
 	}
