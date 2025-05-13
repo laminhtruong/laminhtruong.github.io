@@ -72,7 +72,7 @@ class RoninModule {
 				UnityModule.sendTaskCallback(args.taskId, false, UnityModule.getError("Transaction failed"));
 			}
 		} catch (error) {
-			const errorMessage = error.details || error;
+			const errorMessage = error.details || error.reason || error.message || "Transaction failed";
 			UnityModule.sendTaskCallback(args.taskId, false, UnityModule.getError(errorMessage));
 		}
 	}
