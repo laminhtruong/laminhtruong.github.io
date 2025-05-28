@@ -1,10 +1,10 @@
-var buildUrl = "Build";
-var loaderUrl = buildUrl + "/production.loader.js?638829964679767094";
+var buildUrl = "https://cdn.mirailabs.co/games/mergepals.io/web-build/Build";
+var loaderUrl = buildUrl + "/production.loader.js?638840226438882636";
 var config = {
-    dataUrl: buildUrl + "/0c5c48c0ebe9e5b2f8fd504d3fc5b03b.data.unityweb",
-    frameworkUrl: buildUrl + "/707113bfe0781df710cb91ab55a6f3b5.js.unityweb",
-    codeUrl: buildUrl + "/f382dac69366ab2f2d0e7d3ffa375006.wasm.unityweb",
-    streamingAssetsUrl: "StreamingAssets",
+    dataUrl: buildUrl + "/77d68ccda526eb5944a31a0f6a377c74.data.unityweb",
+    frameworkUrl: buildUrl + "/06b80fd24f230ed99aec6544f5aa9ef6.js.unityweb",
+    codeUrl: buildUrl + "/cb9d1663b8206aa8c6d7690ff9006c83.wasm.unityweb",
+    streamingAssetsUrl: "https://cdn.mirailabs.co/games/mergepals.io/web-build/StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
     productVersion: "2.2.0",
@@ -52,5 +52,5 @@ script.onload = function () {
 document.body.appendChild(script);
 
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://cdn.mirailabs.co/merge_pal/static/1254741318562603008.json',
+    manifestUrl: 'https://mergepals.io/tonconnect-manifest.json',
 });
