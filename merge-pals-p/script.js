@@ -1,13 +1,13 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/production.loader.js?638840226438882636";
+var loaderUrl = buildUrl + "/production.loader.js?638851480935552293";
 var config = {
-    dataUrl: buildUrl + "/77d68ccda526eb5944a31a0f6a377c74.data.unityweb",
-    frameworkUrl: buildUrl + "/06b80fd24f230ed99aec6544f5aa9ef6.js.unityweb",
-    codeUrl: buildUrl + "/cb9d1663b8206aa8c6d7690ff9006c83.wasm.unityweb",
+    dataUrl: buildUrl + "/874def558281a2efcbdba0ac689198e4.data.unityweb",
+    frameworkUrl: buildUrl + "/878a4152c3b2ff33d2c5ad5fd03ffa36.js.unityweb",
+    codeUrl: buildUrl + "/0f0603ee74fcb9167dee0074c6c3bec0.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals",
-    productVersion: "2.2.0",
+    productVersion: "3.0.0",
 
     cacheControl: function (url) {
         // Caching enabled for .data and .bundle files.
