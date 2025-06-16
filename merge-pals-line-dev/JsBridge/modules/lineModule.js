@@ -218,7 +218,7 @@ class LineModule {
 			if (res.code === 0) {
 				window.OpenADLineJsSDK.interactive.getRender({ adInfo, cb: callbackFunc });
 			} else {
-				console.error("Failed to initialize Line AD SDK", res.msg);
+				UnityModule.sendTaskCallback(args.taskId, false, res.msg);
 			}
 		});
 	}
