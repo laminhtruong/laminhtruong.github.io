@@ -157,12 +157,13 @@ class LineModule {
 		const adInfo = {
 			zoneId: args.zoneId || 486,
 			publisherId: args.publisherId || 52,
+			eventId: 0
 		};
 
 		const adParams = {
 			line: {
 				type: liff.isInClient() ? 'LMA' : 'LWA',
-				liffId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209',
+				liffId: '2006898896-KvlkD1WM',
 				prototype: window.liff,
 			}
 		};
@@ -217,7 +218,7 @@ class LineModule {
 			if (res.code === 0) {
 				window.OpenADLineJsSDK.interactive.getRender({ adInfo, cb: callbackFunc });
 			} else {
-				console.error("Failed to initialize Line AD SDK", res);
+				console.error("Failed to initialize Line AD SDK", res.msg);
 			}
 		});
 	}

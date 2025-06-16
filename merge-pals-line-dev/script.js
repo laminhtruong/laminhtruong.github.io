@@ -1,9 +1,9 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/development.loader.js?638856904826087933";
+var loaderUrl = buildUrl + "/development.loader.js?638856913070566334";
 var config = {
-    dataUrl: buildUrl + "/976a6e4b17e009f3905806271a5f6263.data.unityweb",
-    frameworkUrl: buildUrl + "/e4a502a72d00874a4f7641fd6933aa57.js.unityweb",
-    codeUrl: buildUrl + "/a95e85d6f32a40b63583d33ba6454176.wasm.unityweb",
+    dataUrl: buildUrl + "/ff303dd0d2d78a33a9497d1838653803.data.unityweb",
+    frameworkUrl: buildUrl + "/8ccd1284d3ba7789c4a135c88bf1442c.js.unityweb",
+    codeUrl: buildUrl + "/56770f5591c01c3f6037097d703533c5.wasm.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "Mirailabs",
     productName: "Merge Pals | Mini Dapp",
