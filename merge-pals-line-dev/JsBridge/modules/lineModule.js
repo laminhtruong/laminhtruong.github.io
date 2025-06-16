@@ -152,6 +152,75 @@ class LineModule {
 		const type = this.sdk.getWalletProvider().walletType;
 		return UnityModule.getData(type !== null ? type : "");
 	}
+
+	showAds(args) {
+		const adInfo = {
+			zoneId: args.zoneId || 486,
+			publisherId: args.publisherId || 52,
+		};
+
+		const adParams = {
+			line: {
+				type: liff.isInClient() ? 'LMA' : 'LWA',
+				liffId: '230a2bf5-3cd0-4d8f-8bb5-ce1f9c5e5209',
+				prototype: window.liff,
+			}
+		};
+
+		const userInfo = {
+			userId: '',
+			displayName: '',
+		};
+
+		const callbackFunc = {
+			onAdResourceLoad: (e) => {
+				// 'step1', e = true / false
+			},
+			// Indicates the interactive ad is opening
+			onAdOpening: (e) => {
+				// 'step2', e = true / false
+			},
+			// Indicates the interactive ad is opened,
+			onAdOpened: (e) => {
+				// 'step3',  e = true / false
+			},
+			// indicates the interactive ad task is finished, the task is defined by publisher
+			onAdTaskFinished: (e) => {
+				// 'step5',  e = true / false
+			},
+			// Indicates the interactive ad is closing
+			onAdClosing: (e) => {
+				// 'step6', e = true / false
+			},
+			// Indicates the interactive ad is closed
+			onAdClosed: (e) => {
+				// 'step7', e = view / click / close
+				// view: viewed Ad completed, not clicked, not manually closed ads; client side needs to issue rewards level 1.
+				// click: click Ad completed, include viewed Ad, not manually closed ads; client side needs to issue rewards level 2.
+				// close: user manually closed ads. client side can not get any rewards.
+				// If you want to perform different steps based on different shutdown states, please write the codes here.
+
+				const success = (e == 'view' || e == 'click');
+				if (success) {
+					UnityModule.sendTaskCallback(args.taskId, true, '');
+				} else {
+					UnityModule.sendTaskCallback(args.taskId, false, 'User manually closed the ad');
+				}
+			},
+			// Indicates clicked and jumps
+			onAdClick: (e) => {
+				// 'step4', e = true / false
+			},
+		};
+
+		window.OpenADLineJsSDK.interactive.init({ adParams, adInfo, userInfo }).then(res => {
+			if (res.code === 0) {
+				window.OpenADLineJsSDK.interactive.getRender({ adInfo, cb: callbackFunc });
+			} else {
+				console.error("Failed to initialize Line AD SDK", res);
+			}
+		});
+	}
 }
 
 export default new LineModule;
