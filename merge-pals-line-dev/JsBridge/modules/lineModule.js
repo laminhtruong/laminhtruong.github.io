@@ -214,9 +214,13 @@ class LineModule {
 			},
 		};
 
+		const clickReward = async () => {
+			console.log('clickReward', res);
+		}
+
 		window.OpenADLineJsSDK.interactive.init({ adParams, adInfo, userInfo }).then(res => {
 			if (res.code === 0) {
-				window.OpenADLineJsSDK.interactive.getRender({ adInfo, cb: callbackFunc });
+				window.OpenADLineJsSDK.interactive.getRender({ adInfo, cb: callbackFunc, clickReward });
 			} else {
 				UnityModule.sendTaskCallback(args.taskId, false, res.msg);
 			}
