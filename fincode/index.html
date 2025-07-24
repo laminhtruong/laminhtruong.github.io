@@ -5,14 +5,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	<script src="https://js.fincode.jp/v1/fincode.js"></script>
+	<script src="https://js.test.fincode.jp/v1/fincode.js"></script>
 </head>
 
 <body>
 	<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 	<script>eruda.init();</script>
 	<script>
-		window.finCode = new Fincode("AAAAAAAAAAAAA");
+		window.finCode = new Fincode("p_test_eagefdfsfew52443526f5345rf2353466345346ffsdf36345235rf4363fsdsdf45634tg53673523542");
 
 		function showUI() {
 			const ui = window.finCode.ui({ layout: "vertical" })
@@ -31,6 +31,13 @@
 
 	</script>
 	<button id="showUI" onclick="showUI()">Show UI</button>
+	<form id="fincode-form" style="margin: 50px; padding: 20px">
+		<div id="fincode">
+		</div>
+		<button id="submit">
+			<span>Submit</span>
+		</button>
+	</form>
 </body>
 
 </html>
