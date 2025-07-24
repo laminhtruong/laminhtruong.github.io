@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="https://js.fincode.jp/v1/fincode.js"></script>
+</head>
+
+<body>
+	<script>
+		window.finCode = new Fincode("AAAAAAAAAAAAA");
+
+		function showUI() {
+			const ui = window.finCode.ui({ layout: "vertical" })
+			ui.create("payment", { layout: "vertical" })
+			ui.mount("fincode", "400")
+
+			const onSubmit = async (e) => {
+				e.preventDefault()
+
+				const response = await getCardToken(fincode, ui, "4")
+				const tokens = response.list // expect 4 tokens
+
+				// Process something with token.
+			}
+		}
+
+	</script>
+	<button id="showUI" onclick="showUI()">Show UI</button>
+</body>
+
+</html>
