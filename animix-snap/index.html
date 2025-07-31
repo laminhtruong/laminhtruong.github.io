@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animix Snap</title>
+  <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet">
+  <link rel="stylesheet" href="styles.5961006.css">
+</head>
+
+<body>
+  <div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
+  </div>
+  <div id="unity-loading-container">
+    <div id="unity-loading-bg">
+      <div id="unity-loading-fg"></div>
+    </div>
+    <div id="unity-loading-text">Downloading game data</div>
+    <div id="unity-loading-version" ontouchstart="touchStart(event)">Version: 1.0.0</div>
+  </div>
+  <script src="debug.js?638895705448479117"></script>
+  <script type="module" src="JsBridge/main.js?638895705448479117"></script>
+  </script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+    Telegram.WebApp.enableClosingConfirmation();
+    Telegram.WebApp.disableVerticalSwipes();
+
+    alert = function (message) { console.log(`ALERT ${message}`); };
+  </script>
+  <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
+  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+  <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
+  <script src="script.js?638895705448479117"></script>
+</body>
+
+</html>
