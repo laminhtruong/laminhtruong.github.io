@@ -21,7 +21,7 @@ class TelegramModule {
 	}
 
 	getUserId() {
-		if (typeof Telegram === 'undefined' || typeof Telegram.WebApp.initDataUnsafe.user === 'undefined') return "";
+		if (typeof Telegram === 'undefined') return "";
 		return Telegram.WebApp.initDataUnsafe.user.id;
 	}
 

@@ -1,10 +1,10 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/69b0e0207a7dd6505101a3e8266a8789.loader.js?638895705448479117";
+var loaderUrl = buildUrl + "/69b0e0207a7dd6505101a3e8266a8789.loader.js?638896674962540871";
 var config = {
-    dataUrl: buildUrl + "/15a586714bae38466f9a0f0b7e426c1c.data.unityweb",
-    frameworkUrl: buildUrl + "/ec6ea80949cb7409f7e5e4a2c261a3ff.framework.js.unityweb",
-    codeUrl: buildUrl + "/c8c45927516a4f071c6917979b37cec7.wasm.unityweb",
-    symbolsUrl: buildUrl + "/64069de28dbb6e46d0078a5c3fdeab28.symbols.json.unityweb",
+    dataUrl: buildUrl + "/b2fcc96bfdbf54023bc8c6ac759f2272.data.unityweb",
+    frameworkUrl: buildUrl + "/96bbb26a68edb810217a25d804551515.framework.js.unityweb",
+    codeUrl: buildUrl + "/861df03c1e699bb17e6deb335f78afe1.wasm.unityweb",
+    symbolsUrl: buildUrl + "/10c014f4d36be2909f22c5ee5f527253.symbols.json.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "sg-byte",
     productName: "Animix Snap",
