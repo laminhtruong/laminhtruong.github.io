@@ -67,13 +67,12 @@ class BridgeModule {
 		let params = query.split("&");
 		let result = {};
 
-		if (params.length === 0) {
-			return this.getData(result);
-		}
-
 		for (let i = 0; i < params.length; i++) {
 			let pair = params[i].split("=");
-			result[pair[0]] = pair[1];
+
+			if (pair[0] !== "") {
+				result[pair[0]] = pair[1];
+			}
 		}
 
 		return this.getData(result);
