@@ -1,31 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-us">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animix Snap</title>
+  <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet">
+  <link rel="stylesheet" href="styles.958508236.css">
 </head>
 
 <body>
-	<script>
-		const GOOGLE_CLIENT_ID = '113148838872-nigvcmbhcpnptojs5kr5fgk0ek7fp6it.apps.googleusercontent.com'
-		const REDIRECT_URI = 'https://snap-api-test.animix.tech/public/auth/google';
+  <div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
+  </div>
+  <div id="unity-loading-container">
+    <div id="unity-loading-bg">
+      <div id="unity-loading-fg"></div>
+    </div>
+    <div id="unity-loading-text">Downloading game data</div>
+    <div id="unity-loading-version" ontouchstart="touchStart(event)">Version: 1.0.0</div>
+  </div>
+  <script src="debug.js?638906913383275415"></script>
+  <script type="module" src="JsBridge/main.js?638906913383275415"></script>
+  </script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
 
-		function loginGoogle() {
-			const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
-				`client_id=${GOOGLE_CLIENT_ID}&` +
-				`redirect_uri=${encodeURIComponent(REDIRECT_URI)}&` +
-				`response_type=code&` +
-				`scope=${encodeURIComponent('openid email profile')}&` +
-				`access_type=offline&` +
-				`prompt=consent`;
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+    Telegram.WebApp.enableClosingConfirmation();
+    Telegram.WebApp.disableVerticalSwipes();
+  </script>
 
-			window.location.href = googleAuthUrl;
-		}
-	</script>
-
-	<button onclick="loginGoogle()">Login with Google</button>
+  <script>
+    alert = function (message) { console.log(`ALERT ${message}`); };
+  </script>
+  <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
+  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+  <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
+  <script src="script.js?638906913383275415"></script>
 </body>
 
 </html>

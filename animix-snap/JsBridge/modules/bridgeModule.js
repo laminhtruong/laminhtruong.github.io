@@ -5,15 +5,12 @@ class BridgeModule {
 		});
 	}
 
-	getConfig() {
-		return this.getData({
-			"bot_name": "@animix_bot",
-			"invite_link": "https://t.me/laminhtruongbot/mashupdev?startapp={0}",
-		});
-	}
-
 	getData(data) {
 		return (typeof data === 'object' && data !== null) ? JSON.stringify(data) : typeof data !== 'undefined' ? data.toString() : '';
+	}
+
+	getError(message) {
+		return "{\"message\": \"" + message + "\"}";
 	}
 
 	sendTaskCallback(taskId, success, data) {
@@ -58,9 +55,38 @@ class BridgeModule {
 	getPlatform() {
 		let platform = 'unknown';
 
-		if (typeof Telegram !== 'undefined') platform = "telegram";
+		if (typeof Telegram.WebApp.initData !== 'undefined') platform = "telegram";
+		else if (typeof liff !== 'undefined') platform = "line";
+		else "web"
 
 		return this.getData(platform);
+	}
+
+	getParams() {
+		let query = window.location.search.substring(1);
+		let params = query.split("&");
+		let result = {};
+
+		for (let i = 0; i < params.length; i++) {
+			let pair = params[i].split("=");
+			result[pair[0]] = pair[1];
+		}
+
+		return this.getData(result);
+	}
+
+	getParam(param) {
+		let query = window.location.search.substring(1);
+		let params = query.split("&");
+
+		for (let i = 0; i < params.length; i++) {
+			let pair = params[i].split("=");
+			if (pair[0] == param) {
+				return pair[1];
+			}
+		}
+
+		return "";
 	}
 }
 
