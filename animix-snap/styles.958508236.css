@@ -18,7 +18,7 @@ body {
     text-align: center;
 }
 
-#unity-container {
+#unity-container.unity-mobile {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -29,8 +29,28 @@ body {
     justify-content: center;
 }
 
+#unity-container.unity-desktop {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+}
+
 /* Default values, might be overwritten by aspect ratio media queries */
-#unity-canvas {
+#unity-canvas.unity-mobile {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
+
+#unity-canvas.unity-desktop {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
     background-color: #fff;
