@@ -1,10 +1,10 @@
-import bridgeModule from './modules/bridgeModule.js?638906945832728896';
+import bridgeModule from './modules/bridgeModule.js?638906982743524342';
 window.bridgeModule = bridgeModule;
 
-import googleModule from './modules/googleModule.js?638906945832728896';
+import googleModule from './modules/googleModule.js?638906982743524342';
 window.googleModule = googleModule;
 
-import telegramModule from './modules/telegramModule.js?638906945832728896';
+import telegramModule from './modules/telegramModule.js?638906982743524342';
 window.telegramModule = telegramModule;
 
 
