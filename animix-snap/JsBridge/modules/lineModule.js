@@ -17,10 +17,6 @@ class LineModule {
 		}
 	}
 
-	getReferralCode() {
-		return BridgeModule.getData(BridgeModule.getParam("referral_code"));
-	}
-
 	invite(args) {
 		if (liff.isApiAvailable("shareTargetPicker")) {
 			liff.shareTargetPicker([
@@ -36,7 +32,7 @@ class LineModule {
 		try {
 			if (liff.isInClient()) {
 				if (!liff.isLoggedIn()) liff.login({ redirectUri: location.href });
-				BridgeModule.sendTaskCallback(args.taskId, true, { access_token: liff.getAccessToken(), referral_code: this.getReferralCode() });
+				BridgeModule.sendTaskCallback(args.taskId, true, { access_token: liff.getAccessToken() });
 			} else {
 				BridgeModule.sendTaskCallback(args.taskId, false, BridgeModule.getError("This platform is not support"));
 			}

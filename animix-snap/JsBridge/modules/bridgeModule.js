@@ -56,7 +56,7 @@ class BridgeModule {
 		let platform = 'unknown';
 
 		if (Telegram.WebApp.initData !== '') platform = "telegram";
-		else if (typeof liff !== 'undefined') platform = "line";
+		else if (liff.isInClient()) platform = "line";
 		else platform = "web";
 
 		return this.getData(platform);
@@ -75,20 +75,6 @@ class BridgeModule {
 		}
 
 		return this.getData(result);
-	}
-
-	getParam(param) {
-		let query = window.location.search.substring(1);
-		let params = query.split("&");
-
-		for (let i = 0; i < params.length; i++) {
-			let pair = params[i].split("=");
-			if (pair[0] == param) {
-				return pair[1];
-			}
-		}
-
-		return "";
 	}
 }
 

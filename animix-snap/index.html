@@ -48,15 +48,18 @@
       window.addEventListener('resize', resizeCanvas);
     }
   </script>
-  <script type="module" src="JsBridge/main.js?638908711281234791"></script>
+  <script type="module" src="JsBridge/main.js?638908893958751591"></script>
   </script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
 
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
-    Telegram.WebApp.enableClosingConfirmation();
-    Telegram.WebApp.disableVerticalSwipes();
+  <script>
+    if (Telegram.WebApp.initData !== '') {
+      Telegram.WebApp.ready();
+      Telegram.WebApp.expand();
+      Telegram.WebApp.enableClosingConfirmation();
+      Telegram.WebApp.disableVerticalSwipes();
+    }
   </script>
 
   <script>
@@ -65,7 +68,7 @@
   <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
   <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
   <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
-  <script src="script.js?638908711281234791"></script>
+  <script src="script.js?638908893958751591"></script>
 </body>
 
 </html>
