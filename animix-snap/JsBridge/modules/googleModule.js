@@ -13,8 +13,12 @@ class LineModule {
 			`access_type=offline&` +
 			`prompt=consent`;
 
+		if (args.refcode && args.refcode.length > 0) {
+			url += `&refcode=${args.refcode}`;
+		}
+
 		if (args.jwt) {
-			url += `&state=${encodeURIComponent(args.jwt)}`;
+			url += `&state=${args.jwt}`;
 		}
 
 		window.location.href = url;
