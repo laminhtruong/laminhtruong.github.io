@@ -1,7 +1,7 @@
-import bridgeModule from './modules/bridgeModule.js?638911154531030653';
-import telegramModule from './modules/telegramModule.js?638911154531030653';
-import lineModule from './modules/lineModule.js?638911154531030653';
-import googleModule from './modules/googleModule.js?638911154531030653';
+import bridgeModule from './modules/bridgeModule.js?638911369067670388';
+import telegramModule from './modules/telegramModule.js?638911369067670388';
+import lineModule from './modules/lineModule.js?638911369067670388';
+import googleModule from './modules/googleModule.js?638911369067670388';
 
 window.bridgeModule = bridgeModule;
 window.telegramModule = telegramModule;
