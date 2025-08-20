@@ -5,7 +5,7 @@ class LineModule {
 	}
 
 	async login(args) {
-		const url = `https://accounts.google.com/o/oauth2/v2/auth?` +
+		let url = `https://accounts.google.com/o/oauth2/v2/auth?` +
 			`client_id=${this.GOOGLE_CLIENT_ID}&` +
 			`redirect_uri=${encodeURIComponent(this.REDIRECT_URI)}&` +
 			`response_type=code&` +
