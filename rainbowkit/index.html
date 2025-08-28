@@ -64,7 +64,7 @@
 
 		disconnect = async () => {
 			try {
-				var result = await walletProvider.disconnectWallet();
+				var result = await walletProvider.disconnect();
 				console.log("Disconnect result:", result);
 			} catch (error) {
 				console.error("Failed to disconnect:", error);
