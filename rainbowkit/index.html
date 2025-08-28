@@ -73,7 +73,7 @@
 
 		login = async () => {
 			const result = await walletProvider.signPersonalMessage({
-				message: args.message,
+				message: 'hello world',
 			});
 
 			if (result.success) {
