@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+	<script src="https://cdnjs.threes.studio/latest/umd-rainbowkit.umd.2afac3f4.js"></script>
+
+	<script>
+		initSdk = async () => {
+			if (
+				typeof window.RainbowKitUMD !== "undefined" &&
+				typeof window.RainbowKitUMD.renderRainbowKitWrapper !== "undefined"
+			) {
+				// Initialize with config
+				const config = {
+					appName: "Animix Snap",
+					projectId: "be8caf8e619c12ce975393e921477985",
+					chains: [
+						// Use any chains from viem
+						window.RainbowKitUMD.viem.chains.mainnet, // Ethereum Mainnet (1)
+						window.RainbowKitUMD.viem.chains.sepolia, // Sepolia Testnet (11155111)
+						window.RainbowKitUMD.viem.chains.polygon, // Polygon Mainnet (137)
+						window.RainbowKitUMD.viem.chains.arbitrum, // Arbitrum One (42161)
+						// And many other chains...
+					],
+					initialChain: 1,
+				};
+
+				// Or use all available chains
+				const allChains = Object.values(window.RainbowKitUMD.viem.chains);
+				console.log("All available chains:", allChains);
+
+				try {
+					const walletProvider = await window.RainbowKitUMD.renderRainbowKitWrapper(
+						config
+					);
+					console.log("RainbowKit initialized:", walletProvider);
+				} catch (error) {
+					console.error("Failed to initialize:", error);
+				}
+			}
+		}
+
+		connect = async () => {
+			try {
+				const status = await walletProvider.getStatus();
+				if (!status.isConnected) {
+					var result = await walletProvider.connectWallet();
+					console.log("Connect result:", result);
+				} else {
+					console.log("Already connected:", status);
+				}
+			} catch (error) {
+				console.error("Failed to connect:", error);
+			}
+		}
+
+		disconnect = async () => {
+			try {
+				var result = await walletProvider.disconnectWallet();
+				console.log("Disconnect result:", result);
+			} catch (error) {
+				console.error("Failed to disconnect:", error);
+			}
+		}
+
+		login = async () => {
+			const result = await walletProvider.signPersonalMessage({
+				message: args.message,
+			});
+
+			if (result.success) {
+				console.log("Login result:", result);
+			} else {
+				console.error("Failed to login:", result);
+			}
+		}
+
+		initSdk();
+	</script>
+
+	<button onclick="connect()">Connect</button>
+	<button onclick="disconnect()">Disconnect</button>
+	<button onclick="login()">Login</button>
+</body>
+
+</html>
