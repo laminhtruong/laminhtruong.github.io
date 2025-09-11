@@ -17,8 +17,8 @@ class LineModule {
 			url += `&refcode=${args.refcode}`;
 		}
 
-		if (args.jwt) {
-			url += `&state=${args.jwt}`;
+		if (args.token) {
+			url += `&state=${args.token}`;
 		}
 
 		window.location.href = url;

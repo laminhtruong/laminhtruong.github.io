@@ -52,6 +52,11 @@ class BridgeModule {
 		return this.getData(isProduction);
 	}
 
+	getRootLink() {
+		let link = window.location.href;
+		return this.getData(link);
+	}
+
 	getPlatform() {
 		let platform = 'unknown';
 
