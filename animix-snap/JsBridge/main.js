@@ -1,14 +1,14 @@
-import bridgeModule from './modules/bridgeModule.js?638937871959562061';
-import telegramModule from './modules/telegramModule.js?638937871959562061';
-import lineModule from './modules/lineModule.js?638937871959562061';
-import googleModule from './modules/googleModule.js?638937871959562061';
+import bridgeModule from './modules/bridgeModule.js?638938927497116644';
+import telegramModule from './modules/telegramModule.js?638938927497116644';
+import lineModule from './modules/lineModule.js?638938927497116644';
+import googleModule from './modules/googleModule.js?638938927497116644';
 
 window.bridgeModule = bridgeModule;
 window.telegramModule = telegramModule;
 window.lineModule = lineModule;
 window.googleModule = googleModule;
 
-import rainbowKitModule from './modules/rainbowKitModule.js?638937871959562061';
+import rainbowKitModule from './modules/rainbowKitModule.js?638938927497116644';
 window.rainbowKitModule = rainbowKitModule;
 
 window.executeFunctionByName = function (functionName, context /*, args */) {

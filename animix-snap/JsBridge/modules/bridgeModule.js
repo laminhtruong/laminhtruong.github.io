@@ -53,7 +53,7 @@ class BridgeModule {
 	}
 
 	getRootLink() {
-		let link = window.location.href;
+		let link = window.location.href.replace(window.location.search, '').replace(window.location.hash, '');
 		return this.getData(link);
 	}
 
