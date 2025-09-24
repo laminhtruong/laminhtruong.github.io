@@ -5,6 +5,14 @@ class LineModule {
 	}
 
 	async login(args) {
+		var params = {};
+		if (args.refcode && args.refcode.length > 0) {
+			params.refcode = args.refcode;
+		}
+		if (args.token) {
+			params.token = args.token;
+		}
+
 		let url = `https://accounts.google.com/o/oauth2/v2/auth?` +
 			`client_id=${this.GOOGLE_CLIENT_ID}&` +
 			`redirect_uri=${encodeURIComponent(this.REDIRECT_URI)}&` +
@@ -13,12 +21,8 @@ class LineModule {
 			`access_type=offline&` +
 			`prompt=consent`;
 
-		if (args.refcode && args.refcode.length > 0) {
-			url += `&refcode=${args.refcode}`;
-		}
-
-		if (args.token) {
-			url += `&state=${args.token}`;
+		if (args.length > 0) {
+			url += `&state=${Buffer.from(JSON.stringify(stateObj)).toString('base64')}`;
 		}
 
 		window.location.href = url;
