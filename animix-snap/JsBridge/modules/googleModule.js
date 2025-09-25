@@ -21,7 +21,7 @@ class LineModule {
 			`access_type=offline&` +
 			`prompt=consent`;
 
-		if (args.length > 0) {
+		if (Object.keys(params).length > 0) {
 			url += `&state=${Buffer.from(JSON.stringify(stateObj)).toString('base64')}`;
 		}
 
