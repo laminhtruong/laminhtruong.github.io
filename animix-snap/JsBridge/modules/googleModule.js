@@ -22,7 +22,7 @@ class LineModule {
 			`prompt=consent`;
 
 		if (Object.keys(params).length > 0) {
-			url += `&state=${Buffer.from(JSON.stringify(stateObj)).toString('base64')}`;
+			url += `&state=${btoa(JSON.stringify(params))}`;
 		}
 
 		window.location.href = url;
