@@ -1,9 +1,9 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/69b0e0207a7dd6505101a3e8266a8789.loader.js?638944997982497843";
+var loaderUrl = buildUrl + "/69b0e0207a7dd6505101a3e8266a8789.loader.js?638945069808951048";
 var config = {
-    dataUrl: buildUrl + "/87fdf27fcf036ae0990a99797d9f3a21.data.unityweb",
+    dataUrl: buildUrl + "/4c1d4751baf9206d40aa08be1249d48d.data.unityweb",
     frameworkUrl: buildUrl + "/adb6eb692fbb527266466183791b9f65.framework.js.unityweb",
-    codeUrl: buildUrl + "/56998228ed9cac574db657ed885ed75e.wasm.unityweb",
+    codeUrl: buildUrl + "/f003bf424ef82175094ba3c99fc29d44.wasm.unityweb",
     symbolsUrl: buildUrl + "/120794f70561b5afa883ff006b3b3c55.symbols.json.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "sg-byte",
