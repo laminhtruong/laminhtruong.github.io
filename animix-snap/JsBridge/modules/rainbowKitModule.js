@@ -51,8 +51,13 @@ class RainbowKitModule {
 
 	async disconnect(args) {
 		try {
-			var result = await walletProvider.disconnectWallet();
-			BridgeModule.sendTaskCallback(args.taskId, true, result.success);
+			const status = await walletProvider.getStatus();
+			if (status.isConnected) {
+				var result = await walletProvider.disconnect();
+				BridgeModule.sendTaskCallback(args.taskId, true, result.success);
+			} else {
+				BridgeModule.sendTaskCallback(args.taskId, true, true);
+			}
 		} catch (error) {
 			BridgeModule.sendTaskCallback(args.taskId, false, false);
 		}

@@ -81,6 +81,18 @@ class BridgeModule {
 
 		return this.getData(result);
 	}
+
+	storageSet(args) {
+		localStorage.setItem(args.key, args.value);
+	}
+
+	storageGet(args) {
+		let value = localStorage.getItem(args.key);
+		if (value === null) value = "";
+
+		return this.getData(value);
+	}
+
 }
 
 export default new BridgeModule;
