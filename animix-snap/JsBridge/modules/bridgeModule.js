@@ -42,7 +42,7 @@ class BridgeModule {
 		ClipboardJS.copy(args.text);
 	}
 
-	reload() {
+	reload(args) {
 		if (args.root) {
 			window.location.href = this.getRootLink();
 		} else {
