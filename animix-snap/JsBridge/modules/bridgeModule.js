@@ -43,7 +43,11 @@ class BridgeModule {
 	}
 
 	reload() {
-		location.reload();
+		if (args.root) {
+			window.location.href = this.getRootLink();
+		} else {
+			location.reload();
+		}
 	}
 
 	isProduction() {
