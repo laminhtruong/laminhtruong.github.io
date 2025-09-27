@@ -7,6 +7,21 @@ class TelegramModule {
 		});
 	}
 
+	login(args) {
+		let params = {};
+		if (args.refcode && args.refcode.length > 0) {
+			params.refcode = args.refcode;
+		}
+		if (args.token) {
+			params.token = args.token;
+		}
+
+		let origin = BridgeModule.getRootLink() + (Object.keys(params).length ? "?" + new URLSearchParams(params).toString() : "");
+		let url = `https://oauth.telegram.org/auth?bot_id=7798083095&origin=${encodeURIComponent(origin)}`;
+
+		window.location.href = url;
+	}
+
 	setBackButton(args) {
 		if (args.visible) {
 			Telegram.WebApp.BackButton.show();
