@@ -83,6 +83,15 @@ class BridgeModule {
 			}
 		}
 
+		query = window.location.hash.substring(1);
+		params = query.split("&");
+		for (let i = 0; i < params.length; i++) {
+			let pair = params[i].split("=");
+			if (pair[0] !== "") {
+				result[pair[0]] = pair[1];
+			}
+		}
+
 		return this.getData(result);
 	}
 
