@@ -16,8 +16,9 @@ class TelegramModule {
 			params.token = args.token;
 		}
 
-		let origin = BridgeModule.getRootLink() + (Object.keys(params).length ? "?" + new URLSearchParams(params).toString() : "");
-		let url = `https://oauth.telegram.org/auth?bot_id=7798083095&origin=${encodeURIComponent(origin)}`;
+		let root = BridgeModule.getRootLink();
+		let return_to = root + (Object.keys(params).length ? "?" + new URLSearchParams(params).toString() : "");
+		let url = `https://oauth.telegram.org/auth?bot_id=7798083095&origin=${encodeURIComponent(root)}&return_to=${encodeURIComponent(return_to)}&request_access=write`;
 
 		window.location.href = url;
 	}

@@ -1,4 +1,4 @@
-class LineModule {
+class GoogleModule {
 	constructor() {
 		this.GOOGLE_CLIENT_ID = '113148838872-nigvcmbhcpnptojs5kr5fgk0ek7fp6it.apps.googleusercontent.com';
 		this.REDIRECT_URI = 'https://snap-api-test.animix.tech/public/auth/google';
@@ -29,4 +29,4 @@ class LineModule {
 	}
 }
 
-export default new LineModule;
+export default new GoogleModule;
