@@ -9,11 +9,15 @@
   <!-- Enable standalone/fullscreen install -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <!-- Android specific -->
+  <meta name="screen-orientation" content="portrait" />
+  <meta name="display-mode" content="fullscreen" />
 
   <!-- Status bar / theme colors -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#1f2937" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="msapplication-navbutton-color" content="#000000" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <!-- Names for PWA -->
   <meta name="application-name" content="Animix Snap" />
@@ -25,7 +29,7 @@
   <meta name="msapplication-tap-highlight" content="no" />
 
   <!-- PWA icons -->
-  <link rel="apple-touch-icon" href="./favicon.ico" />
+  <link rel="apple-touch-icon" href="./app_icon.png" />
 
   <!-- Web App Manifest -->
   <link rel="manifest" href="./manifest.json" />
@@ -83,6 +87,29 @@
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
 
   <script>
+    // Force fullscreen on Android PWA
+    function enterFullscreen() {
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+        // Running as PWA
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('portrait').catch(() => { });
+        }
+
+        // Hide address bar on Android
+        if (window.innerHeight < window.outerHeight) {
+          setTimeout(() => {
+            window.scrollTo(0, 1);
+          }, 100);
+        }
+      }
+    }
+
+    // Execute on load and orientation change
+    window.addEventListener('load', enterFullscreen);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(enterFullscreen, 100);
+    });
+
     if (Telegram.WebApp.initData !== '') {
       Telegram.WebApp.ready();
       Telegram.WebApp.expand();
