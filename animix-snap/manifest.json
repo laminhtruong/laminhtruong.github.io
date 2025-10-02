@@ -2,7 +2,7 @@
 	"name": "Animix Snap",
 	"short_name": "Animix Snap",
 	"description": "Animix Snap - Mobile Game",
-	"start_url": "/",
+	"start_url": "/animix-snap",
 	"display": "fullscreen",
 	"orientation": "portrait",
 	"theme_color": "#000000",

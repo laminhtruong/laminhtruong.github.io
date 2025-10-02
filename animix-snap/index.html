@@ -6,24 +6,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Animix Snap</title>
 
-  <!-- PWA Meta Tags -->
-  <meta name="theme-color" content="#000000">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Animix Snap">
-  <meta name="msapplication-TileColor" content="#000000">
-  <meta name="application-name" content="Animix Snap">
+  <!-- Enable standalone/fullscreen install -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
 
-  <!-- Fullscreen Meta Tags -->
-  <meta name="format-detection" content="telephone=no">
-  <meta name="msapplication-tap-highlight" content="no">
-  <meta name="apple-touch-fullscreen" content="yes">
+  <!-- Status bar / theme colors -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#1f2937" media="(prefers-color-scheme: dark)" />
 
-  <!-- Icons and Manifest -->
-  <link rel="icon" href="favicon.ico">
-  <link rel="apple-touch-icon" href="favicon.ico">
-  <link rel="manifest" href="manifest.json">
+  <!-- Names for PWA -->
+  <meta name="application-name" content="Animix Snap" />
+  <meta name="apple-mobile-web-app-title" content="Animix Snap" />
+
+  <!-- Miscellaneous -->
+  <meta name="description" content="Animix Snap - Mobile Game" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
+
+  <!-- PWA icons -->
+  <link rel="apple-touch-icon" href="/favicon.ico" />
+
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="/manifest.json" />
 
   <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet">
   <link rel="stylesheet" href="styles.1383505419.css">
@@ -45,39 +50,9 @@
     var canvas = document.querySelector("#unity-canvas");
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    // Hide address bar on mobile
-    function hideAddressBar() {
-      if (isMobile) {
-        setTimeout(function () {
-          window.scrollTo(0, 1);
-        }, 100);
-      }
-    }
-
-    // Force fullscreen on mobile
-    function enterFullscreen() {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
-      }
-    }
-
     if (isMobile) {
       container.className = "unity-mobile";
       canvas.className = "unity-mobile";
-
-      // Hide address bar
-      hideAddressBar();
-      window.addEventListener('orientationchange', hideAddressBar);
-      window.addEventListener('resize', hideAddressBar);
-
-      // Try to enter fullscreen on first touch
-      document.addEventListener('touchstart', function () {
-        enterFullscreen();
-      }, { once: true });
     }
     else {
       function resizeCanvas() {
