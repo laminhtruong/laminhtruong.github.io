@@ -1,6 +1,13 @@
 * {
     padding: 0;
     margin: 0;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 html {
@@ -8,6 +15,8 @@ html {
     height: -webkit-fill-available;
     overscroll-behavior: none;
     overflow: hidden;
+    /* Support for safe area insets */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 body {
@@ -16,6 +25,15 @@ body {
     height: -webkit-fill-available;
     width: 100%;
     text-align: center;
+    /* Prevent scrolling */
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Hide address bar on mobile */
+    -webkit-overflow-scrolling: touch;
 }
 
 #unity-container.unity-mobile {
