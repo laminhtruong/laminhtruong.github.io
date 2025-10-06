@@ -3,10 +3,38 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Animix Snap</title>
+  <!-- Enable standalone/fullscreen install -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <!-- Android specific -->
+  <meta name="screen-orientation" content="portrait" />
+  <meta name="display-mode" content="fullscreen" />
+
+  <!-- Status bar / theme colors -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="msapplication-navbutton-color" content="#000000" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Names for PWA -->
+  <meta name="application-name" content="Animix Snap" />
+  <meta name="apple-mobile-web-app-title" content="Animix Snap" />
+
+  <!-- Miscellaneous -->
+  <meta name="description" content="Animix Snap - Unlimited Creature Collection" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
+
+  <!-- PWA icons -->
+  <link rel="apple-touch-icon" href="./app_icon.png" />
+
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="./manifest.json" />
+
   <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet">
-  <link rel="stylesheet" href="styles.1383505419.css">
+  <link rel="stylesheet" href="styles.711997871.css">
 </head>
 
 <body>
@@ -48,16 +76,35 @@
       window.addEventListener('resize', resizeCanvas);
     }
   </script>
-  <script src="debug.js?638950880210266510"></script>
+  <script src="debug.js?638953603917186998"></script>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.threes.studio/latest/umd-rainbowkit.umd.js?638950880210266510"></script>
-  <script type="module" src="JsBridge/main.js?638950880210266510"></script>
+  <script src="https://cdnjs.threes.studio/latest/umd-rainbowkit.umd.js?638953603917186998"></script>
+  <script type="module" src="JsBridge/main.js?638953603917186998"></script>
   </script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
 
   <script>
+    function enterFullscreen() {
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('portrait').catch(() => { });
+        }
+
+        if (window.innerHeight < window.outerHeight) {
+          setTimeout(() => {
+            window.scrollTo(0, 1);
+          }, 100);
+        }
+      }
+    }
+
+    window.addEventListener('load', enterFullscreen);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(enterFullscreen, 100);
+    });
+
     if (Telegram.WebApp.initData !== '') {
       Telegram.WebApp.ready();
       Telegram.WebApp.expand();
@@ -71,7 +118,7 @@
   <script src="https://unpkg.com/tonweb@0.0.41/dist/tonweb.js"></script>
   <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
   <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
-  <script src="script.js?638950880210266510"></script>
+  <script src="script.js?638953603917186998"></script>
 </body>
 
 </html>
