@@ -16,7 +16,7 @@ class TelegramModule {
 			params.token = args.token;
 		}
 
-		let url = `https://oauth.telegram.org/auth?bot_id=7798083095&origin=https://www.animix.tech?game=1&request_access=write`;
+		let url = `https://oauth.telegram.org/auth?bot_id=7798083095&origin=https://laminhtruong.github.io/animix-snap?game=1&request_access=write`;
 		window.location.href = url;
 	}
 
