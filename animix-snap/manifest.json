@@ -2,8 +2,8 @@
 	"name": "Animix Snap",
 	"short_name": "Animix Snap",
 	"description": "Animix Snap - Unlimited Creature Collection",
-	"start_url": "/animix-snap/",
-	"scope": "/animix-snap/",
+	"start_url": "/",
+	"scope": "/",
 	"display": "fullscreen",
 	"display_override": [
 		"fullscreen",
