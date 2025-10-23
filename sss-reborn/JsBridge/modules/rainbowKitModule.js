@@ -15,11 +15,9 @@ class RainbowKitModule {
 				projectId: "be8caf8e619c12ce975393e921477985",
 				chains: [
 					window.RainbowKitUMD.viem.chains.mainnet, // Ethereum Mainnet (1)
-					window.RainbowKitUMD.viem.chains.sepolia, // Sepolia Testnet (11155111)
-					window.RainbowKitUMD.viem.chains.polygon, // Polygon Mainnet (137)
-					window.RainbowKitUMD.viem.chains.arbitrum, // Arbitrum One (42161)
+					window.RainbowKitUMD.viem.chains.avalancheFuji, // Fuji C-Chain (43113)
 				],
-				initialChain: 1,
+				initialChain: 43113, // Fuji C-Chain
 			};
 
 			// Or use all available chains
