@@ -64,8 +64,8 @@ class BridgeModule {
 	getPlatform() {
 		let platform = 'unknown';
 
-		if (Telegram.WebApp.initData !== '') platform = "telegram";
-		else if (liff.isInClient()) platform = "line";
+		if (typeof Telegram !== 'undefined' && Telegram.WebApp.initData !== '') platform = "telegram";
+		else if (typeof liff !== 'undefined' && liff.isInClient()) platform = "line";
 		else platform = "web";
 
 		return this.getData(platform);

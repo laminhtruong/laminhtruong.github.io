@@ -1,10 +1,10 @@
 var buildUrl = "Build";
-var loaderUrl = buildUrl + "/43e2502d740906e412ee4ebb331ab97f.loader.js?638967292123691084";
+var loaderUrl = buildUrl + "/43e2502d740906e412ee4ebb331ab97f.loader.js?638968396475026479";
 var config = {
-    dataUrl: buildUrl + "/3cb1fae3f84df08b6222c15b39e14187.data.unityweb",
-    frameworkUrl: buildUrl + "/bb1936e648d803aa441b9d89d19e5e8b.framework.js.unityweb",
-    codeUrl: buildUrl + "/dde39dffd15ee7b41fee185555499c12.wasm.unityweb",
-    symbolsUrl: buildUrl + "/86756524aae85d8d259547a8ad2bbd2d.symbols.json.unityweb",
+    dataUrl: buildUrl + "/7ad53370961d5a83ec7d33f66c851cf8.data.unityweb",
+    frameworkUrl: buildUrl + "/a4088b6b68a0cebc1b33aaaaea45013c.framework.js.unityweb",
+    codeUrl: buildUrl + "/00e7549640d89c5b914edf41f6697fab.wasm.unityweb",
+    symbolsUrl: buildUrl + "/b6631e81389061bd0bef7d58a41a4654.symbols.json.unityweb",
     streamingAssetsUrl: "StreamingAssets",
     companyName: "sg-byte",
     productName: "Super Sushi Samurai",

@@ -64,14 +64,24 @@ class RainbowKitModule {
 	}
 
 	async login(args) {
-		const result = await walletProvider.signPersonalMessage({
-			message: args.message,
-		});
+		try {
+			var chainData = await walletProvider.getChainId();
+			var chainId = chainData.chainId;
+			var addressData = await walletProvider.getAddress();
+			var address = addressData.address.toLowerCase();
+			var message = `SSS wants you to sign in with your wallet:\n${address}\n\nNonce: ${args.nonce}\nURI: ${BridgeModule.getRootLink()}\nVersion: 1\nChain ID: ${chainId}\n`;
 
-		if (result.success) {
-			BridgeModule.sendTaskCallback(args.taskId, true, result.signature);
-		} else {
-			BridgeModule.sendTaskCallback(args.taskId, false, result.error);
+			const result = await walletProvider.signPersonalMessage({
+				message: message,
+			});
+
+			if (result.success) {
+				BridgeModule.sendTaskCallback(args.taskId, true, { address, signature: result.signature, message });
+			} else {
+				BridgeModule.sendTaskCallback(args.taskId, false, result.error);
+			}
+		} catch (error) {
+			BridgeModule.sendTaskCallback(args.taskId, false, error);
 		}
 	}
 }

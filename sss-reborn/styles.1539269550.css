@@ -1,0 +1,135 @@
+* {
+    padding: 0;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+html {
+    height: -webkit-fill-available;
+    overscroll-behavior: none;
+    overflow: hidden;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+}
+
+body {
+    height: 100%;
+    height: -webkit-fill-available;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-overflow-scrolling: touch;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+}
+
+@font-face {
+    font-family: 'Squad';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Squad'), url('./SquadLatin-Black.otf');
+}
+
+#unity-container.unity-mobile {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#unity-container.unity-desktop {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+}
+
+#unity-canvas.unity-mobile {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
+
+#unity-canvas.unity-desktop {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
+
+#unity-loading-container {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('splash.jpg');
+    background-position: center;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
+}
+
+#unity-loading-container.finished {
+    opacity: 0;
+    visibility: collapse;
+}
+
+#unity-loading-bg {
+    position: absolute;
+    width: 94%;
+    height: 24px;
+    bottom: 35px;
+    background-color: #0008;
+    border: 3px solid #0000;
+    border-radius: 8px;
+}
+
+#unity-loading-fg {
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(180deg, #E1FF00 0%, #74E000 100%);
+    border-radius: 5px;
+    transition: 400ms linear;
+}
+
+#unity-loading-text {
+    position: absolute;
+    bottom: 70px;
+    color: #40321E;
+    font: 18px 'Squad', 'Roboto';
+}
+
+#unity-loading-version {
+    position: absolute;
+    left: 3%;
+    bottom: 8px;
+    color: #40321E;
+    font: 16px 'Squad', 'Roboto';
+}
