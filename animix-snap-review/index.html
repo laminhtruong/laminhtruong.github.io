@@ -48,14 +48,28 @@
       <div id="unity-loading-version" ontouchstart="touchStart(event)">Version: 1.0.4</div>
     </div>
   </div>
+  <script src="debug.js?638978415292076001"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.threes.studio/latest/umd-rainbowkit.umd.js?638978415292076001"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+  <script type="module" src="JsBridge/main.js?638978415292076001"></script>
+
   <script>
     var container = document.querySelector("#unity-container");
     var canvas = document.querySelector("#unity-canvas");
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    var platform = 'line';//bridgeModule.getPlatform();
 
     if (isMobile) {
       container.className = "unity-mobile";
       canvas.className = "unity-mobile";
+      if (isIOS && platform === "line") {
+        canvas.style.height = "calc(100vh - 34px)";
+        container.style.height = "calc(100vh - 34px)";
+      }
     }
     else {
       function resizeCanvas() {
@@ -75,17 +89,7 @@
       resizeCanvas();
       window.addEventListener('resize', resizeCanvas);
     }
-  </script>
-  <script src="debug.js?638978415292076001"></script>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.threes.studio/latest/umd-rainbowkit.umd.js?638978415292076001"></script>
-  <script type="module" src="JsBridge/main.js?638978415292076001"></script>
-  </script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
 
-  <script>
     function enterFullscreen() {
       if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
         if (screen.orientation && screen.orientation.lock) {
