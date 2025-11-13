@@ -61,12 +61,11 @@
     var canvas = document.querySelector("#unity-canvas");
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    var platform = bridgeModule.getPlatform();
 
     if (isMobile) {
       container.className = "unity-mobile";
       canvas.className = "unity-mobile";
-      if (isIOS && platform === "line") {
+      if (isIOS && liff.isInClient()) {
         canvas.style.height = "calc(100vh - 34px)";
         container.style.height = "calc(100vh - 34px)";
       }
