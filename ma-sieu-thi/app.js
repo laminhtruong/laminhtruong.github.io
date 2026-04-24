@@ -38,6 +38,7 @@ const optionLandscapeEl = document.getElementById("optionLandscape");
 const optionPortraitEl = document.getElementById("optionPortrait");
 
 let groupedStores = [];
+let sheetHeadMeta = { name: "", date: "" };
 let generatedHtml = "";
 let isPreviewReady = false;
 let parserWorker = null;
@@ -116,7 +117,7 @@ function handleWorkerMessage(event) {
 
 	pendingWorkerRequests.delete(id);
 	if (ok) {
-		pending.resolve(payload.groupedStores);
+		pending.resolve(payload);
 		return;
 	}
 
@@ -152,6 +153,7 @@ function parseExcelInWorker(arrayBuffer) {
 async function handleFilePick(event) {
 	const file = event.target.files[0];
 	groupedStores = [];
+	sheetHeadMeta = { name: "", date: "" };
 	generatedHtml = "";
 	isPreviewReady = false;
 	printBtn.disabled = true;
@@ -168,7 +170,9 @@ async function handleFilePick(event) {
 	try {
 		updateStatus(messages.readingExcel);
 		const data = await file.arrayBuffer();
-		groupedStores = await parseExcelInWorker(data);
+		const parsed = await parseExcelInWorker(data);
+		sheetHeadMeta = parsed.headMeta;
+		groupedStores = parsed.groupedStores;
 
 		renderStats();
 
@@ -197,7 +201,7 @@ function splitStoreTables(stores, maxRows) {
 		for (let i = 0; i < entry.items.length; i += maxRows) {
 			const chunk = entry.items.slice(i, i + maxRows);
 			const label = i === 0 ? entry.store : `${entry.store} ${tableConfig.continuationSuffix}`;
-			tables.push({ store: label, items: chunk });
+			tables.push({ store: label, items: chunk, headMeta: sheetHeadMeta });
 		}
 	});
 
@@ -223,6 +227,7 @@ function buildPrintHtml(grouped, options) {
 	const orientation = options.orientation === "portrait" ? "portrait" : "landscape";
 	const maxRows = options.maxRows;
 	const fontSize = options.fontSize;
+	const columnFontSize = tableConfig.columnFontSize;
 
 	const tables = splitStoreTables(grouped, maxRows);
 	const rowsPerPage = estimateRowsPerPage(orientation, maxRows, fontSize);
@@ -265,20 +270,51 @@ function buildPrintHtml(grouped, options) {
     border: 1px solid #111;
     padding: 2px 3px;
     text-align: center;
+		font-family: ${printConfig.tableFontFamily};
     font-size: ${fontSize}px;
-    line-height: 1.2;
-    height: ${Math.max(16, Math.round(fontSize * 1.5))}px;
+		line-height: 1.05;
+		height: ${Math.max(14, Math.round(fontSize * 1.35))}px;
   }
   th {
     background: #ececec;
     font-weight: 700;
   }
+	th.meta-left {
+		background: #ececec;
+		text-align: left;
+		padding: 4px 8px;
+		font-size: ${Math.max(fontSize + 1, 10)}px;
+		font-weight: 800;
+		text-transform: uppercase;
+	}
+	th.meta-total {
+		background: #ececec;
+		text-align: center;
+		padding: 2px 4px;
+	}
+	.meta-total-label {
+		font-size: ${Math.max(fontSize - 3, 8)}px;
+		font-weight: 700;
+		line-height: 1;
+		min-height: 10px;
+	}
+	.meta-total-value {
+		margin-top: 2px;
+		font-size: ${Math.max(fontSize + 3, 12)}px;
+		font-weight: 800;
+		line-height: 1.1;
+	}
   td.left {
     text-align: left;
   }
-  th:nth-child(1), td:nth-child(1) { width: 21%; }
-  th:nth-child(2), td:nth-child(2) { width: 57%; }
-  th:nth-child(3), td:nth-child(3) { width: 22%; }
+	col.col-store { width: 10%; }
+	col.col-product { width: 65%; }
+	col.col-qty { width: 15%; }
+	col.col-kg { width: 10%; }
+	tr:not(.meta-row) th:nth-child(1), tr.data-row td:nth-child(1) {  }
+	tr:not(.meta-row) th:nth-child(2), tr.data-row td:nth-child(2) { font-weight: 700; font-size: 17px;}
+	tr:not(.meta-row) th:nth-child(3), tr.data-row td:nth-child(3) { font-weight: 700; font-size: 30px; }
+	tr:not(.meta-row) th:nth-child(4), tr.data-row td:nth-child(4) {  }
   .page-number {
     text-align: center;
     padding-top: 3mm;
@@ -301,19 +337,31 @@ function buildPrintHtml(grouped, options) {
 
 function renderTable(table, maxRows) {
 	const escapedStore = escapeHtml(table.store);
-	const [storeHeader, productHeader, quantityHeader] = tableConfig.headers;
-	let rows = `<tr><th>${escapeHtml(storeHeader)}</th><th>${escapeHtml(productHeader)}</th><th>${escapeHtml(quantityHeader)}</th></tr>`;
+	const [storeHeader, productHeader, quantityHeader, kgHeader] = tableConfig.headers;
+	const totalQty = sumNumeric(table.items, "qty");
+	const totalKg = sumNumeric(table.items, "kg");
+	const nameText = escapeHtml((table.headMeta && table.headMeta.name) ? table.headMeta.name : "");
+	const dateText = escapeHtml((table.headMeta && table.headMeta.date) ? table.headMeta.date : "");
+	const mergedMetaText = [nameText, dateText].filter(Boolean).join(" ");
+	let rows = "";
+	rows += "<tr class=\"meta-row\">";
+	rows += `<th class=\"meta-left\" colspan=\"2\">${mergedMetaText}</th>`;
+	rows += `<th class=\"meta-total\"><div class=\"meta-total-value\"></div></th>`;
+	rows += `<th class=\"meta-total\"><div class=\"meta-total-value\">${escapeHtml(totalKg.toFixed(0))}</div></th>`;
+	rows += "</tr>";
+	rows += `<tr><th>${escapeHtml(storeHeader)}</th><th>${escapeHtml(productHeader)}</th><th>${escapeHtml(quantityHeader)}</th><th>${escapeHtml(kgHeader)}</th></tr>`;
 
 	for (let i = 0; i < maxRows; i += 1) {
 		if (i < table.items.length) {
 			const item = table.items[i];
-			rows += `<tr><td>${escapedStore}</td><td class="left">${escapeHtml(item.product)}</td><td>${escapeHtml(item.qty)}</td></tr>`;
+			rows += `<tr class="data-row"><td>${escapedStore}</td><td class="left">${escapeHtml(item.product)}</td><td>${escapeHtml(item.qty)}</td><td>${escapeHtml(formatKgOneDecimal(parseLooseNumber(item.kg)))}</td></tr>`;
 		} else {
-			rows += "<tr><td>&nbsp;</td><td class=\"left\">&nbsp;</td><td>&nbsp;</td></tr>";
+			rows += "<tr class=\"data-row\"><td>&nbsp;</td><td class=\"left\">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>";
 		}
 	}
 
-	return `<table>${rows}</table>`;
+	const colgroup = "<colgroup><col class=\"col-store\"><col class=\"col-product\"><col class=\"col-qty\"><col class=\"col-kg\"></colgroup>";
+	return `<table>${colgroup}${rows}</table>`;
 }
 
 function escapeHtml(value) {
@@ -323,6 +371,51 @@ function escapeHtml(value) {
 		.replaceAll(">", "&gt;")
 		.replaceAll('"', "&quot;")
 		.replaceAll("'", "&#39;");
+}
+
+function parseLooseNumber(value) {
+	if (value === null || value === undefined) {
+		return 0;
+	}
+
+	const cleaned = String(value)
+		.replace(/,/g, ".")
+		.replace(/[^0-9.-]/g, "")
+		.trim();
+
+	if (!cleaned) {
+		return 0;
+	}
+
+	const parsed = Number.parseFloat(cleaned);
+	return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function sumNumeric(items, key) {
+	let total = 0;
+	for (const item of items) {
+		total += parseLooseNumber(item[key]);
+	}
+	return total;
+}
+
+function formatNumber(value) {
+	if (Number.isInteger(value)) {
+		return String(value);
+	}
+
+	return value.toFixed(3).replace(/\.0+$/, "").replace(/(\.\d*?)0+$/, "$1");
+}
+
+function formatKgOneDecimal(value) {
+	const rounded = Math.round(value * 10) / 10;
+	if (Object.is(rounded, -0) || rounded === 0) {
+		return "0";
+	}
+	if (Number.isInteger(rounded)) {
+		return String(rounded);
+	}
+	return rounded.toFixed(1);
 }
 
 function handleGenerate() {

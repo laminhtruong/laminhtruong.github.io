@@ -1,7 +1,7 @@
 window.APP_CONFIG = {
 	limits: {
 		defaultMaxRowsPerTable: 15,
-		defaultFontSize: 13,
+		defaultFontSize: 15,
 		minFontSize: 8,
 		maxFontSize: 24,
 		minRowsPerTable: 1,
@@ -11,6 +11,7 @@ window.APP_CONFIG = {
 		downloadFileName: "MaSieuThi.html",
 		paperSize: "A4",
 		documentTitle: "Mã siêu thị",
+		tableFontFamily: "\"Roboto Condensed\", \"Liberation Sans Narrow\", Arial, sans-serif",
 	},
 	labels: {
 		appTitle: "Công cụ tạo HTML in mã siêu thị",
@@ -56,8 +57,14 @@ window.APP_CONFIG = {
 		downloadSuccess: "Đã tải xong tệp HTML.",
 	},
 	table: {
-		headers: ["Mã siêu thị", "Tên sản phẩm", "Số lượng"],
+		headers: ["Mã ST", "Tên sản phẩm", "SL", "KG"],
 		continuationSuffix: "(tiếp)",
 		pageNumberPattern: "Trang {{page}}/{{total}}",
+		summary: {
+			nameLabel: "Tên",
+			dateLabel: "Ngày",
+			totalQtyLabel: "Tổng số lượng",
+			totalKgLabel: "Tổng số kg",
+		},
 	},
 };
