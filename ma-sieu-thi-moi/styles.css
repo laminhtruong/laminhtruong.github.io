@@ -1,0 +1,252 @@
+:root {
+	--ink-900: #1f2937;
+	--ink-700: #334155;
+	--ink-500: #64748b;
+	--paper: #f8fafc;
+	--panel: #ffffff;
+	--line: #d5dbe4;
+	--accent: #0f766e;
+	--accent-strong: #115e59;
+	--shadow: 0 14px 42px rgba(15, 23, 42, 0.14);
+	--radius: 18px;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: "Be Vietnam Pro", sans-serif;
+	color: var(--ink-900);
+	background:
+		radial-gradient(circle at 5% 10%, #dbeafe 0%, transparent 30%),
+		radial-gradient(circle at 95% 90%, #dcfce7 0%, transparent 35%),
+		linear-gradient(140deg, #f8fafc, #f1f5f9 45%, #ecfeff);
+}
+
+.app-shell {
+	width: 100%;
+	min-height: 100vh;
+	height: 100vh;
+	padding: 16px;
+	display: grid;
+	grid-template-columns: minmax(320px, 430px) minmax(0, 1fr);
+	gap: 16px;
+}
+
+.panel {
+	background: var(--panel);
+	border: 1px solid rgba(148, 163, 184, 0.35);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+}
+
+.panel-controls {
+	padding: 22px;
+	overflow: auto;
+}
+
+.panel-head h1 {
+	margin: 6px 0;
+	font-size: 1.55rem;
+}
+
+.eyebrow {
+	margin: 0;
+	font-size: 0.76rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--accent);
+	font-weight: 700;
+}
+
+.sub {
+	margin: 0;
+	font-size: 0.92rem;
+	color: var(--ink-500);
+}
+
+.control-group {
+	margin-top: 14px;
+}
+
+.control-group label {
+	display: block;
+	margin-bottom: 6px;
+	font-size: 0.88rem;
+	font-weight: 600;
+	color: var(--ink-700);
+}
+
+input[type="file"],
+input[type="number"],
+select {
+	width: 100%;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	background: #fff;
+	font-family: inherit;
+	font-size: 0.92rem;
+	padding: 10px 11px;
+}
+
+.control-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 10px;
+}
+
+.control-grid .control-group {
+	display: flex;
+	flex-direction: column;
+}
+
+.control-grid .control-group label {
+	display: flex;
+	align-items: center;
+	line-height: 1.25;
+	min-height: 2.7em;
+	margin-bottom: 8px;
+}
+
+.actions {
+	margin-top: 18px;
+	display: flex;
+	gap: 10px;
+}
+
+.btn {
+	border: 0;
+	border-radius: 11px;
+	font-family: inherit;
+	font-weight: 700;
+	font-size: 0.93rem;
+	padding: 11px 14px;
+	cursor: pointer;
+	transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.btn:hover:not(:disabled) {
+	transform: translateY(-1px);
+}
+
+.btn:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.btn-primary {
+	color: #fff;
+	background: linear-gradient(130deg, var(--accent), var(--accent-strong));
+}
+
+.btn-secondary {
+	color: #fff;
+	background: linear-gradient(130deg, #0f172a, #334155);
+}
+
+.btn-outline {
+	color: #0f172a;
+	background: #eef2ff;
+	border: 1px solid #c7d2fe;
+}
+
+.stats {
+	margin: 16px 0 6px;
+	padding: 0;
+	list-style: none;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+}
+
+.stats li {
+	border: 1px solid #dbe4ec;
+	background: #f8fafc;
+	border-radius: 10px;
+	padding: 8px 9px;
+	font-size: 0.81rem;
+	color: var(--ink-700);
+}
+
+.status {
+	margin: 8px 0 0;
+	min-height: 1.2rem;
+	font-size: 0.88rem;
+	color: var(--ink-500);
+}
+
+.panel-preview {
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	height: 100%;
+}
+
+.preview-head {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	align-items: baseline;
+}
+
+.preview-head h2 {
+	margin: 0;
+	font-size: 1.1rem;
+}
+
+.preview-head p {
+	margin: 0;
+	font-size: 0.86rem;
+	color: var(--ink-500);
+}
+
+#previewFrame {
+	margin-top: 12px;
+	width: 100%;
+	flex: 1;
+	min-height: 0;
+	border: 1px solid #cdd5df;
+	border-radius: 12px;
+	background: #fff;
+}
+
+@media (max-width: 1100px) {
+	.app-shell {
+		grid-template-columns: 1fr;
+		height: auto;
+		min-height: 100vh;
+	}
+
+	.panel-preview {
+		min-height: 72vh;
+	}
+}
+
+@media (max-width: 660px) {
+	.app-shell {
+		padding: 12px;
+		gap: 14px;
+	}
+
+	.panel-controls,
+	.panel-preview {
+		padding: 13px;
+	}
+
+	.control-grid,
+	.stats {
+		grid-template-columns: 1fr;
+	}
+
+	.control-grid .control-group label {
+		min-height: 0;
+	}
+
+	.actions {
+		flex-direction: column;
+	}
+}
