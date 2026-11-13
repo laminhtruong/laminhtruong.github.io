@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+	<main class="app-shell">
+		<section class="panel panel-controls">
+			<header class="panel-head">
+				<p id="labelEyebrow" class="eyebrow"></p>
+				<h1 id="labelMainTitle"></h1>
+				<p id="labelSubtitle" class="sub"></p>
+			</header>
+
+			<div class="control-group">
+				<label id="labelExcelFile" for="excelFile"></label>
+				<input id="excelFile" type="file" accept=".xlsx,.xls">
+			</div>
+
+			<div class="control-grid">
+				<div class="control-group">
+					<label id="labelOrientation" for="orientation"></label>
+					<select id="orientation">
+						<option id="optionLandscape" value="landscape" selected></option>
+						<option id="optionPortrait" value="portrait"></option>
+					</select>
+				</div>
+
+				<div class="control-group">
+					<label id="labelMaxRows" for="maxRows"></label>
+					<input id="maxRows" type="number" min="1" max="100" value="15">
+				</div>
+
+				<div class="control-group">
+					<label id="labelFontSize" for="fontSize"></label>
+					<input id="fontSize" type="number" min="8" max="24" value="11">
+				</div>
+			</div>
+
+			<div class="actions">
+				<button id="btnGenerate" class="btn btn-primary" disabled></button>
+				<button id="btnPrint" class="btn btn-outline" disabled></button>
+				<button id="btnDownload" class="btn btn-secondary" disabled></button>
+			</div>
+
+			<ul id="stats" class="stats"></ul>
+			<p id="status" class="status"></p>
+		</section>
+
+		<section class="panel panel-preview">
+			<div class="preview-head">
+				<h2 id="labelPreviewTitle"></h2>
+				<p id="previewMeta"></p>
+			</div>
+			<iframe id="previewFrame"></iframe>
+		</section>
+	</main>
+
+	<script src="config.js"></script>
+	<script src="app.js"></script>
+</body>
+
+</html>
